@@ -2,12 +2,10 @@
 # ENSAE - 2AD - Groupe de statistique appliquée
 #    Sujet : Filtrage collaborative
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
-#       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah, Ulrich Mpeli Mpeli
+#       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
-#       Fichier : descriptions.R
+#       Fichier : analysis.R
 #       Description : analyses descriptives sur la base des notes, des utilisateurs et des films
-#
-#       Auteur : 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 # ===================================== 1.PREAMBULE ===============================================
@@ -19,58 +17,66 @@ cat("\014")
 ## Set working
 getwd() 
 #setwd("C:/Users/Maestro/Desktop/2A/Stat_App/Donnees") # Changer le repertoire de travail #
+#setwd("~/ENSAE/2AD/Stat-App/Collaborative_Filtering_Project/Codes/Descriptive_analysis")
 
 # ================================== 2.OUVERTURE DES FICHIERS =======================================
 
 ## Lecture du fichier des notes
 
-Data.Ratings = read.table(file=file.choose(),header=F,colClasses = c(V4 = "NULL"))
-colnames(Data.Ratings) = c("userID", "movieID", "rating")
+data.Ratings = read.table(file=file.choose(),header=F,colClasses = c(V4 = "NULL"))
+#data.Ratings <- read.csv("../../Data/ml-100k/u.data.", header = FALSE, sep='\t')
+#data.Ratings$timestamp <- NULL
+colnames(data.Ratings) = c("userID", "movieID", "rating")
 
 ## Lecture du fichier des utilisateurs
 
-Data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors = TRUE)
-colnames(Data.Users) = c("userID", "age", "gender", "occupation", "zip.code")
+data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors = TRUE)
+#data.Users <- read.csv("../../Data/ml-100k/u.user", header = FALSE, sep='|', stringsAsFactors = TRUE)
+colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code")
 
 ## Lecture du fichier des films
 
-Data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
-Movie.Genres = c("unknown", "action", "adventure", "animation", "children's", "comedy", 
+data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
+#data.Movies <- read.csv("../../Data/ml-100k/u.item", header = FALSE, sep='|')
+#data.Movies[4] <- NULL
+vect.movieGenres = c("unknown", "action", "adventure", "animation", "children's", "comedy", 
                       "crime", "documentary", "drama", "fantasy", "film-noir", "horror", 
                       "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western")
+
+# TO ANSWER : A quoi ça sert ?
 #MG=read.table(file=file.choose(),header=F,sep="|", quote = "\"") ##choisir u.genre
 #MG=MG$V1
 #nbG=length(MG)
 
-nb.Genres = length(Movie.Genres)
-colnames(Data.Movies) = c("movieID", "title", "date", "IMDbURL", Movie.Genres)
-#colnames(Data.Movies)=c("movieID", "title", "date", "IMDbURL", MG) à modifier de tel sorte que MG soit une string
+nb.Genres = length(vect.movieGenres)
+colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.movieGenres)
+#colnames(data.Movies)=c("movieID", "title", "date", "IMDbURL", MG) à modifier de tel sorte que MG soit une string
 
 
-# ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (contrôles) ============================
+# ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (controles) ============================
 
 #3.1# A PARTIR DE LA BASE DES NOTES
 
 ## Nombre de notes
 
-nb.Ratings = dim(Data.Ratings)[1]
+nb.Ratings = dim(data.Ratings)[1]
 cat("La base de données contient exactement", nb.Ratings, "notes.")
 
 ## Nombre d'utilisateurs uniques
 
-nb.Users = length(unique(Data.Ratings$userID))
+nb.Users = length(unique(data.Ratings$userID))
 cat("La base de données contient exactement", nb.Users, "utilisateurs uniques.")
 
 ## Nombre de films uniques
 
-nb.Movies = length(unique(Data.Ratings$movieID))
+nb.Movies = length(unique(data.Ratings$movieID))
 cat("La base de données contient exactement", nb.Movies, "films uniques.")
 
 #3.2# VERIFICATION AVEC LA BASE DES UTILISATEURS
 
 ## Nombre d'utilisateurs
 
-if(nb.Users == dim(Data.Users)[1]){
+if(nb.Users == dim(data.Users)[1]){
   cat("La base de données contient bien", nb.Users, "utilisateurs.")
 } else{
   cat("Attention : il y a un conflit sur le nombre d'utilisateurs.")
@@ -81,7 +87,7 @@ if(nb.Users == dim(Data.Users)[1]){
 
 ## Nombre de films
 
-if (nb.Movies == dim(Data.Movies)[1]){
+if (nb.Movies == dim(data.Movies)[1]){
   cat("La base de données contient bien", nb.Movies, "films.")
 } else{
   cat("Attention : il y a un conflit sur le nombre de films.")
@@ -94,34 +100,33 @@ if (nb.Movies == dim(Data.Movies)[1]){
 
 ## Statistiques des notes
 
-avgRatings = summary(Data.Ratings$rating)
-cat("La moyenne des", nb.Ratings, "notes est de", avgRatings[4], ";
-    l'écart-type est", round(ave(Data.Ratings$rating, FUN=sd)[1],2))
-summary(Data.Ratings$rating)
-boxplot(Data.Ratings$rating, main = "Notes discrètes attribuées aux films")
+recap.Ratings = summary(data.Ratings$rating)
+cat("La moyenne des", nb.Ratings, "notes est de", recap.Ratings['Mean'], "; l'écart-type est de", round(ave(data.Ratings$rating, FUN=sd)[1],2))
+summary(data.Ratings$rating)
+boxplot(data.Ratings$rating, main = "Notes discrètes attribuées aux films") #TO DO : remplacer par un diagramme en bâton
 
 #4.2# SUR LES UTILISATEURS
 
 ## Age
 
-avgAge = summary(Data.Users$age)
-avgAge
-cat("La moyenne des âges est", avgAge[4], "ans avec un écart-type de",round(ave(Data.Users$age, FUN=sd)[1],2), "ans")
+stat.Age = summary(data.Users$age)
+stat.Age
+cat("La moyenne des âges est", stat.Age['Mean'], "ans avec un écart-type de",round(ave(data.Users$age, FUN=sd)[1],2), "ans.")
 
 ## Proportion homme/femme
 
-nb.Men = sum(Data.Users$gender == "M")
-nb.Women = sum(Data.Users$gender == "F")
+nb.Men = sum(data.Users$gender == "M")
+nb.Women = sum(data.Users$gender == "F")
 cat("La base de données est composée de", nb.Men, "hommes, soit", round(100*nb.Men/nb.Users,2), 
     "% et", nb.Women, "femmes, soit" ,round(100*nb.Women/nb.Users,2),"% .")
 
 ## Proportions dans les métiers
 
-as.data.frame(summary(Data.Users$occupation))
+as.data.frame(summary(data.Users$occupation))
 
 ## Proportions dans les codes postales
 
-as.data.frame(summary(Data.Users$zip.code))
+as.data.frame(summary(data.Users$zip.code))
 
 cat("le code postal n'est pas du tout pertinent (699 other)")
 
@@ -129,13 +134,13 @@ cat("le code postal n'est pas du tout pertinent (699 other)")
 
 ## Répartition par genres de films
 
-nb.MoviePerGenre = matrix(0, nrow = nb.Genres, ncol = 1)
-rownames(nb.MoviePerGenre) = Movie.Genres
+vect.nb.MoviesPerGenre = matrix(0, nrow = nb.Genres, ncol = 1)
+rownames(vect.nb.MoviesPerGenre) = vect.movieGenres
 for (genre in 1:nb.Genres){
-  nb.MoviePerGenre[genre] = sum(Data.Movies[Movie.Genres[genre]])
+  vect.nb.MoviesPerGenre[genre] = sum(data.Movies[vect.movieGenres[genre]])
 }
-nb.MoviePerGenre
-boxplot(nb.MoviePerGenre, main = "nombre de films par genre")
+vect.nb.MoviesPerGenre
+boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
 
 # ==================================== 5.STATISTIQUE D'ORDRE 2 =========================================
 
@@ -143,21 +148,21 @@ boxplot(nb.MoviePerGenre, main = "nombre de films par genre")
 
 ## Répartition du nombre de films notés par utilisateur
 
-nb.RatingsPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateut et son nombre de films notés
+vect.nb.RatingsPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateut et son nombre de films notés
 for (user in 1:nb.Users) { 
-  nb.RatingsPerUser[user,] = c(user,sum(Data.Ratings$userID == user))
+  vect.nb.RatingsPerUser[user,] = c(user,sum(data.Ratings$userID == user))
 }
-nb.RatingsPerUser = as.data.frame(nb.RatingsPerUser)
-colnames(nb.RatingsPerUser) = c("userID", "nb.Ratings")
+vect.nb.RatingsPerUser = as.data.frame(vect.nb.RatingsPerUser)
+colnames(vect.nb.RatingsPerUser) = c("userID", "nb.Ratings")
 
 ## Statistiques sur le nombre de films notés par utilisateur
 
-summary(nb.RatingsPerUser$nb.Ratings)
-boxplot(nb.RatingsPerUser$nb.Ratings, main = "Nombre de films notés par utilisateur")
+summary(vect.nb.RatingsPerUser$nb.Ratings)
+boxplot(vect.nb.RatingsPerUser$nb.Ratings, main = "Nombre de films notés par utilisateur")
 
 #5.2# LIEN ENTRE MOYENNE DES NOTES ET UTILISATEUR
 
-RatingPerUser = matrix(0, nrow = nb.Users, ncol = 6) # matrice comprenant l'ID de l'utilisateur 
+ratingsPerUser = matrix(0, nrow = nb.Users, ncol = 6) # matrice comprenant l'ID de l'utilisateur 
                                                      #                    la moyenne des notes
                                                      #                    l'écart-type des notes
                                                      #                    la note maximale 
@@ -165,21 +170,21 @@ RatingPerUser = matrix(0, nrow = nb.Users, ncol = 6) # matrice comprenant l'ID d
                                                      #                    la mediane des notes
 
 for (user in 1:nb.Users) { 
-  x=Data.Ratings$rating[Data.Ratings$userID == user]
-  RatingPerUser[user,] = c(user,round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
+  x=data.Ratings$rating[data.Ratings$userID == user] # TO DO : donner un nom avec du sens pour x
+  ratingsPerUser[user,] = c(user,round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
 }
 
 ## Tableau récapitulatif
 
-RecapUsers = cbind(nb.RatingsPerUser,Data.Users$age,Data.Users$gender,Data.Users$occupation,RatingPerUser)
-RecapUsers = RecapUsers[ ,-6] # A optimiser
-colnames(RecapUsers) = c("userID","nb.movie","age","gender","occupation","avg", "sd", "max", "min", "median")
+recap.Users = cbind(vect.nb.RatingsPerUser,data.Users$age,data.Users$gender,data.Users$occupation,ratingsPerUser)
+recap.Users = recap.Users[ ,-6] # A optimiser
+colnames(recap.Users) = c("userID","nb.movie","age","gender","occupation","avg", "sd", "max", "min", "median")
 rm(x)
 
 ## Statistiques sur les notes moyennes données par utilisateur
 
-summary(RatingPerUser$avgRating)
-boxplot(RatingPerUser$avgRating, main = "Note moyenne donnée par utilisateur")
+summary(ratingsPerUser$avgRating)
+boxplot(ratingsPerUser$avgRating, main = "Note moyenne donnée par utilisateur")
 
 #5.3# LIEN ENTRE NOMBRE DE NOTES ET FILM
 
@@ -187,7 +192,7 @@ boxplot(RatingPerUser$avgRating, main = "Note moyenne donnée par utilisateur")
 
 nb.RatingsPerMovie =  matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID du film et som nombre de notes reçues
 for (movie in 1:nb.Movies) { 
-  nb.RatingsPerMovie[movie,] = c(movie,sum(Data.Ratings$movieID == movie))
+  nb.RatingsPerMovie[movie,] = c(movie,sum(data.Ratings$movieID == movie))
 }
 nb.RatingsPerMovie = as.data.frame(nb.RatingsPerMovie)
 colnames(nb.RatingsPerMovie) = c("movieID", "nb.Ratings")
@@ -212,7 +217,7 @@ RatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 6) # matrice comprenant l'ID
 #                    la mediane des notes
 
 for (movie in 1:nb.Movies) { 
-  x=Data.Ratings$rating[Data.Ratings$movieID == movie]
+  x=data.Ratings$rating[data.Ratings$movieID == movie]
   RatingPerMovie[movie,] = c(movie,round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
 }
 rm(x)
@@ -231,12 +236,12 @@ boxplot(RatingPerMovie$avgRating, main = "Note moyenne des films")
 RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
 for (movie in 1:nb.Movies) { 
-  cond1=Data.Ratings$movieID == movie
-  cond2=(Data.Users$gender[Data.Ratings$userID]=="M")
-  x=Data.Ratings$rating[cond1&cond2]
-  y=Data.Ratings$rating[cond1&!(cond2)]
+  cond1=data.Ratings$movieID == movie
+  cond2=(data.Users$gender[data.Ratings$userID]=="M")
+  x=data.Ratings$rating[cond1&cond2]
+  y=data.Ratings$rating[cond1&!(cond2)]
   RatingPerMoviePerGender[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
-  MoyWomen[movie,]=c(movie,(mean(Data.Ratings$movieID == movie)-mean(x)*(length(x)/(length(x)+length(y))))*((length(x)+length(y))/length(y)))
+  MoyWomen[movie,]=c(movie,(mean(data.Ratings$movieID == movie)-mean(x)*(length(x)/(length(x)+length(y))))*((length(x)+length(y))/length(y)))
 }
 
 RatingPerMoviePerGender = as.data.frame(RatingPerMoviePerGender)
@@ -246,25 +251,25 @@ colnames(RatingPerMoviePerGender ) = c("movieID", "nbMen","avgRatingMen","nbWome
 
 ## Tableau récapitulatif
 
-RecapMovie = cbind(nb.RatingsPerMovie,RatingPerMovie,RatingPerMoviePerGender)
-RecapMovie = RecapMovie[ ,-3] # A optimiser
-RecapMovie = RecapMovie[ ,-8] # A optimiser
+recap.Movies = cbind(nb.RatingsPerMovie,RatingPerMovie,RatingPerMoviePerGender)
+recap.Movies = recap.Movies[ ,-3] # A optimiser
+recap.Movies = recap.Movies[ ,-8] # A optimiser
 #rm(RatingPerMovie,nb.RatingsPerMovie,MenPerMovie,MoyWomen,RatingPerMoviePerGender,
-   #RatingPerUser,nb.MoviePerGenre,nb.RatingsPerUser,Movie.Genres,cond1,cond2,x,y)
+   #ratingsPerUser,vect.nb.MoviesPerGenre,vect.nb.RatingsPerUser,vect.movieGenres,cond1,cond2,x,y)
 
 # ====================== 6.CORRELATION ENTRE LES FILMS ET LES UTILISATEURS ===============================
 
 ## Corrélation entre note des films et nombre de visionnage de ce film (normalement oui, et positive)
 
-stat.Movie = merge(nb.RatingsPerMovie, AvgRatingPerMovie, by.x = "movieID", by.y = "movieID")
-plot(stat.Movie$nb.Ratings, stat.Movie$avgRating, 
+#recap.Movies = merge(nb.RatingsPerMovie, AvgRatingPerMovie, by.x = "movieID", by.y = "movieID")
+plot(recap.Movies$nb.Ratings, recap.Movies$avgRating, 
      main = "Lien entre nombre de visionnage et note moyenne par film", 
      xlab = "nombre de visionnage", 
      ylab = "note moyenne")
 
 ## Corrélation entre note attribuée et nombre de films vus (pas nécessairement sauf les rageux et les floodeurs)
-stat.User = merge(nb.RatingsPerUser,AvgRatingPerUser, by.x = "userID", bu.y = "userID")
-plot(stat.User$nb.Ratings, stat.User$avgRating, 
+#recap.Users = merge(vect.nb.RatingsPerUser,AvgRatingPerUser, by.x = "userID", bu.y = "userID")
+plot(recap.Users$nb.movie, recap.Users$avg, 
      main = "Lien entre nombre de films notés et note moyenne par utilisateur", 
      xlab = "nombre de films notés", 
      ylab = "note moyenne")
@@ -276,35 +281,35 @@ plot(stat.User$nb.Ratings, stat.User$avgRating,
 ## Films les plus notés
 
 nb.MostRatedMovies = 25
-order.MostRatedMovies = order(stat.Movie$nb.Ratings, decreasing =TRUE)
+order.MostRatedMovies = order(recap.Movies$nb.Ratings, decreasing =TRUE)
 cat("Les", nb.MostRatedMovies, "films ayant reçu le plus de notes : ")
 for (movie in 1:nb.MostRatedMovies){
-  cat("Le film d'ID", stat.Movie$movieID[order.MostRatedMovies[movie]], ",", 
-      as.character(Data.Movies$title[order.MostRatedMovies[movie]]), ", a reçu", 
-      stat.Movie$nb.Ratings[order.MostRatedMovies[movie]], "notes.")
+  cat("Le film d'ID", recap.Movies$movieID[order.MostRatedMovies[movie]], ",", 
+      as.character(data.Movies$title[order.MostRatedMovies[movie]]), ", a reçu", 
+      recap.Movies$nb.Ratings[order.MostRatedMovies[movie]], "notes.")
   cat("\n")
 }
 
 ## Films les moins notés
 
 nb.LessRatedMovies = 12
-order.LessRatedMovies = order(stat.Movie$nb.Ratings, decreasing =FALSE)
+order.LessRatedMovies = order(recap.Movies$nb.Ratings, decreasing =FALSE)
 cat("Les", nb.LessRatedMovies, "films ayant reçus le moins de notes : ")
 for (movie in 1:nb.LessRatedMovies){
-  cat("Le film d'ID", stat.Movie$movieID[order.LessRatedMovies[movie]], ",", 
-      as.character(Data.Movies$title[order.LessRatedMovies[movie]]), "a reçu", 
-      stat.Movie$nb.Ratings[order.LessRatedMovies[movie]], "note(s).")
+  cat("Le film d'ID", recap.Movies$movieID[order.LessRatedMovies[movie]], ",", 
+      as.character(data.Movies$title[order.LessRatedMovies[movie]]), "a reçu", 
+      recap.Movies$nb.Ratings[order.LessRatedMovies[movie]], "note(s).")
   cat("\n")
 }
 
 ## Films n'ayant reçu qu'une seule note
 
-cat("Il y a", sum(stat.Movie$nb.Ratings == 1), "films qui n'ont reçu qu'une seule note.")
+cat("Il y a", sum(recap.Movies$nb.Ratings == 1), "films qui n'ont reçu qu'une seule note.")
 
 ## Films ayant reçu moins de xxx votes
 
 nbLimit.RatingsForMovie = 10
-cat("Il y a", sum(stat.Movie$nb.Ratings <= nbLimit.RatingsForMovie), "films qui ont reçu moins de", 
+cat("Il y a", sum(recap.Movies$nb.Ratings <= nbLimit.RatingsForMovie), "films qui ont reçu moins de", 
     nbLimit.RatingsForMovie, "votes.")
 
 #7.2# SUR LES FILMS (PAR RAPPORT A LA MOYENNE DES NOTES)
@@ -312,60 +317,60 @@ cat("Il y a", sum(stat.Movie$nb.Ratings <= nbLimit.RatingsForMovie), "films qui 
 ## Films ayant les meilleurs notes
 
 nb.BestMovies = 25
-order.BestMovies = order(stat.Movie$avgRating, decreasing = TRUE)
+order.BestMovies = order(recap.Movies$avgRating, decreasing = TRUE)
 cat("Les", nb.BestMovies, "meilleurs films : ")
 for (movie in 1:nb.BestMovies){
-  cat("Le film d'ID", stat.Movie$movieID[order.BestMovies[movie]], ",", 
+  cat("Le film d'ID", recap.Movies$movieID[order.BestMovies[movie]], ",", 
       as.character(data.Movies$title[order.BestMovies[movie]]),
-      "a une note moyenne de", stat.Movie$avgRating[order.BestMovies[movie]], "sur",
-      stat.Movie$nb.Ratings[order.BestMovies[movie]], "vote(s).")
+      "a une note moyenne de", recap.Movies$avgRating[order.BestMovies[movie]], "sur",
+      recap.Movies$nb.Ratings[order.BestMovies[movie]], "vote(s).")
   cat("\n")
 }
 
 ## Nombre de films ayant une note moyenne de 5
 
-cat("Il y a", sum(stat.Movie$avgRating == 5), "films qui ont reçu une note moyenne de 5.")
+cat("Il y a", sum(recap.Movies$avgRating == 5), "films qui ont reçu une note moyenne de 5.")
 
 ## Films ayant les meilleurs notes et dépassant un seuil de visionnage
 
 cat("Les", nb.BestMovies, "meilleurs films ayant reçu plus de", nbLimit.RatingsForMovie, "notes: ")
-stat.MovieUppernbLimit.Ratings = stat.Movie[stat.Movie$nb.Ratings >= nbLimit.RatingsForMovie,]
-order.BestMoviesUppernbLimit.Ratings = order(stat.MovieUppernbLimit.Ratings$avgRating, decreasing = TRUE)
+recap.MovieUppernbLimit.Ratings = recap.Movies[recap.Movies$nb.Ratings >= nbLimit.RatingsForMovie,]
+order.BestMoviesUppernbLimit.Ratings = order(recap.MovieUppernbLimit.Ratings$avgRating, decreasing = TRUE)
 for (movie in 1:nb.BestMovies){
-  cat("Le film d'ID", stat.MovieUppernbLimit.Ratings$movieID[order.BestMoviesUppernbLimit.Ratings[movie]], ",",
-      as.character(data.Movies$title[stat.MovieUppernbLimit.Ratings$movieID[order.BestMoviesUppernbLimit.Ratings[movie]]]),
-      "a une note moyenne de", stat.MovieUppernbLimit.Ratings$avgRating[order.BestMoviesUppernbLimit.Ratings[movie]], "sur",
-      stat.MovieUppernbLimit.Ratings$nb.Ratings[order.BestMoviesUppernbLimit.Ratings[movie]], "votes.")
+  cat("Le film d'ID", recap.MovieUppernbLimit.Ratings$movieID[order.BestMoviesUppernbLimit.Ratings[movie]], ",",
+      as.character(data.Movies$title[recap.MovieUppernbLimit.Ratings$movieID[order.BestMoviesUppernbLimit.Ratings[movie]]]),
+      "a une note moyenne de", recap.MovieUppernbLimit.Ratings$avgRating[order.BestMoviesUppernbLimit.Ratings[movie]], "sur",
+      recap.MovieUppernbLimit.Ratings$nb.Ratings[order.BestMoviesUppernbLimit.Ratings[movie]], "votes.")
   cat("\n")
 }
 
 ## Films ayant les pires notes
 
 nb.WorstMovies = 20
-order.WorstMovies <- order(stat.Movie$avgRating, decreasing = FALSE)
+order.WorstMovies <- order(recap.Movies$avgRating, decreasing = FALSE)
 cat("Les", nb.WorstMovies, "pires films : ")
 for (movie in 1:nb.WorstMovies){
-  cat("Le film d'ID", stat.Movie$movieID[order.WorstMovies[movie]], ",", 
-      as.character(data.Movies$title[stat.Movie$movieID[order.WorstMovies[movie]]]),
-      ",a une note moyenne de", stat.Movie$avgRating[order.WorstMovies[movie]], "sur",
-      stat.Movie$nb.Ratings[order.WorstMovies[movie]], "vote(s).")
+  cat("Le film d'ID", recap.Movies$movieID[order.WorstMovies[movie]], ",", 
+      as.character(data.Movies$title[recap.Movies$movieID[order.WorstMovies[movie]]]),
+      ",a une note moyenne de", recap.Movies$avgRating[order.WorstMovies[movie]], "sur",
+      recap.Movies$nb.Ratings[order.WorstMovies[movie]], "vote(s).")
   cat("\n")
 }
 
 ## Films ayant une note moyenne de 1
 
-cat("Il y a", sum(stat.Movie$avgRating == 1), "films qui ont reçu une note moyenne de 1.")
+cat("Il y a", sum(recap.Movies$avgRating == 1), "films qui ont reçu une note moyenne de 1.")
 
 ## Films ayant les pires notes et dépassant un seuil de visionnage
 
 cat("Les", nb.WorstMovies, "pires films ayant reçu plus de", nbLimit.RatingsForMovie, "notes: ")
-stat.MovieUppernbLimit.Ratings = stat.Movie[stat.Movie$nb.Ratings >= nbLimit.RatingsForMovie,]
-order.WorstMoviesUppernbLimit.RatingsForMovie = order(stat.MovieUppernbLimit.Ratings$avgRating, decreasing = FALSE)
+recap.MovieUppernbLimit.Ratings = recap.Movies[recap.Movies$nb.Ratings >= nbLimit.RatingsForMovie,]
+order.WorstMoviesUppernbLimit.RatingsForMovie = order(recap.MovieUppernbLimit.Ratings$avgRating, decreasing = FALSE)
 for (movie in 1:nb.WorstMovies){
-  cat("Le film d'ID", stat.MovieUppernbLimit.Ratings$movieID[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], ",",
-      as.character(data.Movies$title[stat.MovieUppernbLimit.Ratings$movieID[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]]]),
-      "a une note moyenne de", stat.MovieUppernbLimit.Ratings$avgRating[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], "sur",
-      stat.MovieUppernbLimit.Ratings$nb.Ratings[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], "votes.")
+  cat("Le film d'ID", recap.MovieUppernbLimit.Ratings$movieID[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], ",",
+      as.character(data.Movies$title[recap.MovieUppernbLimit.Ratings$movieID[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]]]),
+      "a une note moyenne de", recap.MovieUppernbLimit.Ratings$avgRating[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], "sur",
+      recap.MovieUppernbLimit.Ratings$nb.Ratings[order.WorstMoviesUppernbLimit.RatingsForMovie[movie]], "votes.")
   cat("\n")
 }
 
@@ -374,32 +379,32 @@ for (movie in 1:nb.WorstMovies){
 ## Utilisateurs ayant le plus voté
 
 nb.MostVotedUsers = 10
-order.MostVotedUsers = order(stat.User$nb.Ratings, decreasing =TRUE)
+order.MostVotedUsers = order(recap.Users$nb.movie, decreasing =TRUE)
 cat("Les", nb.MostVotedUsers, "utilisateurs ayant notés le plus de films : ")
 for (user in 1:nb.MostVotedUsers){
-  cat("L'utilisateur d'ID", stat.User$userID[order.MostVotedUsers[user]], "a voté", 
-      stat.User$nb.Ratings[order.MostVotedUsers[user]], "fois.")
+  cat("L'utilisateur d'ID", recap.Users$userID[order.MostVotedUsers[user]], "a voté", 
+      recap.Users$nb.movie[order.MostVotedUsers[user]], "fois.")
   cat("\n")
 }
 
 ## Utilisateurs ayant le moins voté
 
 nb.LessVotedUsers = 35
-order.LessVotedUsers = order(stat.User$nb.Ratings, decreasing =FALSE)
+order.LessVotedUsers = order(recap.Users$nb.movie, decreasing =FALSE)
 cat("Les", nb.LessVotedUsers, "utilisateurs ayant notés le moins de films : ")
 for (user in 1:nb.LessVotedUsers){
-  cat("L'utilisateur d'ID", stat.User$userID[order.LessVotedUsers[user]], "n'a voté que", 
-      stat.User$nb.Ratings[order.LessVotedUsers[user]], "fois.")
+  cat("L'utilisateur d'ID", recap.Users$userID[order.LessVotedUsers[user]], "n'a voté que", 
+      recap.Users$nb.movie[order.LessVotedUsers[user]], "fois.")
   cat("\n")
 }
 
 ## Utilisateurs n'ayant voté que 20 fois
 
-cat("Il y a", sum(stat.User$nb.Ratings == 20), "utilisateurs qui n'ont voté que 20 fois.")
+cat("Il y a", sum(recap.Users$nb.movie == 20), "utilisateurs qui n'ont voté que 20 fois.")
 
 ## Utilisateurs ayant voté moins de xxx fois
 nbLimit.RatingsForUser = 75
-cat("Il y a", sum(stat.User$nb.Ratings <= nbLimit.RatingsForUser), "utilisateurs qui ont voté moins de", 
+cat("Il y a", sum(recap.Users$nb.movie <= nbLimit.RatingsForUser), "utilisateurs qui ont voté moins de", 
     nbLimit.RatingsForUser, "fois.")
 
 #7.4# SUR LES UTILISATEURS (PAR RAPPORT A LA MOYENNE DES NOTES)
@@ -407,46 +412,46 @@ cat("Il y a", sum(stat.User$nb.Ratings <= nbLimit.RatingsForUser), "utilisateurs
 ## Utilisateurs ayant donnés les plus hautes notes
 
 nb.NicestUsers = 20
-order.NicestUsers <- order(stat.User$avgRating, decreasing = TRUE)
+order.NicestUsers <- order(recap.Users$avg, decreasing = TRUE)
 cat("Les", nb.NicestUsers, "utilisateurs les plus gentils : ")
 for (user in 1:nb.NicestUsers){
-  cat("L'utilisateur d'ID", stat.User$userID[order.NicestUsers[user]], "a une donné en moyenne une note de", 
-      stat.User$avgRating[order.NicestUsers[user]], "pour", stat.User$nb.Ratings[order.NicestUsers[user]], "notes.")
+  cat("L'utilisateur d'ID", recap.Users$userID[order.NicestUsers[user]], "a une donné en moyenne une note de", 
+      recap.Users$avg[order.NicestUsers[user]], "pour", recap.Users$nb.Ratings[order.NicestUsers[user]], "notes.")
   cat("\n")
 }
 
 ## Utilisateurs ayant donné les meilleurs notes et dépassant un seuil de participation
 
 cat("Les", nb.NicestUsers, "utilisateurs ayant données les meilleurs notes et ayant voté plus de", nbLimit.RatingsForUser, "fois: ")
-stat.UserUppernbLimit.Ratings = stat.User[stat.User$nb.Ratings >= nbLimit.RatingsForUser,]
-order.NicestUsersUppernbLimit.Ratings = order(stat.UserUppernbLimit.Ratings$avgRating, decreasing = TRUE)
+recap.UserUppernbLimit.Ratings = recap.Users[recap.Users$nb.movie >= nbLimit.RatingsForUser,]
+order.NicestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$avg, decreasing = TRUE)
 for (user in 1:nb.NicestUsers){
-  cat("L'utilisateur d'ID", stat.UserUppernbLimit.Ratings$userID[order.NicestUsersUppernbLimit.Ratings[user]], 
-      "a donné en moyenne une note de", stat.UserUppernbLimit.Ratings$avgRating[order.NicestUsersUppernbLimit.Ratings[user]], 
-      "pour", stat.UserUppernbLimit.Ratings$nb.Ratings[order.NicestUsersUppernbLimit.Ratings[user]], "notes.")
+  cat("L'utilisateur d'ID", recap.UserUppernbLimit.Ratings$userID[order.NicestUsersUppernbLimit.Ratings[user]], 
+      "a donné en moyenne une note de", recap.UserUppernbLimit.Ratings$avg[order.NicestUsersUppernbLimit.Ratings[user]], 
+      "pour", recap.UserUppernbLimit.Ratings$nb.movie[order.NicestUsersUppernbLimit.Ratings[user]], "notes.")
   cat("\n")
 }
 
 ## Utilisateurs ayant donnés les plus faibles notes
 
 nb.MeanestUsers = 20
-order.MeanestUsers = order(stat.User$avgRating, decreasing = FALSE)
+order.MeanestUsers = order(recap.Users$avg, decreasing = FALSE)
 cat("Les", nb.MeanestUsers, "utilisateurs les plus méchants : ")
 for (user in 1:nb.MeanestUsers){
-  cat("L'utilisateur d'ID", stat.User$userID[order.MeanestUsers[user]], "a une donné en moyenne une note de", 
-      stat.User$avgRating[order.MeanestUsers[user]], "pour", stat.User$nb.Ratings[order.MeanestUsers[user]], "notes.")
+  cat("L'utilisateur d'ID", recap.Users$userID[order.MeanestUsers[user]], "a donné en moyenne une note de", 
+      recap.Users$avg[order.MeanestUsers[user]], "pour", recap.Users$nb.movie[order.MeanestUsers[user]], "notes.")
   cat("\n")
 }
 
 ## Utilisateurs ayant donné les pires notes et dépassant un seuil de participation
 
 cat("Les", nb.MeanestUsers, "utilisateurs ayant données les pires notes et ayant voté plus de", nbLimit.RatingsForUser, "fois: ")
-stat.UserUppernbLimit.Ratings = stat.User[stat.User$nb.Ratings >= nbLimit.RatingsForUser,]
-order.MeanestUsersUppernbLimit.Ratings = order(stat.UserUppernbLimit.Ratings$avgRating, decreasing = FALSE)
+recap.UserUppernbLimit.Ratings = recap.Users[recap.Users$nb.movie >= nbLimit.RatingsForUser,]
+order.MeanestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$avg, decreasing = FALSE)
 for (user in 1:nb.MeanestUsers){
-  cat("L'utilisateur d'ID", stat.UserUppernbLimit.Ratings$userID[order.MeanestUsersUppernbLimit.Ratings[user]], 
-      "a donné en moyenne une note de", stat.UserUppernbLimit.Ratings$avgRating[order.MeanestUsersUppernbLimit.Ratings[user]], 
-      "pour", stat.UserUppernbLimit.Ratings$nb.Ratings[order.MeanestUsersUppernbLimit.Ratings[user]], "notes.")
+  cat("L'utilisateur d'ID", recap.UserUppernbLimit.Ratings$userID[order.MeanestUsersUppernbLimit.Ratings[user]], 
+      "a donné en moyenne une note de", recap.UserUppernbLimit.Ratings$avg[order.MeanestUsersUppernbLimit.Ratings[user]], 
+      "pour", recap.UserUppernbLimit.Ratings$nb.movie[order.MeanestUsersUppernbLimit.Ratings[user]], "notes.")
   cat("\n")
 }
 
@@ -458,15 +463,15 @@ for (user in 1:nb.MeanestUsers){
 
 ## Création des bases par sexe
 
-data.MaleUsers = Data.Users[Data.Users$gender == "M" ,]
-data.FemaleUsers = Data.Users[Data.Users$gender == "F" ,]
+data.MaleUsers = data.Users[data.Users$gender == "M" ,]
+data.FemaleUsers = data.Users[data.Users$gender == "F" ,]
 
-stat.MaleUser = stat.User[stat.User$userID %in% data.MaleUsers$userID,]
-stat.FemaleUser = stat.User[stat.User$userID %in% data.FemaleUsers$userID,]
+recap.MaleUser = recap.Users[recap.Users$userID %in% data.MaleUsers$userID,]
+recap.FemaleUser = recap.Users[recap.Users$userID %in% data.FemaleUsers$userID,]
 
 ## Statistiques sur la répartion des notes par sexe
 
-summary(stat.MaleUser)
-summary(stat.FemaleUser)
+summary(recap.MaleUser)
+summary(recap.FemaleUser)
 
 # ====================================== 10.ETUDE PAR GENRE DE FILMS ========================================
