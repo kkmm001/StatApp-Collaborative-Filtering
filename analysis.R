@@ -9,15 +9,16 @@
 #
 #       Auteur : 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-#AJOUT
+
 # ===================================== 1.PREAMBULE ===============================================
 
 ## Clean up
 rm(list=ls()) 
+cat("\014") 
 
 ## Set working
 getwd() 
-setwd("C:/Users/Maestro/Desktop/2A/Stat_App/Donnees") # Changer le repertoire de travail #
+#setwd("C:/Users/Maestro/Desktop/2A/Stat_App/Donnees") # Changer le repertoire de travail #
 
 # ================================== 2.OUVERTURE DES FICHIERS =======================================
 
@@ -37,8 +38,14 @@ Data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colCl
 Movie.Genres = c("unknown", "action", "adventure", "animation", "children's", "comedy", 
                       "crime", "documentary", "drama", "fantasy", "film-noir", "horror", 
                       "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western")
+#MG=read.table(file=file.choose(),header=F,sep="|", quote = "\"") ##choisir u.genre
+#MG=MG$V1
+#nbG=length(MG)
+
 nb.Genres = length(Movie.Genres)
 colnames(Data.Movies) = c("movieID", "title", "date", "IMDbURL", Movie.Genres)
+#colnames(Data.Movies)=c("movieID", "title", "date", "IMDbURL", MG) à modifier de tel sorte que MG soit une string
+
 
 # ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (contrôles) ============================
 
@@ -150,62 +157,41 @@ boxplot(nb.RatingsPerUser$nb.Ratings, main = "Nombre de films notés par utilisa
 
 #5.2# LIEN ENTRE MOYENNE DES NOTES ET UTILISATEUR
 
-## Note moyenne par utilisateur
+## Note moyenne par utilisateur / Ecart-type des moyennes par utilisateur
+## Note maximale par utilisateur / Note minimale par utilisateur / Note médiane par utilisateur
+####### POUR NE PAS FAIRE TOURNER LA MEME BOUCLE DEUX FOIS
 
-AvgRatingPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateur et sa note moyenne
+
+RatingPerUser = matrix(0, nrow = nb.Users, ncol = 6) # matrice comprenant l'ID de l'utilisateur 
+                                                     #                    la moyenne des notes
+                                                     #                    l'écart-type des notes
+                                                     #                    la note maximale 
+                                                     #                    la note maximale 
+                                                     #                    la mediane des notes
+
 for (user in 1:nb.Users) { 
-  AvgRatingPerUser[user,] = c(user,round(mean(Data.Ratings$rating[Data.Ratings$userID == user]),2))
+  x=Data.Ratings$rating[Data.Ratings$userID == user]
+  RatingPerUser[user,] = c(user,round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
 }
-AvgRatingPerUser = as.data.frame(AvgRatingPerUser)
-colnames(AvgRatingPerUser) = c("userID", "avgRating")
+rm(x)
+
+RatingPerUser = as.data.frame(RatingPerUser)
+colnames(RatingPerUser) = c("userID","avgRating","SdRating", "MaxRating","MinRating","MedRating")
+
 
 ## Statistiques sur les notes moyennes données par utilisateur
 
-summary(AvgRatingPerUser$avgRating)
-boxplot(AvgRatingPerUser$avgRating, main = "Note moyenne donnée par utilisateur")
-
-## Ecart-type des moyennes par utilisateur
-
-SdRatingPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (user in 1:nb.Users) { 
-  SdRatingPerUser[user,] = c(user,round(sd(Data.Ratings$rating[Data.Ratings$userID == user]),2))
-}
-SdRatingPerUser = as.data.frame(SdRatingPerUser)
-colnames(SdRatingPerUser) = c("userID", "SdRating")
-
-## Note maximale par utilisateur
-
-MaxRatingPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (user in 1:nb.Users) { 
-  MaxRatingPerUser[user,] = c(user,max(Data.Ratings$rating[Data.Ratings$userID == user]))
-}
-MaxRatingPerUser = as.data.frame(MaxRatingPerUser)
-colnames(MaxRatingPerUser) = c("userID", "MaxRating")
-
-## Note minimale par utilisateur
-
-MinRatingPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (user in 1:nb.Users) { 
-  MinRatingPerUser[user,] = c(user,min(Data.Ratings$rating[Data.Ratings$userID == user]))
-}
-MinRatingPerUser = as.data.frame(MinRatingPerUser)
-colnames(MinRatingPerUser) = c("userID", "MinRating")
-
-## Note médiane par utilisateur
-
-MedRatingPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (user in 1:nb.Users) { 
-  MedRatingPerUser[user,] = c(user,median(Data.Ratings$rating[Data.Ratings$userID == user]))
-}
-MedRatingPerUser = as.data.frame(MedRatingPerUser)
-colnames(MedRatingPerUser) = c("userID", "MedRating")
+summary(RatingPerUser$avgRating)
+boxplot(RatingPerUser$avgRating, main = "Note moyenne donnée par utilisateur")
 
 ## Tableau récapitulatif
 
-RecapUsers = cbind(nb.RatingsPerUser,Data.Users$age,Data.Users$gender,Data.Users$occupation,AvgRatingPerUser$avgRating,SdRatingPerUser$SdRating,
-                   MinRatingPerUser$MinRating,MedRatingPerUser$MedRating,MaxRatingPerUser$MaxRating)
+RecapUsers = cbind(nb.RatingsPerUser,Data.Users$age,Data.Users$gender,Data.Users$occupation,RatingPerUser$avgRating,RatingPerUser$SdRating,
+                   RatingPerUser$MinRating,RatingPerUser$MedRating,RatingPerUser$MaxRating)
 colnames(RecapUsers) = c("userID","nb.movie","age","gender","occupation","avg", "sd", "min", "median", "max")
-rm(MaxRatingPerUser,MinRatingPerUser,MedRatingPerUser,SdRatingPerUser,nb.RatingsPerUser,AvgRatingPerUser)
+rm(RatingPerUser,nb.RatingsPerUser)
+
+
 
 
 #5.3# LIEN ENTRE NOMBRE DE NOTES ET FILM
@@ -219,8 +205,49 @@ for (movie in 1:nb.Movies) {
 nb.RatingsPerMovie = as.data.frame(nb.RatingsPerMovie)
 colnames(nb.RatingsPerMovie) = c("movieID", "nb.Ratings")
 
+
+## Statistiques sur le nombre de notes par films
+
+summary(nb.RatingsPerMovie$nb.Ratings)
+boxplot(nb.RatingsPerMovie$nb.Ratings, main = "Nombre de notes par film")
+
+#5.4# LIEN ENTRE MOYENNE DES NOTES ET FILM
+
+## Note moyenne par film / Ecart-type des moyennes par film
+## Note maximale par film / Note minimale par film / Note médiane par film
+####### POUR NE PAS FAIRE TOURNER LA MEME BOUCLE DEUX FOIS
+
+
+RatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 6) # matrice comprenant l'ID du film 
+#                    la moyenne des notes
+#                    l'écart-type des notes
+#                    la note maximale 
+#                    la note maximale 
+#                    la mediane des notes
+
+for (movie in 1:nb.Movies) { 
+  x=Data.Ratings$rating[Data.Ratings$movieID == movie]
+  RatingPerMovie[movie,] = c(movie,round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
+}
+rm(x)
+
+RatingPerMovie = as.data.frame(RatingPerMovie)
+colnames(RatingPerMovie) = c("movieID","avgRating","SdRating", "MaxRating","MinRating","MedRating")
+
+
+## Statistiques sur les notes moyennes reçues par film
+
+summary(RatingPerMovie$avgRating)
+boxplot(RatingPerMovie$avgRating, main = "Note moyenne des films")
+
+
+
+
+
 ## Nombre d'hommes ayant vu un film donné (ainsi que la moyenne des notes attribuées)
 
+
+######################### METHODE 1 ###########################
 # Recherche du sexe 
 
 data = Data.Ratings
@@ -236,7 +263,7 @@ for (i in 1:dim(data)[1]){
   }
 }
 
-# Calcul du nombre d'hommes (le sexe vaut 2 si c'est un homme)
+##### Repartition par sexe
 
 nb.MenPerMovie = rep(0,nb.Movies)
 moy.Men = rep(0,nb.Movies)
@@ -246,91 +273,58 @@ movieID = 1:nb.Movies
 MenPerMovie = cbind(movieID,nb.MenPerMovie,moy.Men,nb.WomPerMovie,moy.Wom)
 MenPerMovie = as.data.frame(MenPerMovie)
 
-for (i in 1:nb.Movies){
+
+for (i in 1:nb.Movies)
+{
   m = 0
   w = 0
   notem = 0
   notew = 0
-  for (j in 1:nb.Ratings){
-    if (data$movieID[j] == MenPerMovie$movieID[i]){
-      if (data$v[j] == 2){
-        k = k+1
-        notem = notem + data$rating[j]
-        else
-         notew = notew + data$rating[j]
+  for (j in 1:nb.Ratings)
+  {
+    if (data$movieID[j] == MenPerMovie$movieID[i])
+    {
+      if (data$v[j] == 2)
+      {  m = m+1
+      notem = notem + data$rating[j]
+      }
+      else
+      { w=w+1
+      notew = notew + data$rating[j]  
       }
     }
   }
-  MenPerMovie$nb.MenPerMovie[i] = k 
-  MenPerMovie$moy.Men[i] = notem/k # Attention traiter à part le cas où k vaut 0
-  MenPerMovie$nb.WomPerMovie[i] = nb.RatingsPerMovie$nb.Ratings - k
-  MenPerMovie$moy.Wom[i] = notew/ (nb.RatingsPerMovie$nb.Ratings - k)
+  MenPerMovie$nb.MenPerMovie[i] = m 
+  MenPerMovie$moy.Men[i] = notem/m # Attention traiter à part le cas où k vaut 0
+  MenPerMovie$nb.WomPerMovie[i] = w
+  MenPerMovie$moy.Wom[i] = notew/w
 }
 
-## Statistiques sur le nombre de notes par films
+######################### METHODE  2 ###################################### 
 
-summary(nb.RatingsPerMovie$nb.Ratings)
-boxplot(nb.RatingsPerMovie$nb.Ratings, main = "Nombre de notes par film")
-
-#5.4# LIEN ENTRE MOYENNE DES NOTES ET FILM
-
-## Note moyenne reçue par film
-
-AvgRatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID du film et sa note moyenne
+RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
+MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
 for (movie in 1:nb.Movies) { 
-  AvgRatingPerMovie[movie,] = c(movie,round(mean(Data.Ratings$rating[Data.Ratings$movieID == movie]),2))
+  cond1=Data.Ratings$movieID == movie
+  cond2=(Data.Users$gender[Data.Ratings$userID]=="M")
+  x=Data.Ratings$rating[cond1&cond2]
+  y=Data.Ratings$rating[cond1&!(cond2)]
+  RatingPerMoviePerGender[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
+  MoyWomen[movie,]=c(movie,(mean(Data.Ratings$movieID == movie)-mean(x)*(length(x)/(length(x)+length(y))))*((length(x)+length(y))/length(y)))
 }
-AvgRatingPerMovie = as.data.frame(AvgRatingPerMovie)
-colnames(AvgRatingPerMovie) = c("movieID", "avgRating")
 
-## Statistiques sur les notes moyennes reçues par film
+RatingPerMoviePerGender = as.data.frame(RatingPerMoviePerGender)
+colnames(RatingPerMoviePerGender ) = c("movieID", "nbMen","avgRatingMen","nbWomen","avgRatingWomen")
 
-summary(AvgRatingPerMovie$avgRating)
-boxplot(AvgRatingPerMovie$avgRating, main = "Note moyenne des films")
-
-## Ecart-type des moyennes par film
-
-SdRatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID du film et l'écart-type des notes
-for (movie in 1:nb.Movies) { 
-  SdRatingPerMovie[movie,] = c(movie,round(sd(Data.Ratings$rating[Data.Ratings$movieID == movie]),2))
-}
-SdRatingPerMovie = as.data.frame(SdRatingPerMovie)
-colnames(SdRatingPerMovie) = c("movieID", "SdRating")
-
-## Note maximale par film
-
-MaxRatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID du film et la note maximale obtenue
-for (movie in 1:nb.Movies) { 
-  MaxRatingPerMovie[movie,] = c(movie,max(Data.Ratings$rating[Data.Ratings$movieID == movie]))
-}
-MaxRatingPerMovie = as.data.frame(MaxRatingPerMovie)
-colnames(MaxRatingPerMovie) = c("movieID", "MaxRating")
-
-## Note minimale par film
-
-MinRatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (movie in 1:nb.Movies) { 
-  MinRatingPerMovie[movie,] = c(movie,min(Data.Ratings$rating[Data.Ratings$movieID == movie]))
-}
-MinRatingPerMovie = as.data.frame(MinRatingPerMovie)
-colnames(MinRatingPerMovie) = c("movieID", "MinRating")
-
-## Note médiane par film
-
-MedRatingPerMovie = matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID de l'utilisateur et l'écart-type des notes
-for (movie in 1:nb.Movies) { 
-  MedRatingPerMovie[movie,] = c(movie,median(Data.Ratings$rating[Data.Ratings$movieID == movie]))
-}
-MedRatingPerMovie = as.data.frame(MedRatingPerMovie)
-colnames(MedRatingPerMovie) = c("userID", "MedRating")
+# on verifie que moyeWomen[i,2]=RatingPerMOviePerGender$avrRatingWomen[i] pour tout i
 
 ## Tableau récapitulatif
 
-RecapMovie = cbind(nb.RatingsPerMovie,AvgRatingPerMovie$avgRating,SdRatingPerMovie$SdRating,
-                   MinRatingPerMovie$MinRating,MedRatingPerMovie$MedRating,MaxRatingPerMovie$MaxRating,
+RecapMovie = cbind(nb.RatingsPerMovie,RatingPerMovie$avgRating,RatingPerMovie$SdRating,
+                   RatingPerMovie$MinRating,RatingPerMovie$MedRating,RatingPerMovie$MaxRating,
                    MenPerMovie$nb.MenPerMovie,MenPerMovie$moy.Men,MenPerMovie$nb.WomPerMovie,MenPerMovie$moy.Wom)
 colnames(RecapMovie) = c("movieID","nb.user","avg", "sd", "min", "median", "max","nbMen","avgMen","nbWom","avgWom")
-rm(MaxRatingPerMovie,MinRatingPerMovie,MedRatingPerMovie,SdRatingPerMovie,nb.RatingsPerMovie,AvgRatingPerMovie,MenPerMovie)
+rm(RatingPerMovie,nb.RatingsPerMovie,MenPerMovie)
 
 # ====================== 6.CORRELATION ENTRE LES FILMS ET LES UTILISATEURS ===============================
 
