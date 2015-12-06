@@ -16,19 +16,19 @@ summary(vect.alea)
 n=5
 
 i=1
-U1=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))
+U1=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))[,-c(4)]
 
 i=2
-U2=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))
+U2=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))[,-c(4)]
 
 i=3
-U3=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))
+U3=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))[,-c(4)]
 
 i=4
-U4=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))
+U4=subset(Ratings, (alea<quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))[,-c(4)]
 
 i=5
-U5=subset(Ratings, (alea<=quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))
+U5=subset(Ratings, (alea<=quantile(vect.alea,i/n))&(alea>=quantile(vect.alea,(i-1)/n)))[,-c(4)]
 
 #U=list()
 
