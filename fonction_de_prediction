@@ -1,30 +1,37 @@
-prediction=function(U,M)
+prediction=function(U1,U2,U3,U4,IdUser,IdMovie)
 {
-  x=Data.Ratings$Rating[userID=U,movieId=M]
-  if (!(is.null(x)))
+  x1=U1$rating[(U1$userID==IdUser)&(U1$movieID==IdMovie)]
+  x2=U2$rating[(U2$userID==IdUser)&(U2$movieID==IdMovie)]
+  x3=U3$rating[(U3$userID==IdUser)&(U3$movieID==IdMovie)]
+  x4=U4$rating[(U4$userID==IdUser)&(U4$movieID==IdMovie)]
+  m=max(length(x1),length(x2),length(x3),length(x4))
+  if (m>0)
   {
-    cat("L'utilisateur", U, " a déjà noté le film",M,"il lui a donné la note de",x,".")
+    cat("L'utilisateur", IdUser, " a déjà noté le film",IdMovie,"il lui a donné la note de",x1,x2,x3,x4)
   }
   else
   {
+    Users=rbind(U1,U2,U3,U4)
+    RM=RecapMovie(Users,DataMovie) # IL FAUT CREER CETTE FONctiON LES AMIS
+    RU=RecapUsers(Users,DataMovie)  # IL FAUT CREER CETTE FONctiON LES AMIS
     pred=rep(0,5)
     pred[1]=runif(1,1,5)
-    pred[2]=mean(Data.Ratings$rating)
-    pred[3]=mean(RecapMovie$avg)
-    pred[4]=RecapUsers$avg[userID=U]
-    pred[5]=RecapMovie$avg[movieID=M]
+    pred[2]=mean(Users$rating)
+    pred[3]=mean(RM$avg)
+    pred[4]=RU$avg[userID=IdUser]
+    pred[5]=RM$avg[movieID=IdMovie]
     pred=round(p,4)
     cat("On peut prédire la note par :")
     cat("\n")
     cat("-  Une note complétement aléatoire  :",pred[1])
     cat("\n")
-    cat("-	La moyenne de toutes les notes présentes dans la base modèle :",pred[2])
+    cat("-  La moyenne de toutes les notes présentes dans la base modèle :",pred[2])
     cat("\n")
-    cat("-	La moyenne des moyennes des films (sans pondération):",pred[3])
+    cat("-  La moyenne des moyennes des films (sans pondération):",pred[3])
     cat("\n")
     cat("-	La moyenne des notes que l'utilisateur i a donné aux autres films :",pred[4])
     cat("\n")
-    cat("-	La moyenne des notes données par tous les autres utilisateurs au film ",M,":",pred[5])
+    cat("-	La moyenne des notes données par tous les autres utilisateurs au film ",IdMovie,":",pred[5])
     cat("\n")
     return(pred)
   }
