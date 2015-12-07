@@ -1,4 +1,4 @@
-prediction=function(U1,U2,U3,U4,IdUser,IdMovie)
+prediction=function(U1,U2,U3,U4,IdUser,IdMovie,data.movies,data.users)
 {
   x1=U1$rating[(U1$userID==IdUser)&(U1$movieID==IdMovie)]
   x2=U2$rating[(U2$userID==IdUser)&(U2$movieID==IdMovie)]
@@ -12,8 +12,8 @@ prediction=function(U1,U2,U3,U4,IdUser,IdMovie)
   else
   {
     Users=rbind(U1,U2,U3,U4)
-    RM=RecapMovie(Users,DataMovie) # IL FAUT CREER CETTE FONctiON LES AMIS
-    RU=RecapUsers(Users,DataMovie)  # IL FAUT CREER CETTE FONctiON LES AMIS
+    RM=recap_movie(U1,U2,U3,U4,data.movies,data.users) # IL FAUT CREER CETTE FONctiON LES AMIS
+    RU=recap_user(U1,U2,U3,U4,data.movies,data.users)  # IL FAUT CREER CETTE FONctiON LES AMIS
     pred=rep(0,5)
     pred[1]=runif(1,1,5)
     pred[2]=mean(Users$rating)
