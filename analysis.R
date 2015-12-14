@@ -130,12 +130,7 @@ as.data.frame(summary(data.Users$zip.code))
 
 ## Répartition par genres de films
 
-vect.nb.MoviesPerGenre = matrix(0, nrow = nb.Genres, ncol = 1)
-rownames(vect.nb.MoviesPerGenre) = vect.movieGenres
-for (genre in 1:nb.Genres){
-  vect.nb.MoviesPerGenre[genre] = sum(data.Movies[vect.movieGenres[genre]])
-}
-vect.nb.MoviesPerGenre
+vect.nb.MoviesPerGenre = as.matrix(apply(data.Movies[5:23],2, sum, na.rm = TRUE))
 boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
 #need diagramme en baton
 
@@ -145,11 +140,7 @@ boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
 
 ## Répartition du nombre de films notés par utilisateur
 
-vect.nb.RatingsPerUser = matrix(0, nrow = nb.Users, ncol = 2) #matrice comprenant l'ID de l'utilisateut et son nombre de films notés
-for (user in 1:nb.Users) { 
-  vect.nb.RatingsPerUser[user,] = c(user,sum(data.Ratings$userID == user))
-}
-vect.nb.RatingsPerUser = as.data.frame(vect.nb.RatingsPerUser)
+vect.nb.RatingsPerUser = as.data.frame(cbind(seq(1,nb.Users), tabulate(bin=data.Ratings$userID, nbins = nb.Users))) 
 colnames(vect.nb.RatingsPerUser) = c("userID", "nb.Ratings")
 
 ## Statistiques sur le nombre de films notés par utilisateur
@@ -189,11 +180,7 @@ boxplot(recap.Users$mean, main = "Note moyenne donnée par utilisateur")
 
 ## Répartition du nombre de notes par film
 
-vect.nb.RatingsPerMovie =  matrix(0, nrow = nb.Movies, ncol = 2) #matrice comprenant l'ID du film et som nombre de notes reçues
-for (movie in 1:nb.Movies) { 
-  vect.nb.RatingsPerMovie[movie,] = c(movie,sum(data.Ratings$movieID == movie))
-}
-vect.nb.RatingsPerMovie = as.data.frame(vect.nb.RatingsPerMovie)
+vect.nb.RatingsPerMovie = as.data.frame(cbind(seq(1,nb.Movies), tabulate(bin=data.Ratings$movieID, nbins = nb.Movies))) 
 colnames(vect.nb.RatingsPerMovie) = c("movieID", "nb.Ratings")
 
 ## Statistiques sur le nombre de notes par films
@@ -238,9 +225,9 @@ boxplot(recap.Movies$mean, main = "Note moyenne des films")
 
 RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
+cond2=(data.Users$gender[data.Ratings$userID]=="M")
 for (movie in 1:nb.Movies) { 
   cond1=data.Ratings$movieID == movie
-  cond2=(data.Users$gender[data.Ratings$userID]=="M")
   x=data.Ratings$rating[cond1&cond2]
   y=data.Ratings$rating[cond1&!(cond2)]
   RatingPerMoviePerGender[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
