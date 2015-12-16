@@ -1,4 +1,4 @@
-prediction=function(RU1,RM1,userID,movieID,data.Movies,data.Users)
+prediction=function(RU1,RM1,userID,movieID)
 {
   X=RU1$rating[(RU1$userID==userID)&(RU1$movieID==movieID)]
   if (length(X)>0)
@@ -9,7 +9,7 @@ prediction=function(RU1,RM1,userID,movieID,data.Movies,data.Users)
   {
     pred=rep(0,5)
     pred[1]=runif(1,1,5)
-    pred[2]=mean(data.Users$rating,na.rm=T)
+    pred[2]=mean(RU1$rating,na.rm=T)
     pred[3]=mean(RM1$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas été noté ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
     pred[4]=RU1$mean[userID==userID]
     pred[5]=RM1$mean[movieID==movieID]
