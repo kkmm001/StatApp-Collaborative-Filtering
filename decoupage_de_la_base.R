@@ -11,7 +11,13 @@ data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors =
 colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code") 
 
 data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL")) 
-data.Movies[4] = NULL 
+data.Movies[4] = NULL
+vect.MovieGenres = c("unknown", "action", "adventure", "animation", "children's", "comedy",  
+                      "crime", "documentary", "drama", "fantasy", "film-noir", "horror",  
+                      "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western") 
+nb.Genres = length(vect.MovieGenres) 
+colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.MovieGenres) 
+
 
 
 set.seed(1000) # avant de genere le vecteur aleatoire toujours effectuer cette commende comme ca on a tyoujours le meme resulatt
