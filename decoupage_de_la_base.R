@@ -8,7 +8,6 @@ data.Ratings = read.table(file=file.choose(),header=F,colClasses = c(V4 = "NULL"
 colnames(data.Ratings) = c("userID", "movieID", "rating")
 
 data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors = TRUE) 
-data.Users = read.csv("../../Data/ml-100k/u.user", header = FALSE, sep='|'
 colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code") 
 
 data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL")) 
