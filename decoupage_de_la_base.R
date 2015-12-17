@@ -25,34 +25,36 @@ vect.Alea=runif(nrow(data.Ratings))
 data.Ratings=cbind(data.Ratings,vect.Alea)
 colnames(data.Ratings) = c("userID", "movieID", "rating","alea")
 
-
 n=5
 
-i=1
-U1=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+#i=1
+#U1=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-i=2
-U2=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+#i=2
+#U2=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-i=3
-U3=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+#i=3
+#U3=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-i=4
-U4=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+#i=4
+#U4=subset(data.Ratings, (alea<quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-i=5
-U5=subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
-
-rm(data.Ratings,vect.Alea)
+#i=5
+#U5=subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
 #Penser à sauvegarder les bases U1, U2, U3, U4 et U5
 
-#U=list()
+U<-list()
+for(i in 1:n)
+{
+  U[[i]]<-subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+}
+rm(data.Ratings,vect.Alea)
 #for(i in 1:n)
 #{
 #  U[i]=subset(Ratings, alea<quantile(vect.Alea,i/n),alea>quantile(vect.Alea,(i-1)/n))
 #}
-# r=cbind(Ratings,new1 = mapply(function(x) (x<quantile(vect.Alea,i/n))*(x>quantile(vect.Alea,(i-1)/n)), Ratings$alea) )
+ r=cbind(Ratings,new1 = mapply(function(x) (x<quantile(vect.Alea,i/n))*(x>quantile(vect.Alea,(i-1)/n)), Ratings$alea) )
 
 RM5=recap_Movies(U1,U2,U3,U4,data.Movies,data.Users)
 RU5=recap_Users(U1,U2,U3,U4,data.Movies,data.Users)
