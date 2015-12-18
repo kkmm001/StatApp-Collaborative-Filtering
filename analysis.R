@@ -3,7 +3,7 @@
 #    Sujet : Filtrage collaborative
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
-#
+#ggyfhjfhjghjg
 #       Fichier : analysis.R
 #       Description : analyses descriptives sur la base des notes, des utilisateurs et des films
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
