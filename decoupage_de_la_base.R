@@ -11,7 +11,7 @@ data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors =
 colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code") 
 
 data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL")) 
-data.Movies[4] = NULL
+#data.Movies[4] = NULL
 vect.MovieGenres = c("unknown", "action", "adventure", "animation", "children's", "comedy",  
                       "crime", "documentary", "drama", "fantasy", "film-noir", "horror",  
                       "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western") 
@@ -42,7 +42,7 @@ n=5
 #i=5
 #U5=subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-#Penser à sauvegarder les bases U1, U2, U3, U4 et U5
+#Penser Ã sauvegarder les bases U1, U2, U3, U4 et U5
 
 U<-list()
 for(i in 1:n)
@@ -54,15 +54,23 @@ rm(data.Ratings,vect.Alea)
 #{
 #  U[i]=subset(Ratings, alea<quantile(vect.Alea,i/n),alea>quantile(vect.Alea,(i-1)/n))
 #}
- r=cbind(Ratings,new1 = mapply(function(x) (x<quantile(vect.Alea,i/n))*(x>quantile(vect.Alea,(i-1)/n)), Ratings$alea) )
+# r=cbind(Ratings,new1 = mapply(function(x) (x<quantile(vect.Alea,i/n))*(x>quantile(vect.Alea,(i-1)/n)), Ratings$alea) )
 
-RM5=recap_Movies(U1,U2,U3,U4,data.Movies,data.Users)
-RU5=recap_Users(U1,U2,U3,U4,data.Movies,data.Users)
-RM4=recap_Movies(U1,U2,U3,U5,data.Movies,data.Users)
-RU4=recap_Users(U1,U2,U3,U5,data.Movies,data.Users)
-RM3=recap_Movies(U1,U2,U4,U5,data.Movies,data.Users)
-RU3=recap_Users(U1,U2,U4,U5,data.Movies,data.Users)
-RM2=recap_Movies(U1,U3,U4,U5,data.Movies,data.Users)
-RU2=recap_Users(U1,U3,U4,U5,data.Movies,data.Users)
-RM1=recap_Movies(U2,U3,U4,U5,data.Movies,data.Users)
-RU1=recap_Users(U2,U3,U4,U5,data.Movies,data.Users)
+
+TrainingU <- do.call("rbind",U[c(1:4)])
+TestU <- U[[5]]
+
+RM5=recap_Movies(TrainingU,data.Movies,data.Users)
+RU5=recap_Users(TrainingU,data.Movies,data.Users)
+
+resultPrediction = prediction(RM5,RU5,210, 40) #210 et 40 se place dans RU5. On le recupère pour tester.
+
+
+#RM4=recap_Movies(U1,U2,U3,U5,data.Movies,data.Users)
+#RU4=recap_Users(U1,U2,U3,U5,data.Movies,data.Users)
+#RM3=recap_Movies(U1,U2,U4,U5,data.Movies,data.Users)
+#RU3=recap_Users(U1,U2,U4,U5,data.Movies,data.Users)
+#RM2=recap_Movies(U1,U3,U4,U5,data.Movies,data.Users)
+#RU2=recap_Users(U1,U3,U4,U5,data.Movies,data.Users)
+#RM1=recap_Movies(U2,U3,U4,U5,data.Movies,data.Users)
+#RU1=recap_Users(U2,U3,U4,U5,data.Movies,data.Users)
