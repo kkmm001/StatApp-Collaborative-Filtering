@@ -1,32 +1,32 @@
-recap_Movies=function(U1,U2,U3,U4,data.Movies,data.Users)
+recap_Movies=function(TrainingU,data.Movies,data.Users)
 {
-  U=rbind(U1,U2,U3,U4)
-  nb.Movies = dim(data.Momedvies)[1]
+  U=TrainingU
+  nb.Movies = dim(data.Movies)[1]
   
   stat.RatingPerMovie= as.data.frame(matrix(0, nrow = nb.Movies, ncol = 7) )
   colnames(stat.RatingPerMovie) = c("movieID","nb.Ratings","mean","sd", "max","min","med")
   # matrice comprenant l'ID du film 
-  #                    le nombre d'utilisateurs ayant notÃ© le film
+  #                    le nombre d'utilisateurs ayant notÃÂ© le film
   #                    la moyenne des notes
-  #                    l'Ã©cart-type des notes
+  #                    l'ÃÂ©cart-type des notes
   #                    la note maximale 
   #                    la note minimale 
   #                    la mediane des notes
   
   
-  ## Nombre d'hommes et de femmes ayant vu un film donnÃ© (ainsi que la moyenne des notes attribuÃ©es)
+  ## Nombre d'hommes et de femmes ayant vu un film donnÃÂ© (ainsi que la moyenne des notes attribuÃÂ©es)
   
   stat.RatingsPerMoviePerSex =as.data.frame( matrix(0, nrow = nb.Movies, ncol = 5) )#matrice comprenant l'ID du film 
   colnames( stat.RatingsPerMoviePerSex) = c("movieID", "nb.Men","meanMen","nb.Women","meanWomen")
   # mean.women=matrix(0, nrow = nb.Movies, ncol = 2) 
   
+  cond2=(data.Users$gender[U$userID]=="M")
   for (movie in 1:nb.Movies)
   { 
     cond1=U$movieID == movie
     x=U$rating[cond1]
     stat.RatingPerMovie[movie,] = c(movie,length(x),round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
     
-    cond2=(data.Users$sex[U$userID]=="M")
     x=U$rating[cond1&cond2]
     y=U$rating[cond1&!(cond2)]
     stat.RatingsPerMoviePerSex[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
