@@ -134,6 +134,7 @@ rm(dst,dstM,dstF)
 
 as.data.frame(summary(data.Users$occupation))
 #remarque : ces catégories professionnelles sont etranges : ce n'est pas une categorisation CSP traditionnelle.
+
 ## Proportions dans les codes postales
 
 as.data.frame(summary(data.Users$zip.code))
@@ -155,18 +156,19 @@ boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
 
 vect.nb.RatingsPerUser = as.data.frame(cbind(seq(1,nb.Users), tabulate(bin=data.Ratings$userID, nbins = nb.Users))) 
 colnames(vect.nb.RatingsPerUser) = c("userID", "nb.Ratings")
+barplot(sort(vect.nb.MoviesPerGenre),main = "nombre de films par genre",names.arg = toupper(rownames(vect.nb.MoviesPerGenre)))
 
 ## Statistiques sur le nombre de films notees par utilisateur
 
 summary(vect.nb.RatingsPerUser$nb.Ratings)
-boxplot(vect.nb.RatingsPerUser$nb.Ratings, main = "Nombre de films notes par utilisateur")
-#need diagramme en baton
+plot(table(vect.nb.RatingsPerUser$nb.Ratings), main = "Nombre de films notés par utilisateur", lwd = 5, lend = "square")
+#Je ne trouve pas ce graphique interessant
 
 #5.2# LIEN ENTRE MOYENNE DES NOTES ET UTILISATEUR
 
 stat.RatingsPerUser = matrix(0, nrow = nb.Users, ncol = 6) # matrice comprenant l'ID de l'utilisateur 
 #                    la moyenne des notes
-#                    l'Ã©cart-type des notes
+#                    l'écart-type des notes
 #                    la note maximale 
 #                    la note maximale 
 #                    la mediane des notes
@@ -178,16 +180,16 @@ for (user in 1:nb.Users) {
 }
 rm(x)
 
-## Tableau rÃ©capitulatif
+## Tableau récapitulatif
 recap.Users = merge(vect.nb.RatingsPerUser, stat.RatingsPerUser, by.x = "userID", by.y = "userID")
 recap.Users = merge(recap.Users, data.Users, by.x = "userID", by.y = "userID")
 rm(vect.nb.RatingsPerUser)
 rm(stat.RatingsPerUser)
 
-## Statistiques sur les notes moyennes donnÃ©es par utilisateur
+## Statistiques sur les notes moyennes données par utilisateur
 
 summary(recap.Users$mean)
-boxplot(recap.Users$mean, main = "Note moyenne donnÃ©e par utilisateur")
+boxplot(recap.Users$mean, main = "Note moyenne donnée par utilisateur")
 
 #5.3# LIEN ENTRE NOMBRE DE NOTES ET FILM
 
