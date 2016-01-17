@@ -100,8 +100,8 @@ if (nb.Movies == dim(data.Movies)[1]){
 ## Statistiques des notes
 
 cat("La moyenne des", nb.Ratings, "notes est de", round(mean(data.Ratings$rating),2), "; l'ecart-type est de", round(sd(data.Ratings$rating),2), ".")
-boxplot(data.Ratings$rating, main = "Notes discretes attribuÃ©es aux films") #TO DO : remplacer par un diagramme en bÃ¢ton
-#need histogramme
+plot(table(data.Ratings$rating), main = paste("Distribution des",nb.Ratings," notes"),xlab = "Notes", ylab = "Nombre de notes",lwd = 5, lend = "square") 
+table(data.Ratings$rating)
 
 #4.2# SUR LES UTILISATEURS
 
