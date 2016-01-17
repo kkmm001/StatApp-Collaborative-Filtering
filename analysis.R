@@ -108,7 +108,6 @@ table(data.Ratings$rating)
 ## Age
 
 cat("La moyenne des ages est", round(mean(data.Users$age),2), "ans avec un ecart-type de", round(sd(data.Users$age),2), "ans.")
-# histogramme des ages
 
 ## Proportion homme/femme
 
@@ -117,10 +116,24 @@ nb.Women = sum(data.Users$gender == "F")
 cat("La base de donnees est composee de", nb.Men, "hommes, soit", round(100*nb.Men/nb.Users,2), 
     "% et", nb.Women, "femmes, soit" ,round(100*nb.Women/nb.Users,2),"% .")
 
+# Histogramme des âges
+par(lend="butt")
+dst = density(data.Users$age, na.rm = TRUE)
+dstM = density(data.Users$age[data.Users$gender == "M"], na.rm = TRUE)
+dstF = density(data.Users$age[data.Users$gender == "F"], na.rm = TRUE)
+hist(data.Users$age, col = grey(0.9), border = grey(0.8),main = paste("Age des votants"),
+     xlab = "Age [ans]",proba = TRUE, ylim = c(0, max(dst$y)))
+lines(dstM$x, nb.Men/nb.Users*dstM$y, lwd = 3, col = "darkblue")
+lines(dstF$x, nb.Women/nb.Users*dstF$y, lwd = 3, lty = 2, col = "darkred")
+lines(dst$x, dst$y)
+legend("topright", inset = 0.01, legend = c("Femmes", "Hommes","Total"), col = c("darkred","darkblue","black"),
+       lty = c(2, 1,1), lwd = 2, pt.cex = 2)
+rm(dst,dstM,dstF)
+
 ## Proportions dans les metiers
 
 as.data.frame(summary(data.Users$occupation))
-#remarque : ces catÃ©gories professionnelles sont etranges : ce n'est pas une categorisation CSP traditionnelle.
+#remarque : ces catégories professionnelles sont etranges : ce n'est pas une categorisation CSP traditionnelle.
 ## Proportions dans les codes postales
 
 as.data.frame(summary(data.Users$zip.code))
