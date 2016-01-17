@@ -1,4 +1,4 @@
-# DECOUPAGE DE LA BASE EN 5 BASES DE MEME TAILLE 
+# DECOUPAGE DE LA BASE EN 5 SOUS-BASES DE MEME TAILLE 
 
 # Clean up
 rm(list=ls()) 
@@ -20,7 +20,7 @@ colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.MovieGenre
 
 
 
-set.seed(1000) # avant de genere le vecteur aleatoire toujours effectuer cette commende comme ca on a tyoujours le meme resulatt
+set.seed(1000) # avant de genere le vecteur aleatoire toujours effectuer cette commande comme ça on a toujours le meme resulat
 vect.Alea=runif(nrow(data.Ratings))
 data.Ratings=cbind(data.Ratings,vect.Alea)
 colnames(data.Ratings) = c("userID", "movieID", "rating","alea")
@@ -42,12 +42,12 @@ n=5
 #i=5
 #U5=subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 
-#Penser Ã sauvegarder les bases U1, U2, U3, U4 et U5
+#Penser à sauvegarder les bases U1, U2, U3, U4 et U5
 
-U<-list()
+U = list()
 for(i in 1:n)
 {
-  U[[i]]<-subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+  U[[i]] = subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 }
 rm(data.Ratings,vect.Alea)
 #for(i in 1:n)
@@ -57,8 +57,8 @@ rm(data.Ratings,vect.Alea)
 # r=cbind(Ratings,new1 = mapply(function(x) (x<quantile(vect.Alea,i/n))*(x>quantile(vect.Alea,(i-1)/n)), Ratings$alea) )
 
 
-TrainingU <- do.call("rbind",U[c(1:4)])
-TestU <- U[[5]]
+TrainingU = do.call("rbind",U[c(1:4)])
+TestU = U[[5]]
 
 RM5=recap_Movies(TrainingU,data.Movies,data.Users)
 RU5=recap_Users(TrainingU,data.Movies,data.Users)
