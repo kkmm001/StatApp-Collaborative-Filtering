@@ -379,81 +379,81 @@ for (movie in 1:nb.WorstMovies){
 
 #7.3# SUR LES UTILISATEURS (PAR RAPPORT AU NOMBRE DE NOTES DONNEES)
 
-## Utilisateurs ayant le plus votÃ©
+## Utilisateurs ayant le plus voté
 
 nb.MostVotedUsers = 10
 order.MostVotedUsers = order(recap.Users$nb.Ratings, decreasing =TRUE)
-cat("Les", nb.MostVotedUsers, "utilisateurs ayant notÃ©s le plus de films : ")
+cat("Les", nb.MostVotedUsers, "utilisateurs ayant noté le plus de films : ")
 for (user in 1:nb.MostVotedUsers){
   id.order = order.MostVotedUsers[user]
-  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a votÃ©", 
+  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a voté", 
       recap.Users$nb.Ratings[id.order], "fois.")
   cat("\n")
 }
 
-## Utilisateurs ayant le moins votÃ©
+## Utilisateurs ayant le moins voté
 
 nb.LessVotedUsers = 15
 order.LessVotedUsers = order(recap.Users$nb.Ratings, decreasing =FALSE)
-cat("Les", nb.LessVotedUsers, "utilisateurs ayant notÃ©s le moins de films : ")
+cat("Les", nb.LessVotedUsers, "utilisateurs ayant noté le moins de films : ")
 for (user in 1:nb.LessVotedUsers){
   id.order = order.LessVotedUsers[user]
-  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "n'a votÃ© que", 
+  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "n'a voté que", 
       recap.Users$nb.Ratings[id.order], "fois.")
   cat("\n")
 }
 
-## Utilisateurs n'ayant votÃ© que 20 fois
+## Utilisateurs n'ayant voté que 20 fois
 
 cat("Il y a", sum(recap.Users$nb.Ratings == 20), "utilisateurs qui n'ont votÃ© que 20 fois.")
 
-## Utilisateurs ayant votÃ© moins de xxx fois
+## Utilisateurs ayant voté moins de xxx fois
 nbLimit.RatingsForUser = 75
-cat("Il y a", sum(recap.Users$nb.Ratings <= nbLimit.RatingsForUser), "utilisateurs qui ont votÃ© moins de", 
+cat("Il y a", sum(recap.Users$nb.Ratings <= nbLimit.RatingsForUser), "utilisateurs qui ont voté moins de", 
     nbLimit.RatingsForUser, "fois.")
 
 #7.4# SUR LES UTILISATEURS (PAR RAPPORT A LA MOYENNE DES NOTES)
 
-## Utilisateurs ayant donnÃ©s les plus hautes notes
+## Utilisateurs ayant donné les plus hautes notes
 
 nb.NicestUsers = 20
 order.NicestUsers <- order(recap.Users$mean, decreasing = TRUE)
 cat("Les", nb.NicestUsers, "utilisateurs les plus gentils : ")
 for (user in 1:nb.NicestUsers){
   id.order = order.NicestUsers[user]
-  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a une donnÃ© en moyenne une note de", 
+  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a donné en moyenne une note de", 
       recap.Users$mean[id.order], "pour", recap.Users$nb.Ratings[id.order], "notes.")
   cat("\n")
 }
 
-## Utilisateurs ayant donnÃ© les meilleurs notes et dÃ©passant un seuil de participation
+## Utilisateurs ayant donné les meilleurs notes et dépassant un seuil de participation
 
-cat("Les", nb.NicestUsers, "utilisateurs ayant donnÃ©es les meilleurs notes et ayant votÃ© plus de", nbLimit.RatingsForUser, "fois: ")
+cat("Les", nb.NicestUsers, "utilisateurs ayant donné les meilleurs notes et ayant voté plus de", nbLimit.RatingsForUser, "fois: ")
 recap.UserUppernbLimit.Ratings = recap.Users[recap.Users$nb.Ratings >= nbLimit.RatingsForUser,]
 order.NicestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$mean, decreasing = TRUE)
 for (user in 1:nb.NicestUsers){
   id.order = order.NicestUsersUppernbLimit.Ratings[user]
   cat("L'utilisateur d'ID", recap.UserUppernbLimit.Ratings$userID[id.order], 
-      "a donnÃ© en moyenne une note de", recap.UserUppernbLimit.Ratings$mean[id.order], 
+      "a donné en moyenne une note de", recap.UserUppernbLimit.Ratings$mean[id.order], 
       "pour", recap.UserUppernbLimit.Ratings$nb.Ratings[id.order], "notes.")
   cat("\n")
 }
 
-## Utilisateurs ayant donnÃ©s les plus faibles notes
+## Utilisateurs ayant donné les plus faibles notes
 
 nb.MeanestUsers = 20
 order.MeanestUsers = order(recap.Users$mean, decreasing = FALSE)
-cat("Les", nb.MeanestUsers, "utilisateurs les plus mÃ©chants : ")
+cat("Les", nb.MeanestUsers, "utilisateurs les plus sévères : ")
 for (user in 1:nb.MeanestUsers){
   id.order = order.MeanestUsers[user]
-  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a donnÃ© en moyenne une note de", 
+  cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a donné en moyenne une note de", 
       recap.Users$mean[id.order], "pour", recap.Users$nb.Ratings[id.order], "notes.")
   cat("\n")
 }
 
-## Utilisateurs ayant donnÃ© les pires notes et dÃ©passant un seuil de participation
+## Utilisateurs ayant donné les pires notes et dépassant un seuil de participation
 
-cat("Les", nb.MeanestUsers, "utilisateurs ayant donnÃ©es les pires notes et ayant votÃ© plus de", nbLimit.RatingsForUser, "fois: ")
+cat("Les", nb.MeanestUsers, "utilisateurs ayant donné les pires notes et ayant voté plus de", nbLimit.RatingsForUser, "fois: ")
 recap.UserUppernbLimit.Ratings = recap.Users[recap.Users$nb.Ratings >= nbLimit.RatingsForUser,]
 order.MeanestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$mean, decreasing = FALSE)
 for (user in 1:nb.MeanestUsers){
@@ -470,7 +470,7 @@ for (user in 1:nb.MeanestUsers){
 
 # ====================================== 9.ETUDE PAR SEXE =================================================
 
-## CrÃ©ation des bases par sexe
+## Création des bases par sexe
 
 data.MaleUsers = data.Users[data.Users$gender == "M" ,]
 data.FemaleUsers = data.Users[data.Users$gender == "F" ,]
@@ -478,7 +478,7 @@ data.FemaleUsers = data.Users[data.Users$gender == "F" ,]
 recap.MaleUser = recap.Users[recap.Users$userID %in% data.MaleUsers$userID,]
 recap.FemaleUser = recap.Users[recap.Users$userID %in% data.FemaleUsers$userID,]
 
-## Statistiques sur la rÃ©partion des notes par sexe
+## Statistiques sur la répartion des notes par sexe
 
 summary(recap.MaleUser)
 summary(recap.FemaleUser)
