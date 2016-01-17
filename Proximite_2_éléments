@@ -8,7 +8,7 @@
 ### 1.1. Similarité entre deux utilisateurs du point de vue des films qu'ils ont en commun
 ## Utilisation du coefficient de correlation de pearson
 
-n = length(data.Ratings)
+n = 100000
 k = 0 # Nombre de films en commun
 X = 0 # Vecteur des Notes du premier individu
 Y = 0 # Vecteur des Notes du deuxième individu
