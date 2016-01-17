@@ -11,9 +11,9 @@ recap_Users=function(U1,U2,U3,U4,data.Movies,data.Users)
   colnames(stat.RatingsPerUser) = c("userID", "nb.Ratings","mean", "sd", "max", "min", "med")
   
   # matrice comprenant l'ID de l'utilisateur 
-  #                    le nombre de films notÃ©s par utilisateur
+  #                    le nombre de films notés par utilisateur
   #                    la moyenne des notes
-  #                    l'Ã©cart-type des notes
+  #                    l'écart-type des notes
   #                    la note maximale 
   #                    la note maximale 
   #                    la mede des notes
@@ -26,7 +26,7 @@ recap_Users=function(U1,U2,U3,U4,data.Movies,data.Users)
   rm(x,user,nb.Users,U)
                               
   recap.Users = cbind( data.Users , stat.RatingsPerUser$nb.Ratings , stat.RatingsPerUser$mean ,stat.RatingsPerUser$sd , stat.RatingsPerUser$max , stat.RatingsPerUser$min , stat.RatingsPerUser$med )
-  colnames(recap.Users) = c("userID", "age", "sex", "occupation", "zip.code","nb.Ratings","mean", "sd", "max", "min", "med")
+  colnames(recap.Users) = c("userID", "age", "sexe", "occupation", "zip.code","nb.Ratings","mean", "sd", "max", "min", "med")
   recap.Users = recap.Users[ ,-5]
   rm(stat.RatingsPerUser) 
   return(recap.Users)
