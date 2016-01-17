@@ -226,17 +226,18 @@ rm(x)
 stat.RatingsPerMovie = as.data.frame(stat.RatingsPerMovie)
 
 ## Tableau récapitulatif
+
 recap.Movies = merge(vect.nb.RatingsPerMovie, stat.RatingsPerMovie, by.x = "movieID", by.y = "movieID")
 recap.Movies = merge(recap.Movies, data.Movies, by.x = "movieID", by.y = "movieID")
 rm(vect.nb.RatingsPerMovie)
 rm(stat.RatingsPerMovie)
 
-## Statistiques sur les notes moyennes reÃ§ues par film
+## Statistiques sur les notes moyennes reçues par film
 
 summary(recap.Movies$mean)
 boxplot(recap.Movies$mean, main = "Note moyenne des films")
 
-## Nombre d'hommes et de femmes ayant vu un film donnÃ© (ainsi que la moyenne des notes attribuÃ©es)
+## Nombre d'hommes et de femmes ayant vu un film donné (ainsi que la moyenne des notes attribuÃ©es)
 
 RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
@@ -256,17 +257,17 @@ colnames(RatingPerMoviePerGender ) = c("movieID", "nbMen","avgRatingMen","nbWome
 
 # ====================== 6.CORRELATION ENTRE LES FILMS ET LES UTILISATEURS ===============================
 
-## CorrÃ©lation entre note des films et nombre de visionnage de ce film (normalement oui, et positive)
+## Corrélation entre note des films et nombre de visionnage de ce film (normalement oui, et positive)
 
 plot(recap.Movies$nb.Ratings, recap.Movies$mean, 
      main = "Lien entre nombre de visionnage et note moyenne par film", 
      xlab = "nombre de visionnage", 
      ylab = "note moyenne")
 
-## CorrÃ©lation entre note attribuÃ©e et nombre de films vus (pas nÃ©cessairement sauf les rageux et les floodeurs)
+## Corrélation entre note attribuée et nombre de films vus (pas nécessairement sauf les rageux et les floodeurs)
 #recap.Users = merge(vect.nb.RatingsPerUser,AvgRatingPerUser, by.x = "userID", bu.y = "userID")
 plot(recap.Users$nb.Ratings, recap.Users$mean, 
-     main = "Lien entre nombre de films notÃ©s et note moyenne par utilisateur", 
+     main = "Lien entre nombre de films notés et note moyenne par utilisateur", 
      xlab = "nombre de films notes", 
      ylab = "note moyenne")
 
