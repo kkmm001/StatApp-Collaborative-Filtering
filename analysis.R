@@ -193,7 +193,7 @@ boxplot(recap.Users$mean, main = "Note moyenne donnée par utilisateur")
 
 #5.3# LIEN ENTRE NOMBRE DE NOTES ET FILM
 
-## RÃ©partition du nombre de notes par film
+## Répartition du nombre de notes par film
 
 vect.nb.RatingsPerMovie = as.data.frame(cbind(seq(1,nb.Movies), tabulate(bin=data.Ratings$movieID, nbins = nb.Movies))) 
 colnames(vect.nb.RatingsPerMovie) = c("movieID", "nb.Ratings")
@@ -206,12 +206,12 @@ boxplot(vect.nb.RatingsPerMovie$nb.Ratings, main = "Nombre de notes par film")
 #5.4# LIEN ENTRE MOYENNE DES NOTES ET FILM
 
 ## Note moyenne par film / Ecart-type des notes par film
-## Note maximale par film / Note minimale par film / Note mÃ©diane par film
+## Note maximale par film / Note minimale par film / Note médiane par film
 ####### POUR NE PAS FAIRE TOURNER LA MEME BOUCLE DEUX FOIS
 
 stat.RatingsPerMovie = matrix(0, nrow = nb.Movies, ncol = 6) # matrice comprenant l'ID du film 
 #                    la moyenne des notes
-#                    l'Ã©cart-type des notes
+#                    l'écart-type des notes
 #                    la note maximale 
 #                    la note maximale 
 #                    la mediane des notes
@@ -225,7 +225,7 @@ rm(x)
 
 stat.RatingsPerMovie = as.data.frame(stat.RatingsPerMovie)
 
-## Tableau rÃ©capitulatif
+## Tableau récapitulatif
 recap.Movies = merge(vect.nb.RatingsPerMovie, stat.RatingsPerMovie, by.x = "movieID", by.y = "movieID")
 recap.Movies = merge(recap.Movies, data.Movies, by.x = "movieID", by.y = "movieID")
 rm(vect.nb.RatingsPerMovie)
