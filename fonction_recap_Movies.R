@@ -8,13 +8,13 @@ recap_Movies=function(TrainingU,data.Movies,data.Users)
   # matrice comprenant l'ID du film 
   #                    le nombre d'utilisateurs ayant notÃÂ© le film
   #                    la moyenne des notes
-  #                    l'ÃÂ©cart-type des notes
+  #                    l'écart-type des notes
   #                    la note maximale 
   #                    la note minimale 
   #                    la mediane des notes
   
   
-  ## Nombre d'hommes et de femmes ayant vu un film donnÃÂ© (ainsi que la moyenne des notes attribuÃÂ©es)
+  ## Nombre d'hommes et de femmes ayant vu un film donné (ainsi que la moyenne des notes attribuées)
   
   stat.RatingsPerMoviePerSex =as.data.frame( matrix(0, nrow = nb.Movies, ncol = 5) )#matrice comprenant l'ID du film 
   colnames( stat.RatingsPerMoviePerSex) = c("movieID", "nb.Men","meanMen","nb.Women","meanWomen")
