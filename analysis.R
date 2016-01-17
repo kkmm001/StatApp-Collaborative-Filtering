@@ -275,7 +275,7 @@ plot(recap.Users$nb.Ratings, recap.Users$mean,
 
 #7.1# SUR LES FILMS (PAR RAPPORT AUX NOMBRE DE NOTES)
 
-## Films les plus notÃ©s
+## Films les plus notés
 
 nb.MostRatedMovies = 25
 order.MostRatedMovies = order(recap.Movies$nb.Ratings, decreasing =TRUE)
@@ -283,12 +283,12 @@ cat("Les", nb.MostRatedMovies, "films ayant recu le plus de notes : ")
 for (movie in 1:nb.MostRatedMovies){
   id.order = order.MostRatedMovies[movie]
   cat("Le film d'ID", recap.Movies$movieID[id.order], ",", 
-      as.character(data.Movies$title[id.order]), ", a recu", 
+      as.character(data.Movies$title[id.order]), ", a reçu", 
       recap.Movies$nb.Ratings[id.order], "notes.")
   cat("\n")
 }
 
-## Films les moins notÃ©s
+## Films les moins notés
 
 nb.LessRatedMovies = 12
 order.LessRatedMovies = order(recap.Movies$nb.Ratings, decreasing =FALSE)
@@ -296,19 +296,19 @@ cat("Les", nb.LessRatedMovies, "films ayant recus le moins de notes : ")
 for (movie in 1:nb.LessRatedMovies){
   id.order = order.LessRatedMovies[movie]
   cat("Le film d'ID", recap.Movies$movieID[id.order], ",", 
-      as.character(data.Movies$title[id.order]), "a reÃ§u", 
+      as.character(data.Movies$title[id.order]), "a reçu", 
       recap.Movies$nb.Ratings[id.order], "note(s).")
   cat("\n")
 }
 
-## Films n'ayant reÃ§u qu'une seule note
+## Films n'ayant reçu qu'une seule note
 
-cat("Il y a", sum(recap.Movies$nb.Ratings == 1), "films qui n'ont reÃ§u qu'une seule note.")
+cat("Il y a", sum(recap.Movies$nb.Ratings == 1), "films qui n'ont reçu qu'une seule note.")
 
-## Films ayant reÃ§u moins de xxx votes
+## Films ayant reçu moins de xxx votes
 
 nbLimit.RatingsForMovie = 10
-cat("Il y a", sum(recap.Movies$nb.Ratings <= nbLimit.RatingsForMovie), "films qui ont reÃ§u moins de", 
+cat("Il y a", sum(recap.Movies$nb.Ratings <= nbLimit.RatingsForMovie), "films qui ont reçu moins de", 
     nbLimit.RatingsForMovie, "votes.")
 
 #7.2# SUR LES FILMS (PAR RAPPORT A LA MOYENNE DES NOTES)
@@ -331,9 +331,9 @@ for (movie in 1:nb.BestMovies){
 
 cat("Il y a", sum(recap.Movies$mean == 5), "films qui ont reÃ§u une note moyenne de 5.")
 
-## Films ayant les meilleurs notes et dÃ©passant un seuil de visionnage
+## Films ayant les meilleurs notes et dépassant un seuil de visionnage
 
-cat("Les", nb.BestMovies, "meilleurs films ayant reÃ§u plus de", nbLimit.RatingsForMovie, "notes: ")
+cat("Les", nb.BestMovies, "meilleurs films ayant reçu plus de", nbLimit.RatingsForMovie, "notes: ")
 recap.MovieUppernbLimit.Ratings = recap.Movies[recap.Movies$nb.Ratings >= nbLimit.RatingsForMovie,]
 order.BestMoviesUppernbLimit.Ratings = order(recap.MovieUppernbLimit.Ratings$mean, decreasing = TRUE)
 for (movie in 1:nb.BestMovies){
@@ -348,7 +348,7 @@ for (movie in 1:nb.BestMovies){
 ## Films ayant les pires notes
 
 nb.WorstMovies = 10
-order.WorstMovies <- order(recap.Movies$mean, decreasing = FALSE)
+order.WorstMovies = order(recap.Movies$mean, decreasing = FALSE)
 cat("Les", nb.WorstMovies, "pires films : ")
 for (movie in 1:nb.WorstMovies){
   id.order = order.WorstMovies[movie]
@@ -361,11 +361,11 @@ for (movie in 1:nb.WorstMovies){
 
 ## Films ayant une note moyenne de 1
 
-cat("Il y a", sum(recap.Movies$mean == 1), "films qui ont reÃ§u une note moyenne de 1.")
+cat("Il y a", sum(recap.Movies$mean == 1), "films qui ont reçu une note moyenne de 1.")
 
-## Films ayant les pires notes et dÃ©passant un seuil de visionnage
+## Films ayant les pires notes et dépassant un seuil de visionnage
 
-cat("Les", nb.WorstMovies, "pires films ayant reÃ§u plus de", nbLimit.RatingsForMovie, "notes: ")
+cat("Les", nb.WorstMovies, "pires films ayant reçu plus de", nbLimit.RatingsForMovie, "notes: ")
 recap.MovieUppernbLimit.Ratings = recap.Movies[recap.Movies$nb.Ratings >= nbLimit.RatingsForMovie,]
 order.WorstMoviesUppernbLimit.RatingsForMovie = order(recap.MovieUppernbLimit.Ratings$mean, decreasing = FALSE)
 for (movie in 1:nb.WorstMovies){
