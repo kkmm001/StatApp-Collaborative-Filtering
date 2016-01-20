@@ -2,7 +2,9 @@ proxi_Users = function(userID1, userID2, data.Ratings){
   # proxi_Users calcule la prximité (au sens de Pearson) de deux individus
   
   #TODO(vérifier que la personne existe)
+  isPresent = !(is.null(intersect(userID1,data.Ratings$userID)))
   
+  if (isPresent){
   mat.MoviesOfuserID1 = data.Ratings[data.Ratings$userID == userID1, c("movieID", "rating")]
   mat.MoviesOfuserID1 = mat.MoviesOfuserID1[sort.list(mat.MoviesOfuserID1[,1]),]
   
@@ -18,4 +20,5 @@ proxi_Users = function(userID1, userID2, data.Ratings){
   res = cor(mat.MoviesinCommon[1,],mat.MoviesinCommon[2,], method="pearson")
   
   return(res)
+}
 }
