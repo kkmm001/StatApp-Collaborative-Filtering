@@ -63,7 +63,7 @@ TestU = U[[5]]
 RM5=recap_Movies(TrainingU,data.Movies,data.Users)
 RU5=recap_Users(TrainingU,data.Movies,data.Users)
 
-resultPrediction = prediction(RM5,RU5,210, 40) #210 et 40 se place dans RU5. On le recupère pour tester.
+resultPrediction = prediction(RU5,RM5,210, 40) #210 et 40 se place dans RU5. On le recupère pour tester.
 
 
 #RM4=recap_Movies(U1,U2,U3,U5,data.Movies,data.Users)
