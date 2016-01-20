@@ -5,6 +5,6 @@ error_01 = function(vect1, vect2){
     return(sum(vect1-vect2 != 0)/length(vect1))
   }
   else{
-    return(cat("Erreur : les tailles des deux vecteurs ne correspondent pas"))
+    warning("Erreur : les tailles des deux vecteurs ne correspondent pas")
   }
 }
