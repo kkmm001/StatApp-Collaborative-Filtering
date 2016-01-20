@@ -3,14 +3,14 @@ prediction=function(RU1,RM1,userID,movieID)
   X=RU1$rating[(RU1$userID==userID)&(RU1$movieID==movieID)]
   if (length(X)>0)
   {
-    cat("L'utilisateur", userID, " a déjà  noté le film",movieID,"il lui a donnÃé la note de",x1,x2,x3,x4)
+    cat("L'utilisateur", userID, " a déjà  noté le film",movieID,"il lui a donné la note de",x1,x2,x3,x4)
   }
   else
   {
     pred=rep(0,5)
     pred[1]=runif(1,1,5)
     pred[2]=mean(RU1$mean,na.rm=T)
-    pred[3]=mean(RM1$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas Ã©tÃ© notÃ© ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
+    pred[3]=mean(RM1$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas été noté ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
     pred[4]=RU1$mean[userID==userID]
     pred[5]=RM1$mean[movieID==movieID]
     pred=round(pred,4)
