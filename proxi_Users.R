@@ -27,3 +27,6 @@ proxi_Users = function(userID1, userID2, data.Ratings){
     
   
 }
+
+#TODO : retirer les individus dont la variance des notes est nulle => pour cela, cette méthode ne fonctionne pas
+# Il faudra utiliser leur moyenne (note unique)
