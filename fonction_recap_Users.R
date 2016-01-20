@@ -1,9 +1,9 @@
-recap_Users=function(U1,U2,U3,U4,data.Movies,data.Users)
+recap_Users=function(TrainingU,data.Movies,data.Users)
 { # ===================================================
   # ATTENTION
   # data.Movies n'est pas utilisé dans cette fonction !
   
-  U=rbind(U1,U2,U3,U4)
+  U=TrainingU
   nb.Users = dim(data.Users)[1]
   
   stat.RatingsPerUser = matrix(0, nrow = nb.Users, ncol = 7) 
