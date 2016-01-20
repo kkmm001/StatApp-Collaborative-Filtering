@@ -6,7 +6,7 @@ recap_Movies=function(TrainingU,data.Movies,data.Users)
   stat.RatingPerMovie= as.data.frame(matrix(0, nrow = nb.Movies, ncol = 7) )
   colnames(stat.RatingPerMovie) = c("movieID","nb.Ratings","mean","sd", "max","min","med")
   # matrice comprenant l'ID du film 
-  #                    le nombre d'utilisateurs ayant notÃÂ© le film
+  #                    le nombre d'utilisateurs ayant noté le film
   #                    la moyenne des notes
   #                    l'écart-type des notes
   #                    la note maximale 
