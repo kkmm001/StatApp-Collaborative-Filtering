@@ -6,20 +6,21 @@
 # ===================================== 1.PREAMBULE ===============================================
 
 set.seed(1000) # avant de genere le vecteur aleatoire toujours effectuer cette commande comme ca on a toujours le meme resulat
-vect.Alea=runif(nrow(data.Ratings))
-data.Ratings=cbind(data.Ratings,vect.Alea)
-colnames(data.Ratings) = c("userID", "movieID", "rating","alea")
+base = data.Ratings
+vect.Alea = runif(nrow(base))
+base = cbind(base,vect.Alea)
+colnames(base) = c("userID", "movieID", "rating","alea")
 
 # ===================================== 2.DECOUPAGE PROPREMENT DIT ===============================================
 
-n=5
+n = 5
 
 U = list()
 for(i in 1:n)
 {
-  U[[i]] = subset(data.Ratings, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
+  U[[i]] = subset(base, (alea<=quantile(vect.Alea,i/n))&(alea>=quantile(vect.Alea,(i-1)/n)))[,-c(4)]
 }
-rm(vect.Alea)
+rm(base,vect.Alea)
 
 # ===================================== 3.RECONSTITUTION DES BASES (APPRENTISSAGES ET TESTS) ===============================================
 
