@@ -11,13 +11,9 @@
 # ===================================== 1.PREAMBULE ===============================================
 
 ## Clean up
+
 rm(list=ls()) 
 cat("\014") 
-
-## Set working
-#getwd() 
-#setwd("C:/Users/Maestro/Desktop/2A/Stat_App/Donnees") # Changer le repertoire de travail
-#setwd("~/ENSAE/2AD/Stat-App/Collaborative_Filtering_Project/Codes/Descriptive_analysis")
 
 # ================================== 2.OUVERTURE DES FICHIERS =======================================
 
@@ -25,32 +21,27 @@ cat("\014")
 
 data.Ratings = read.table(file=file.choose(),header=F,colClasses = c(V4 = "NULL"))
 #data.Ratings = read.csv("../../Data/ml-100k/u.data.", header = FALSE, sep='\t')
-colnames(data.Ratings) = c("userID", "movieID", "rating","timestamp")
-data.Ratings$timestamp = NULL
+colnames(data.Ratings) = c("userID", "movieID", "rating")
+#data.Ratings$timestamp = NULL
+
 
 ## Lecture du fichier des utilisateurs
 
-#data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors = TRUE)
-data.Users = read.csv("../../Data/ml-100k/u.user", header = FALSE, sep='|', stringsAsFactors = TRUE)
+data.Users = read.table(file=file.choose(),header=F, sep='|', stringsAsFactors = TRUE)
+#data.Users = read.csv("../../Data/ml-100k/u.user", header = FALSE, sep='|', stringsAsFactors = TRUE)
 colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code")
 
 ## Lecture du fichier des films
 
-#data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
-data.Movies = read.csv("../../Data/ml-100k/u.item", header = FALSE, sep='|')
-data.Movies[4] = NULL
+data.Movies = read.table(file=file.choose(),header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
+#data.Movies = read.csv("../../Data/ml-100k/u.item", header = FALSE, sep='|')
+#data.Movies[4] = NULL
 vect.MovieGenres = c("unknown", "action", "adventure", "animation", "children's", "comedy", 
                      "crime", "documentary", "drama", "fantasy", "film-noir", "horror", 
                      "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western")
 
-#MG=read.table(file=file.choose(),header=F,sep="|", quote = "\"") ##choisir u.genre
-#MG=MG$V1
-#nbG=length(MG)
-
 nb.Genres = length(vect.MovieGenres)
 colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.MovieGenres)
-#colnames(data.Movies)=c("movieID", "title", "date", "IMDbURL", MG) Ã  modifier de tel sorte que MG soit une string
-
 
 # ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (controles) ============================
 
@@ -76,7 +67,7 @@ cat("La base de donnees contient exactement", nb.Movies, "films uniques.")
 ## Nombre d'utilisateurs
 
 if(nb.Users == dim(data.Users)[1]){
-  cat("La base de donnÃ©es contient bien", nb.Users, "utilisateurs.")
+  cat("La base de données contient bien", nb.Users, "utilisateurs.")
 } else{
   cat("Attention : il y a un conflit sur le nombre d'utilisateurs.")
   break
@@ -117,6 +108,7 @@ cat("La base de donnees est composee de", nb.Men, "hommes, soit", round(100*nb.M
     "% et", nb.Women, "femmes, soit" ,round(100*nb.Women/nb.Users,2),"% .")
 
 # Histogramme des âges
+
 par(lend="butt")
 dst = density(data.Users$age, na.rm = TRUE)
 dstM = density(data.Users$age[data.Users$gender == "M"], na.rm = TRUE)
@@ -134,7 +126,6 @@ rm(dst,dstM,dstF)
 
 as.data.frame(summary(data.Users$occupation))
 #remarque : ces catégories professionnelles sont etranges : ce n'est pas une categorisation CSP traditionnelle.
-
 ## Proportions dans les codes postales
 
 as.data.frame(summary(data.Users$zip.code))
@@ -145,8 +136,7 @@ as.data.frame(summary(data.Users$zip.code))
 ## Repartition par genres de films
 
 vect.nb.MoviesPerGenre = as.matrix(apply(data.Movies[5:23],2, sum, na.rm = TRUE))
-boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
-#need diagramme en baton
+barplot(sort(vect.nb.MoviesPerGenre),main = "nombre de films par genre",names.arg = toupper(rownames(vect.nb.MoviesPerGenre)))
 
 # ==================================== 5.STATISTIQUE D'ORDRE 2 =========================================
 
@@ -156,7 +146,6 @@ boxplot(vect.nb.MoviesPerGenre, main = "nombre de films par genre")
 
 vect.nb.RatingsPerUser = as.data.frame(cbind(seq(1,nb.Users), tabulate(bin=data.Ratings$userID, nbins = nb.Users))) 
 colnames(vect.nb.RatingsPerUser) = c("userID", "nb.Ratings")
-barplot(sort(vect.nb.MoviesPerGenre),main = "nombre de films par genre",names.arg = toupper(rownames(vect.nb.MoviesPerGenre)))
 
 ## Statistiques sur le nombre de films notees par utilisateur
 
@@ -181,6 +170,7 @@ for (user in 1:nb.Users) {
 rm(x)
 
 ## Tableau récapitulatif
+
 recap.Users = merge(vect.nb.RatingsPerUser, stat.RatingsPerUser, by.x = "userID", by.y = "userID")
 recap.Users = merge(recap.Users, data.Users, by.x = "userID", by.y = "userID")
 rm(vect.nb.RatingsPerUser)
@@ -237,7 +227,7 @@ rm(stat.RatingsPerMovie)
 summary(recap.Movies$mean)
 boxplot(recap.Movies$mean, main = "Note moyenne des films")
 
-## Nombre d'hommes et de femmes ayant vu un film donné (ainsi que la moyenne des notes attribuÃ©es)
+## Nombre d'hommes et de femmes ayant vu un film donné (ainsi que la moyenne des notes attribuées)
 
 RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
@@ -266,6 +256,7 @@ plot(recap.Movies$nb.Ratings, recap.Movies$mean,
 
 ## Corrélation entre note attribuée et nombre de films vus (pas nécessairement sauf les rageux et les floodeurs)
 #recap.Users = merge(vect.nb.RatingsPerUser,AvgRatingPerUser, by.x = "userID", bu.y = "userID")
+
 plot(recap.Users$nb.Ratings, recap.Users$mean, 
      main = "Lien entre nombre de films notés et note moyenne par utilisateur", 
      xlab = "nombre de films notes", 
@@ -290,7 +281,7 @@ for (movie in 1:nb.MostRatedMovies){
 
 ## Films les moins notés
 
-nb.LessRatedMovies = 12
+nb.LessRatedMovies = 25
 order.LessRatedMovies = order(recap.Movies$nb.Ratings, decreasing =FALSE)
 cat("Les", nb.LessRatedMovies, "films ayant recus le moins de notes : ")
 for (movie in 1:nb.LessRatedMovies){
@@ -305,7 +296,7 @@ for (movie in 1:nb.LessRatedMovies){
 
 cat("Il y a", sum(recap.Movies$nb.Ratings == 1), "films qui n'ont reçu qu'une seule note.")
 
-## Films ayant reçu moins de xxx votes
+## Films ayant reçu moins de 10 votes
 
 nbLimit.RatingsForMovie = 10
 cat("Il y a", sum(recap.Movies$nb.Ratings <= nbLimit.RatingsForMovie), "films qui ont reçu moins de", 
@@ -329,7 +320,7 @@ for (movie in 1:nb.BestMovies){
 
 ## Nombre de films ayant une note moyenne de 5
 
-cat("Il y a", sum(recap.Movies$mean == 5), "films qui ont reÃ§u une note moyenne de 5.")
+cat("Il y a", sum(recap.Movies$mean == 5), "films qui ont reçu une note moyenne de 5.")
 
 ## Films ayant les meilleurs notes et dépassant un seuil de visionnage
 
@@ -405,9 +396,10 @@ for (user in 1:nb.LessVotedUsers){
 
 ## Utilisateurs n'ayant voté que 20 fois
 
-cat("Il y a", sum(recap.Users$nb.Ratings == 20), "utilisateurs qui n'ont votÃ© que 20 fois.")
+cat("Il y a", sum(recap.Users$nb.Ratings == 20), "utilisateurs qui n'ont voté que 20 fois.")
 
 ## Utilisateurs ayant voté moins de xxx fois
+
 nbLimit.RatingsForUser = 75
 cat("Il y a", sum(recap.Users$nb.Ratings <= nbLimit.RatingsForUser), "utilisateurs qui ont voté moins de", 
     nbLimit.RatingsForUser, "fois.")
@@ -443,7 +435,7 @@ for (user in 1:nb.NicestUsers){
 
 nb.MeanestUsers = 20
 order.MeanestUsers = order(recap.Users$mean, decreasing = FALSE)
-cat("Les", nb.MeanestUsers, "utilisateurs les plus sévères : ")
+cat("Les", nb.MeanestUsers, "utilisateurs les plus sévère : ")
 for (user in 1:nb.MeanestUsers){
   id.order = order.MeanestUsers[user]
   cat("L'utilisateur d'ID", recap.Users$userID[id.order], "a donné en moyenne une note de", 
