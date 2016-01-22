@@ -3,7 +3,7 @@
 #       Description : Fonction récap des users sur les bases                                       #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-recap_Users=function(data.Ratings){ 
+stat_Users=function(data.Ratings){ 
   
   vect.Users = unique(data.Ratings$userID)
   nb.Users = length(vect.Users)
