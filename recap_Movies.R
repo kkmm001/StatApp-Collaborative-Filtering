@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 #       Fichier : fonction_recap_Movies.R                                                          #
-#       Description : Fonction récap_des films sur les bases                                       #
+#       Description : Fonction rÃ©cap_des films sur les bases                                       #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
 recap_Movies = function(data.Ratings){
@@ -11,9 +11,9 @@ recap_Movies = function(data.Ratings){
   stat.RatingPerMovie= as.data.frame(matrix(0, nrow = nb.Movies, ncol = 7) )
   colnames(stat.RatingPerMovie) = c("movieID","nb.Ratings","mean","sd", "max","min","med")
   # matrice comprenant l'ID du film 
-  #                    le nombre d'utilisateurs ayant noté le film
+  #                    le nombre d'utilisateurs ayant notÃ© le film
   #                    la moyenne des notes
-  #                    l'écart-type des notes
+  #                    l'Ã©cart-type des notes
   #                    la note maximale 
   #                    la note minimale 
   #                    la mediane des notes
