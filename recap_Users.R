@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : fonction_recap_Users.R                                                           #
-#       Description : Fonction recap sur les bases d'apprentissage                                 #
+#       Fichier : recap_Users.R                                                                    #
+#       Description : Fonction récap des users sur les bases                                       #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
 recap_Users=function(data.Ratings){ 
@@ -18,11 +18,12 @@ recap_Users=function(data.Ratings){
   #                    la note minimale
   #                    la mede des notes
   
-  for (user in 1:nb.Users){ 
+  for (user_fakeID in 1:nb.Users){ 
+    user = vect.Users[user_fakeID]
     x=data.Ratings$rating[data.Ratings$userID == user]
-    stat.RatingPerUser[user,] = c(user,length(x),round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
+    stat.RatingPerUser[user_fakeID,] = c(user,length(x),round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
   }
-
+  
   return(stat.RatingPerUser)
   
 }
