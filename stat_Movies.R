@@ -3,7 +3,7 @@
 #       Description : Fonction récap des films sur les bases                                       #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-recap_Movies = function(data.Ratings){
+stat_Movies = function(data.Ratings){
   
   vect.Movies = unique(data.Ratings$movieID)
   nb.Movies = length(vect.Movies)
