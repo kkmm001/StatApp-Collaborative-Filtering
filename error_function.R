@@ -9,12 +9,10 @@ error_function = function(vect1,vect2,method){
   }
   
   else{
-  
-  switch(method,
-         'MSE' = sum((vect1-vect2)^2)/length(vect1),  #erreur quadratique moyenne
-         'MAD' = sum(abs(vect1-vect2))/length(vect1), #erreur absolue moyenne
-         '0-1' = sum(vect1-vect2 != 0)/length(vect1) #erreur 0-1
-  )
-         
+    switch(method,
+           'MSE' = sum((vect1-vect2)^2)/length(vect1),  #erreur quadratique moyenne
+           'MAD' = sum(abs(vect1-vect2))/length(vect1), #erreur absolue moyenne
+           '0-1' = sum(vect1-vect2 != 0)/length(vect1)  #erreur 0-1
+    )
   }
 }
