@@ -3,7 +3,7 @@
 #       Description : Fonction de prédiction naive sur les bases                                   #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-prediction=function(RU1,RM1,userID,movieID){
+prediction_naive=function(RU1,RM1,userID,movieID){
   
   X=RU1$rating[(RU1$userID==userID)&(RU1$movieID==movieID)]
   if (length(X)>0){
