@@ -1,5 +1,5 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : Fonction_prediction_naive.R                                                      #
+#       Fichier : Fonction_prediction_naive.R    y                                                  #
 #       Description : Fonction de prédiction naive sur les bases                                   #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
