@@ -21,7 +21,7 @@ function(stat_Users,stat_Movies, matrixTest){  #userID,movieID){
       matrixTest$Prediction5[couple]=stat_Movies$mean[stat_Movies$movieID==matrixTest$movieID[couple]]
     }
     
-    #matrixTest$Prediction4=stat_Users$mean[stat_Users$userID==matrixTest$userID]
+    #matrixTest$Prediction4=stat_Users$mean[stat_Users$userID==matrixTest$userID] 
     
     #pred[5]=stat_Movies$mean[stat_Movies$movieID==movieID]
     
