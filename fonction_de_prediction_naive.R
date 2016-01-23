@@ -3,32 +3,39 @@
 #       Description : Fonction de prédiction naive sur les bases                                   #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-prediction_naive=function(RU1,RM1,userID,movieID){
+prediction_naive=function(stat_Users,stat_Movies, matrixTest){
   
-  X=RU1$rating[(RU1$userID==userID)&(RU1$movieID==movieID)]
-  if (length(X)>0){
-    cat("L'utilisateur", userID, " a déja  noté le film",movieID,"il lui a donné la note de",x1,x2,x3,x4)
-  }
-  else{
-    pred=rep(0,5)
-    pred[1]=runif(1,1,5)
-    pred[2]=mean(RU1$mean,na.rm=T)
-    pred[3]=mean(RM1$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas été noté ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
-    pred[4]=RU1$mean[RU1$userID==userID]
-    pred[5]=RM1$mean[RM1$movieID==movieID]
-    pred=round(pred,4)
-    cat("On peut prédire la note par :")
-    cat("\n")
-    cat("-  Une note complètement aléatoire  :",pred[1])
-    cat("\n")
-    cat("-  La moyenne de toutes les notes présentes dans la base modèle :",pred[2])
-    cat("\n")
-    cat("-  La moyenne des moyennes des films (sans pondération):",pred[3])
-    cat("\n")
-    cat("-	La moyenne des notes que l'utilisateur",userID, "a donné aux autres films :",pred[4])
-    cat("\n")
-    cat("-	La moyenne des notes données par tous les autres utilisateurs au film ",movieID,":",pred[5])
-    cat("\n")
-    return(pred)
-  }
+    D = dim(matrixTest)[1]
+    ResultTest = matrixTest
+    ResultTest$Prediction1=runif(D,1,5)
+    
+    #par la note moyenne de USER
+    ResultTest$Prediction2=mean(stat_Users$mean,na.rm=T)
+    
+    ResultTest$Prediction3=mean(stat_Movies$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas été noté ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
+    
+    for (rowIndex in 1:D) { 
+      flag = stat_Users$userID==ResultTest$userID[rowIndex]
+      if (sum(flag)){
+        ResultTest$Prediction4[rowIndex]=stat_Users$mean[flag]
+      }
+    }
+    
+    for (rowIndex in 1:D) { 
+      flag = stat_Movies$movieID==ResultTest$movieID[rowIndex]
+      if (sum(flag)){
+        ResultTest$Prediction5[rowIndex]=stat_Movies$mean[flag]
+      }
+    }
+    
+   
+    
+    return(ResultTest)
+  #}
 }
+
+
+
+
+
+
