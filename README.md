@@ -3,3 +3,6 @@ ENSAE ParisTech Master Project 2015-2016 "Films Recommandation System by Collabo
 
 Authors group: CUI Biwei/ DELGADO Claudia/ MIAH Mehdi/ MPELI MPELI Ulrich/
 Tutors group: COTTET Vincent/ SEBBAR Mehdi
+
+ATTENTION : 
+le film 'Chasing Amy' a deux identifiants : 246 et 268
