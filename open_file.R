@@ -1,12 +1,8 @@
-# ===================================== 1.PREAMBULE ===============================================
+# Notes de Mehdi : il faudrait une fonction indiquant le dossier contenant les données
+# du type open_file(repository = ml-100k) ou open_file(repository = ml-1m).
+# ATTENTION : cette fonction devra être compatible avec les autres bases de données.
+# En effet, tous ne contiennent pas de fichiers 'data.Users' et les formats sont différents (.dat ou .csv).
 
-## Clean up
-
-rm(list=ls()) 
-cat("\014") 
-
-
-# ================================== 2.OUVERTURE DES FICHIERS =======================================
 
 ## Lecture du fichier des notes
 u.data = file.choose()
@@ -18,22 +14,18 @@ u.item=paste(substr(u.data, 1, nchar(u.data)-4), "item", sep="")
 cat(u.item)
 
 data.Ratings = read.table(file=u.data,header=F,colClasses = c(V4 = "NULL"))
-#data.Ratings = read.csv("../../Data/ml-100k/u.data.", header = FALSE, sep='\t')
 colnames(data.Ratings) = c("userID", "movieID", "rating")
-#data.Ratings$timestamp = NULL
 
 
 ## Lecture du fichier des utilisateurs
 
 data.Users = read.table(file=u.user,header=F, sep='|', stringsAsFactors = TRUE)
-#data.Users = read.csv("../../Data/ml-100k/u.user", header = FALSE, sep='|', stringsAsFactors = TRUE)
 colnames(data.Users) = c("userID", "age", "gender", "occupation", "zip.code")
 
 ## Lecture du fichier des films
 
 data.Movies = read.table(file=u.item,header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
-#data.Movies = read.csv("../../Data/ml-100k/u.item", header = FALSE, sep='|')
-#data.Movies[4] = NULL
+
 vect.MovieGenres = c("unknown", "action", "adventure", "animation", "children's", "comedy", 
                      "crime", "documentary", "drama", "fantasy", "film-noir", "horror", 
                      "musical", "mystery", "romance", "sci-fi", "thriller", "war", "western")
