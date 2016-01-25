@@ -1,41 +1,42 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 #       Fichier : Fonction_prediction_naive.R    y                                                  #
-#       Description : Fonction de prédiction naive sur les bases                                   #
+#       Description : Fonction de prediction naive sur les bases                                   #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-prediction_naive=function(stat_Users,stat_Movies, matrixTest){
+naive_prediction = function(train.Ratings, test.Ratings){
   
-    D = dim(matrixTest)[1]
-    ResultTest = matrixTest
-    ResultTest$Prediction1=runif(D,1,5)
+  #generation des statistiques sur les donnees de l'apprentissage
+  stat.Users = stat_Users(train.Ratings)
+  stat.Movies = stat_Movies(train.Ratings)
+  
+  nb.Tests = dim(test.Ratings)[1]
+  resultTest = test.Ratings
     
-    #par la note moyenne de USER
-    ResultTest$Prediction2=mean(stat_Users$mean,na.rm=T)
+  #prediction aleatoire
+  resultTest$random=round(runif(nb.Tests,1,5),2)
     
-    ResultTest$Prediction3=mean(stat_Movies$mean,na.rm=T) # on doit d'abord enlever les films qui n'ont pas été noté ie qui ont une moyenne = a Nan avant de prendre la moyenne generale
+  #prediction par la note moyenne des utilisateurs
+  resultTest$meanOfUsers=round(mean(stat.Users$mean,na.rm=T), 2)
     
-    for (rowIndex in 1:D) { 
-      flag = stat_Users$userID==ResultTest$userID[rowIndex]
-      if (sum(flag)){
-        ResultTest$Prediction4[rowIndex]=stat_Users$mean[flag]
-      }
+  #prediction par la note moyenne des films
+  resultTest$meanOfMovies=round(mean(stat.Movies$mean,na.rm=T),2)
+    
+  #prediction par la moyenne par utilisateur
+  for (rowIndex in 1:nb.Tests) { 
+    flag = (stat.Users$userID == resultTest$userID[rowIndex])
+    if (sum(flag)){
+      resultTest$meanByUser[rowIndex]=stat.Users$mean[flag]
     }
-    
-    for (rowIndex in 1:D) { 
-      flag = stat_Movies$movieID==ResultTest$movieID[rowIndex]
-      if (sum(flag)){
-        ResultTest$Prediction5[rowIndex]=stat_Movies$mean[flag]
-      }
+  }
+  
+  #prediction par la moyenne par film
+  for (rowIndex in 1:nb.Tests) { 
+    flag = (stat.Movies$movieID == resultTest$movieID[rowIndex])
+    if (sum(flag)){
+      resultTest$meanByMovie[rowIndex]=stat.Movies$mean[flag]
     }
+  }
     
-   
-    
-    return(ResultTest)
-  #}
+  return(resultTest)
+  
 }
-
-
-
-
-
-
