@@ -159,3 +159,5 @@ EBIN5 = error_function(naive_prediction1$rating,naive_prediction1$meanByMovie,'0
 cross_validation[1,5] = mean(MSE1,MSE2,MSE3,MSE4,MSE5)
 cross_validation[2,5] = mean(MAE1,MAE2,MAE3,MAE4,MAE5)
 cross_validation[3,5] = mean(EBIN1,EBIN2,EBIN3,EBIN4,EBIN5)
+
+rm(naive_prediction1,MSE1,MSE2,MSE3,MSE4,MSE5)
