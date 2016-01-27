@@ -1,4 +1,4 @@
-random,"meanOfUsers","meanOfMovies","meanByUser","meanByMovie"
+"fonction d'erreur","random","meanOfUsers","meanOfMovies","meanByUser","meanByMovie"
 MSE,1.70214032911508,1.12563182257788,1.20178201018321,1.0402247834002,1.02421713762268
 MAE,1.393774,0.937532,0.98663,0.835118,0.8175035
 01,0.78555,0.66105,0.72525,0.6374,0.63485
