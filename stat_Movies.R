@@ -1,5 +1,5 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : recap_Movies.R                                                                   #
+#       Fichier : stat_Movies.R                                                                   #
 #       Description : Fonction récap des films sur les bases                                       #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
