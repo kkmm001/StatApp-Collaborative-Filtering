@@ -23,7 +23,7 @@ EBIN2 = error_function(naive_prediction1$rating,naive_prediction1$random,'01')
 naive_prediction1 = naive_prediction(TrainingU3,TestU3)
 RMSE3 = error_function(naive_prediction1$rating,naive_prediction1$random,'RMSE')
 MAE3 = error_function(naive_prediction1$rating,naive_prediction1$random,'MAE')
-EBIN3 = error_function(naive_prediction1$rating,naive_prediction1$random,'01')
+EBIN3 = error_function(naive_prediction1$rating,naive_prediction1$random,'01')  # jhfgyff
 
 naive_prediction1 = naive_prediction(TrainingU4,TestU4)
 RMSE4 = error_function(naive_prediction1$rating,naive_prediction1$random,'RMSE')
