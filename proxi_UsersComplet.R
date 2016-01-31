@@ -26,3 +26,10 @@ proxi_UsersComplet = function(userID, data.Ratings){
     warning("L'individu ", userID1, "n'est pas dans la base")
   }
 }
+
+  # On teste pour un individu quelconque
+
+mat.cor = proxi_UsersComplet(1,TestU1)
+colnames(mat.cor) = c("ID","corcoef")
+mat.cor = as.data.frame(mat.cor)
+mat.cor[apply(mat.cor,1,function(mat.cor) !any(is.na(mat.cor))),] # On supprime les NA
