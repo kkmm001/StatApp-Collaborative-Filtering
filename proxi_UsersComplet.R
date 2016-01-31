@@ -62,12 +62,12 @@ proxi_UsersComplet_euclid = function(userID, data.Ratings){
 mat.cor_pearson = proxi_UsersComplet_Pearson(1,TestU1)
 colnames(mat.cor_pearson) = c("ID","corcoef")
 mat.cor_pearson = as.data.frame(mat.cor_pearson)
-mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pearson) !any(is.na(mat.cor_pearson))),] # On supprime les NA
+mat.cor_pearson = mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pearson) !any(is.na(mat.cor_pearson))),] # On supprime les NA
 
 #======== EUCLIDE ====================
 mat.cor_euclid = proxi_UsersComplet_euclid(1,TestU1)
 colnames(mat.cor_euclid) = c("ID","corcoef")
 mat.cor_euclid = as.data.frame(mat.cor_euclid)
-mat.cor_euclid[apply(mat.cor_euclid,1,function(mat.cor_euclid) !any(is.na(mat.cor_euclid))),] # On supprime les NA
+mat.cor_euclid = mat.cor_euclid[apply(mat.cor_euclid,1,function(mat.cor_euclid) !any(is.na(mat.cor_euclid))),] # On supprime les NA
 
 
