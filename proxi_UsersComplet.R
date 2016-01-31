@@ -1,6 +1,6 @@
-proxi_UsersComplet = function(userID, data.Ratings){
-  
-  # proxi_Users calcule la proximite (au sens de Pearson) avec tous les individus de la base
+#====================================== 1. Coefficient de corrélation de Pearson ===============================
+
+proxi_UsersComplet_Pearson = function(userID, data.Ratings){
   
   isPresent = !(is.null(intersect(userID,data.Ratings$userID)))
   
@@ -17,7 +17,7 @@ proxi_UsersComplet = function(userID, data.Ratings){
     for(ind.User in 1:length(vect.Users)){
         user = vect.Users[ind.User]
         mat.cor[ind.User,1] = user
-        mat.cor[ind.User,2] = proxi_Users(mat.MoviesOfuserID,user,data.Ratings)
+        mat.cor[ind.User,2] = proxi_Users_Pearson(mat.MoviesOfuserID,user,data.Ratings)
     }
     
     return(mat.cor)
