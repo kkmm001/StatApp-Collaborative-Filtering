@@ -66,7 +66,7 @@ mat.cor_pearson = mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pears
 
 #======== EUCLIDE ====================
 mat.cor_euclid = proxi_UsersComplet_euclid(1,TestU1)
-colnames(mat.cor_euclid) = c("ID","corcoef")
+colnames(mat.cor_euclid) = c("ID","euclidist")
 mat.cor_euclid = as.data.frame(mat.cor_euclid)
 mat.cor_euclid = mat.cor_euclid[apply(mat.cor_euclid,1,function(mat.cor_euclid) !any(is.na(mat.cor_euclid))),] # On supprime les NA
 
