@@ -41,15 +41,15 @@ proxi_UsersComplet_euclid = function(userID, data.Ratings){
     vect.Users = unique(data.Ratings$userID) 
     vect.Users = vect.Users[vect.Users != userID] #suppression de l'individu en question
     
-    mat.cor = matrix(NA, nrow = length(vect.Users) , ncol = 2)
+    mat.dist = matrix(NA, nrow = length(vect.Users) , ncol = 2)
     
     for(ind.User in 1:length(vect.Users)){
       user = vect.Users[ind.User]
-      mat.cor[ind.User,1] = user
-      mat.cor[ind.User,2] = proxi_Users_euclid(mat.MoviesOfuserID,user,data.Ratings)
+      mat.dist[ind.User,1] = user
+      mat.dist[ind.User,2] = proxi_Users_euclid(mat.MoviesOfuserID,user,data.Ratings)
     }
     
-    return(mat.cor)
+    return(mat.dist)
   }
   else{
     warning("L'individu ", userID1, "n'est pas dans la base")
@@ -65,9 +65,9 @@ mat.cor_pearson = as.data.frame(mat.cor_pearson)
 mat.cor_pearson = mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pearson) !any(is.na(mat.cor_pearson))),] # On supprime les NA
 
 #======== EUCLIDE ====================
-mat.cor_euclid = proxi_UsersComplet_euclid(1,TestU1)
-colnames(mat.cor_euclid) = c("ID","euclidist")
-mat.cor_euclid = as.data.frame(mat.cor_euclid)
-mat.cor_euclid = mat.cor_euclid[apply(mat.cor_euclid,1,function(mat.cor_euclid) !any(is.na(mat.cor_euclid))),] # On supprime les NA
+mat.dist_euclid = proxi_UsersComplet_euclid(1,TestU1)
+colnames(mat.dist_euclid) = c("ID","euclidist")
+mat.dist_euclid = as.data.frame(mat.dist_euclid)
+mat.dist_euclid = mat.dist_euclid[apply(mat.dist_euclid,1,function(mat.dist_euclid) !any(is.na(mat.dist_euclid))),] # On supprime les NA
 
 
