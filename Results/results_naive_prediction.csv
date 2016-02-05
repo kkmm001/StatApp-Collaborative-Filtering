@@ -1,0 +1,4 @@
+"error function","random","meanOfUsers","meanOfMovies","meanByUser","meanByMovie"
+RMSE,1.70214,1.12563,1.20178,1.04022,1.02421
+MAE ,1.39377,0.93753,0.98663,0.83511,0.81750
+01  ,0.78555,0.66105,0.72525,0.63740,0.63485
