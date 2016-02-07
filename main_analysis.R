@@ -17,7 +17,6 @@ cat("\014")
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
 source("open_file.R")
-#open_file()
 
 # ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (controles) ============================
 
@@ -69,7 +68,6 @@ cat(sprintf("La moyenne des %.0f notes est de %.2f ; l'ecart-type est de %.2f.\n
             nb.Ratings,mean(data.Ratings$rating), sd(data.Ratings$rating)
               ))
 plot(table(data.Ratings$rating), 
-     main = paste(sprintf("Distribution des %.0f notes", nb.Ratings)),
      xlab = "Notes", 
      ylab = "Nombre de notes",
      lwd = 5, 
@@ -86,8 +84,8 @@ cat(sprintf("La moyenne des ages est %.2f ans avec un ecart-type de %.2f ans.\n"
 
 ## Proportion homme/femme
 
-nb.Men = sum(data.Users$gender == "M")
-nb.Women = sum(data.Users$gender == "F")
+nb.Men = sum(data.Users$sex == "M")
+nb.Women = sum(data.Users$sex == "F")
 cat(sprintf("La base de donnees est composee de %.0f hommes, soit %.2f%% et %.0f femmes, soit %.2f%%.\n", 
     nb.Men, 100*nb.Men/nb.Users, nb.Women, 100*nb.Women/nb.Users
     ))
@@ -96,8 +94,8 @@ cat(sprintf("La base de donnees est composee de %.0f hommes, soit %.2f%% et %.0f
 
 par(lend="butt")
 dst = density(data.Users$age, na.rm = TRUE)
-dstM = density(data.Users$age[data.Users$gender == "M"], na.rm = TRUE)
-dstF = density(data.Users$age[data.Users$gender == "F"], na.rm = TRUE)
+dstM = density(data.Users$age[data.Users$sex == "M"], na.rm = TRUE)
+dstF = density(data.Users$age[data.Users$sex == "F"], na.rm = TRUE)
 
 hist(data.Users$age, 
      col = grey(0.9), 
@@ -186,21 +184,21 @@ boxplot(recap.Movies$mean, main = "Note moyenne des films")
 
 ## Nombre d'hommes et de femmes ayant vu un film donne (ainsi que la moyenne des notes attribuees)
 
-RatingPerMoviePerGender = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
+RatingPerMoviePerSex = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
-cond2=(data.Users$gender[data.Ratings$userID]=="M")
+cond2=(data.Users$sex[data.Ratings$userID]=="M")
 for (movie in 1:nb.Movies) { 
   cond1=data.Ratings$movieID == movie
   x=data.Ratings$rating[cond1&cond2]
   y=data.Ratings$rating[cond1&!(cond2)]
-  RatingPerMoviePerGender[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
+  RatingPerMoviePerSex[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
   MoyWomen[movie,]=c(movie,(mean(data.Ratings$movieID == movie)-mean(x)*(length(x)/(length(x)+length(y))))*((length(x)+length(y))/length(y)))
 }
 
-RatingPerMoviePerGender = as.data.frame(RatingPerMoviePerGender)
-colnames(RatingPerMoviePerGender ) = c("movieID", "nbMen","avgRatingMen","nbWomen","avgRatingWomen")
+RatingPerMoviePerSex = as.data.frame(RatingPerMoviePerSex)
+colnames(RatingPerMoviePerSex ) = c("movieID", "nbMen","avgRatingMen","nbWomen","avgRatingWomen")
 
-# on verifie que moyeWomen[i,2]=RatingPerMOviePerGender$avrRatingWomen[i] pour tout i
+# on verifie que moyeWomen[i,2]=RatingPerMOviePerSex$avrRatingWomen[i] pour tout i
 
 # ====================== 6.CORRELATION ENTRE LES FILMS ET LES UTILISATEURS ===============================
 
@@ -426,8 +424,8 @@ for (user in 1:nb.MeanestUsers){
 
 ## Creation des bases par sexe
 
-data.MaleUsers = data.Users[data.Users$gender == "M" ,]
-data.FemaleUsers = data.Users[data.Users$gender == "F" ,]
+data.MaleUsers = data.Users[data.Users$sex == "M" ,]
+data.FemaleUsers = data.Users[data.Users$sex == "F" ,]
 
 recap.MaleUser = recap.Users[recap.Users$userID %in% data.MaleUsers$userID,]
 recap.FemaleUser = recap.Users[recap.Users$userID %in% data.FemaleUsers$userID,]
