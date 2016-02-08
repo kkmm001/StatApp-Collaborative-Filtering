@@ -8,35 +8,21 @@
 # car le prédicteur meanByMovie possède les erreurs minimales
 #
 #
-recommandation_naive = function (train.Ratings, IdUSer,nb.movie)
-{
-  #generation des statistiques sur les donnees de l'apprentissage
-  stat.Users = stat_Users(train.Ratings)
-  stat.Movies = stat_Movies(train.Ratings)
-  
-  #nb.Tests = dim(test.Ratings)[1]
-  #resultTest = test.Ratings
-  
-  meanOfMovies=round(mean(stat.Movies$mean,na.rm=T),2)
-  VectTri=order(meanOfMovies)
-  movie=1
-  result=c()
-  while (movie<=nb.movie)
-  {
-    if(train.Ratings[userID==IdUser movieID==VectTri[i]])
-    
-    train.Ratings$rating[train.Ratings$movieID == movie & userID==IdUser m]
-    {
-      result=c(result,VectTri[i])
-      i=i+1
-    }
-  }
-}
 
-# Remarques de Mehdi : Est-ce que ça marche ? 
-# Le i à la ligne 31 n'est pas déclaré (c'est pas movie ?)
-# Il manque une accolade ouvrante pour le if à la ligne 26
-# stat.Users est totalement inutile ici
-# Il faut faire la recherche des films non pas dans l'ensemble de films mais dans l'ensemble des films que l'utilisateur n'a pas encore vus
-# Il faut afficher les titres des films pour une vérification logique + l'historique des films de l'utiliasteur (en bonus)
-# Il faut travailler sur data.Ratings et non train.Ratings
+  recommandation_naive = function (data.Ratings, id.user,nb.movie)
+  {
+    # generation des statistiques sur les donnees de l'apprentissage
+    stat.Movies = stat_Movies(data.Ratings)
+    # generation du vecteur de films qu'id.user a deja vu
+    dejavu=data.Ratings$movieID[data.Ratings$userID==id.user]
+    # on retire les films deja visioné de stat.Movies
+    for(ind_other in 1:length(dejavu))
+    {
+      otherID = dejavu[ind_other]
+      stat.Movies = stat.Movies[stat.Movies$movieID != otherID,]
+    }
+    # on tri stat.Movies par odre décroissant en se base sur la moyenne de chaque film       
+    VectTri=stat.Movies.non.vu[order(stat.Movies.non.vu$mean,decreasing=TRUE),]
+    # on recommande les  nb.movie films ayant les meilleurs moyennes  
+    return(VectTri$movieID[1:nb.movie])
+  }
