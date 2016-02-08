@@ -4,8 +4,8 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 #
 # Suite aux résultats obtenus grâce aux fonctions de prédictions naives (results_naivePredictionTest.csv), 
-# on choisit de prendre comme recommandation pour les différenst utilisateur les films ayant obtenus les plus hautes moyennes
-# car  meanByMovie possède les erreurs minimales
+# on choisit de prendre comme recommandation pour les différents utilisateurs les films ayant obtenus les plus hautes moyennes
+# car le prédicteur meanByMovie possède les erreurs minimales
 #
 #
 recommandation_naive = function (train.Ratings, IdUSer,nb.movie)
@@ -30,10 +30,13 @@ recommandation_naive = function (train.Ratings, IdUSer,nb.movie)
       result=c(result,VectTri[i])
       i=i+1
     }
-    
   }
-  
-
-
-
 }
+
+# Remarques de Mehdi : Est-ce que ça marche ? 
+# Le i à la ligne 31 n'est pas déclaré (c'est pas movie ?)
+# Il manque une accolade ouvrante pour le if à la ligne 26
+# stat.Users est totalement inutile ici
+# Il faut faire la recherche des films non pas dans l'ensemble de films mais dans l'ensemble des films que l'utilisateur n'a pas encore vus
+# Il faut afficher les titres des films pour une vérification logique + l'historique des films de l'utiliasteur (en bonus)
+# Il faut travailler sur data.Ratings et non train.Ratings
