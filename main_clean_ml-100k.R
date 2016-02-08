@@ -18,12 +18,12 @@ cat("\014")
 # ================================ 2.OUVERTURE DES FICHIERS =======================================
 
 ##Ouverture du fichier des notes
-file.Ratings = file.choose()
+file.Ratings = file.choose() # u.data
 data.Ratings = read.table(file=file.Ratings,header=F,colClasses = c(V4 = "NULL"))
 colnames(data.Ratings) = c("userID", "movieID", "rating")
 
 ##Ouverture du  fichier des films
-file.Movies = file.choose()
+file.Movies = file.choose() # u.item
 data.Movies = read.table(file=file.Movies,header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
 
 vect.MovieGenres = c("unknown", "Action", "Adventure", "Animation", "Children's", "Comedy", 
@@ -34,7 +34,7 @@ nb.Genres = length(vect.MovieGenres)
 colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.MovieGenres)
 
 ##Ouverture du fichiers des utilisateurs
-file.Users = file.choose()
+file.Users = file.choose() # u.user
 data.Users = read.table(file=file.Users,header=F, sep='|', stringsAsFactors = TRUE)
 colnames(data.Users) = c("userID", "age", "sex", "occupation", "zip.code")
 
