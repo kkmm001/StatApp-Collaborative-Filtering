@@ -13,7 +13,8 @@ naive_prediction = function(train.Ratings, test.Ratings){
   resultTest = test.Ratings
     
   #prediction aleatoire
-  resultTest$random=round(runif(nb.Tests,1,5),2)
+  # resultTest$random=round(runif(nb.Tests,1,5),2)
+  resultTest$random=sample(x=train.Ratings$rating,replace=T,size=nb.Tests)
     
   #prediction par la note moyenne des utilisateurs
   resultTest$meanOfUsers=round(mean(stat.Users$mean,na.rm=T), 2)
