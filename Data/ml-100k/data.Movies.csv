@@ -1,4 +1,4 @@
-"movieID","title","date","IMDbURL","unknown","action","adventure","animation","children's","comedy","crime","documentary","drama","fantasy","film-noir","horror","musical","mystery","romance","sci-fi","thriller","war","western"
+"movieID","title","date","IMDbURL","unknown","Action","Adventure","Animation","Children's","Comedy","Crime","Documentary","Drama","Fantasy","Film-noir","Horror","Musical","Mystery","Romance","Sci-fi","Thriller","War","Western"
 1,"Toy Story (1995)","01-Jan-1995","http://us.imdb.com/M/title-exact?Toy%20Story%20(1995)",0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 2,"GoldenEye (1995)","01-Jan-1995","http://us.imdb.com/M/title-exact?GoldenEye%20(1995)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
 3,"Four Rooms (1995)","01-Jan-1995","http://us.imdb.com/M/title-exact?Four%20Rooms%20(1995)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
@@ -265,8 +265,6 @@
 264,"Mimic (1997)","22-Aug-1997","http://us.imdb.com/M/title-exact?Mimic+(1997)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0
 265,"Hunt for Red October, The (1990)","01-Jan-1990","http://us.imdb.com/M/title-exact?Hunt+for+Red+October%2C+The+(1990)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
 266,"Kull the Conqueror (1997)","29-Aug-1997","http://us.imdb.com/M/title-exact?Kull+the+Conqueror+(1997)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-267,"unknown","","",1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-268,"Chasing Amy (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Chasing+Amy+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0
 269,"Full Monty, The (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Full+Monty%2C+The+(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 270,"Gattaca (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Gattaca+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0
 271,"Starship Troopers (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Starship+Troopers+(1997)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0
@@ -301,7 +299,6 @@
 300,"Air Force One (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Air+Force+One+(1997)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
 301,"In & Out (1997)","19-Sep-1997","http://us.imdb.com/Title?In+%26+Out+(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 302,"L.A. Confidential (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?L%2EA%2E+Confidential+(1997)",0,0,0,0,0,0,1,0,0,0,1,0,0,1,0,0,1,0,0
-303,"Ulee's Gold (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Ulee%27s+Gold+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 304,"Fly Away Home (1996)","13-Sep-1996","http://us.imdb.com/M/title-exact?Fly%20Away%20Home%20(1996)",0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 305,"Ice Storm, The (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Ice+Storm%2C+The+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 306,"Mrs. Brown (Her Majesty, Mrs. Brown) (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Her+Majesty%2C+Mrs%2E+Brown+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0
@@ -346,7 +343,6 @@
 345,"Deconstructing Harry (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?imdb-title-118954",0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
 346,"Jackie Brown (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?imdb-title-119396",0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0
 347,"Wag the Dog (1997)","09-Jan-1998","http://us.imdb.com/M/title-exact?imdb-title-120885",0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
-348,"Desperate Measures (1998)","30-Jan-1998","http://us.imdb.com/Title?Desperate+Measures+(1998)",0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0
 349,"Hard Rain (1998)","16-Jan-1998","http://us.imdb.com/M/title-exact?imdb-title-120696",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
 350,"Fallen (1998)","16-Jan-1998","http://us.imdb.com/Title?Fallen+(1998)",0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0
 351,"Prophecy II, The (1998)","16-Jan-1998","http://us.imdb.com/M/title-exact?imdb-title-119959",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
@@ -498,7 +494,6 @@
 497,"Bringing Up Baby (1938)","01-Jan-1938","http://us.imdb.com/M/title-exact?Bringing%20Up%20Baby%20(1938)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 498,"African Queen, The (1951)","01-Jan-1951","http://us.imdb.com/M/title-exact?African%20Queen,%20The%20(1951)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0
 499,"Cat on a Hot Tin Roof (1958)","01-Jan-1958","http://us.imdb.com/M/title-exact?Cat%20on%20a%20Hot%20Tin%20Roof%20(1958)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-500,"Fly Away Home (1996)","13-Sep-1996","http://us.imdb.com/M/title-exact?Fly%20Away%20Home%20(1996)",0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 501,"Dumbo (1941)","01-Jan-1941","http://us.imdb.com/M/title-exact?Dumbo%20(1941)",0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0
 502,"Bananas (1971)","01-Jan-1971","http://us.imdb.com/M/title-exact?Bananas%20(1971)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0
 503,"Candidate, The (1972)","01-Jan-1972","http://us.imdb.com/M/title-exact?Candidate,%20The%20(1972)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -668,7 +663,6 @@
 667,"Audrey Rose (1977)","01-Jan-1977","http://us.imdb.com/M/title-exact?Audrey%20Rose%20(1977)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
 668,"Blood Beach (1981)","01-Jan-1981","http://us.imdb.com/M/title-exact?Blood%20Beach%20(1981)",0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
 669,"Body Parts (1991)","01-Jan-1991","http://us.imdb.com/M/title-exact?Body%20Parts%20(1991)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
-670,"Body Snatchers (1993)","01-Jan-1993","http://us.imdb.com/M/title-exact?Body%20Snatchers%20(1993)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0
 671,"Bride of Frankenstein (1935)","01-Jan-1935","http://us.imdb.com/M/title-exact?Bride%20of%20Frankenstein%20(1935)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
 672,"Candyman (1992)","01-Jan-1992","http://us.imdb.com/M/title-exact?Candyman%20(1992)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
 673,"Cape Fear (1962)","01-Jan-1962","http://us.imdb.com/M/title-exact?Cape%20Fear%20(1962)",0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0
@@ -678,7 +672,6 @@
 677,"Fire on the Mountain (1996)","24-Jan-1997","http://us.imdb.com/M/title-exact?Fire%20on%20the%20Mountain%20(1996)",0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
 678,"Volcano (1997)","25-Apr-1997","http://us.imdb.com/M/title-exact?Volcano%20%281997%29",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0
 679,"Conan the Barbarian (1981)","01-Jan-1981","http://us.imdb.com/M/title-exact?Conan+the+Barbarian+(1981)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-680,"Kull the Conqueror (1997)","29-Aug-1997","http://us.imdb.com/M/title-exact?Kull+the+Conqueror+(1997)",0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 681,"Wishmaster (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Wishmaster+(1997)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0
 682,"I Know What You Did Last Summer (1997)","17-Oct-1997","http://us.imdb.com/M/title-exact?I+Know+What+You+Did+Last+Summer+(1997)",0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0,0
 683,"Rocket Man (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Rocket+Man+(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -863,7 +856,6 @@
 862,"Jingle All the Way (1996)","22-Nov-1996","http://us.imdb.com/M/title-exact?Jingle%20All%20the%20Way%20(1996)",0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 863,"Garden of Finzi-Contini, The (Giardino dei Finzi-Contini, Il) (1970)","08-Nov-1996","http://us.imdb.com/M/title-exact?Giardino%20dei%20Finzi-Contini,%20Il%20(1970)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 864,"My Fellow Americans (1996)","20-Dec-1996","http://us.imdb.com/M/title-exact?My%20Fellow%20Americans%20(1996)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
-865,"Ice Storm, The (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Ice+Storm%2C+The+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 866,"Michael (1996)","25-Dec-1996","http://us.imdb.com/M/title-exact?Michael%20(1996)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
 867,"Whole Wide World, The (1996)","25-Dec-1996","http://us.imdb.com/M/title-exact?Whole%20Wide%20World,%20The%20(1996)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 868,"Hearts and Minds (1996)","10-Jan-1997","http://us.imdb.com/M/title-exact?Hearts%20and%20Minds%20(1996)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -879,7 +871,6 @@
 878,"That Darn Cat! (1997)","14-Feb-1997","http://us.imdb.com/M/title-exact?That%20Darn%20Cat%20(1997)",0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0
 879,"Peacemaker, The (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Peacemaker%2C+The+(1997)",0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0
 880,"Soul Food (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Soul+Food+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-881,"Money Talks (1997)","22-Aug-1997","http://us.imdb.com/M/title-exact?Money+Talks+(1997)",0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 882,"Washington Square (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Washington+Square+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 883,"Telling Lies in America (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Telling+Lies+in+America+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 884,"Year of the Horse (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Year+of+the+Horse+(1997)",0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
@@ -1001,7 +992,6 @@
 1000,"Lightning Jack (1994)","01-Jan-1994","http://us.imdb.com/M/title-exact?Lightning%20Jack%20(1994)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1
 1001,"Stupids, The (1996)","30-Aug-1996","http://us.imdb.com/M/title-exact?Stupids,%20The%20(1996)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1002,"Pest, The (1997)","07-Feb-1997","http://us.imdb.com/M/title-exact?Pest,%20The%20(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
-1003,"That Darn Cat! (1997)","14-Feb-1997","http://us.imdb.com/M/title-exact?That%20Darn%20Cat%20(1997)",0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0
 1004,"Geronimo: An American Legend (1993)","01-Jan-1993","http://us.imdb.com/M/title-exact?Geronimo:%20An%20American%20Legend%20(1993)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1
 1005,"Double vie de Véronique, La (Double Life of Veronique, The) (1991)","01-Jan-1991","http://us.imdb.com/M/title-exact?Podwojne%20zycie%20Weroniki%20(1991)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1006,"Until the End of the World (Bis ans Ende der Welt) (1991)","01-Jan-1991","http://us.imdb.com/M/title-exact?Bis%20ans%20Ende%20der%20Welt%20(1991)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0
@@ -1255,7 +1245,6 @@
 1254,"Gone Fishin' (1997)","30-May-1997","http://us.imdb.com/M/title-exact?Gone%20Fishin'%20(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1255,"Broken English (1996)","02-May-1997","http://us.imdb.com/M/title-exact?Broken%20English%20%281996%29",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1256,"Designated Mourner, The (1997)","23-May-1997","http://us.imdb.com/M/title-exact?Designated%20Mourner%2C%20The%20%281997%29",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-1257,"Designated Mourner, The (1997)","23-May-1997","http://us.imdb.com/M/title-exact?Designated%20Mourner%2C%20The%20%281997%29",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1258,"Trial and Error (1997)","30-May-1997","http://us.imdb.com/M/title-exact?Trial%20and%20Error%20%281997%29",0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
 1259,"Pie in the Sky (1995)","09-Feb-1996","http://us.imdb.com/M/title-exact?Pie%20in%20the%20Sky%20(1995)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
 1260,"Total Eclipse (1995)","01-Jan-1995","http://us.imdb.com/M/title-exact?Total%20Eclipse%20(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -1604,8 +1593,6 @@
 1603,"Angela (1995)","16-Feb-1996","http://us.imdb.com/M/title-exact?Angela%20(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1604,"He Walked by Night (1948)","01-Jan-1948","http://us.imdb.com/M/title-exact?He%20Walked%20by%20Night%20(1948)",0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0
 1605,"Love Serenade (1996)","11-Jul-1997","http://us.imdb.com/M/title-exact?Love+Serenade+(1996)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
-1606,"Deceiver (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Liar+(1997)",0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0
-1607,"Hurricane Streets (1998)","01-Jan-1998","http://us.imdb.com/Title?Hurricane+Streets+(1998)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1608,"Buddy (1997)","06-Jun-1997","http://us.imdb.com/M/title-exact?Buddy%20%281997%29",0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1609,"B*A*P*S (1997)","28-Mar-1997","http://us.imdb.com/M/title-exact?B%2EA%2EP%2ES%2E%20(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1610,"Truth or Consequences, N.M. (1997)","02-May-1997","http://us.imdb.com/Title?Truth+or+Consequences,+N.M.+(1997)",0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0
@@ -1615,7 +1602,6 @@
 1614,"Reluctant Debutante, The (1958)","01-Jan-1958","http://us.imdb.com/M/title-exact?Reluctant%20Debutante,%20The%20(1958)",0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
 1615,"Warriors of Virtue (1997)","02-May-1997","http://us.imdb.com/M/title-exact?Warriors%20of%20Virtue%20%281997%29",0,1,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0
 1616,"Desert Winds (1995)","01-Jan-1995","http://us.imdb.com/M/title-exact?Desert%20Winds%20(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-1617,"Hugo Pool (1997)","01-Jan-1997","http://us.imdb.com/M/title-exact?Hugo+Pool+(1997)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
 1618,"King of New York (1990)","01-Jan-1990","http://us.imdb.com/Title?King+of+New+York+(1990)",0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0
 1619,"All Things Fair (1996)","08-Mar-1996","http://us.imdb.com/Title?Lust+och+f%E4gring+stor+(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1620,"Sixth Man, The (1997)","28-Mar-1997","http://us.imdb.com/M/title-exact?Sixth%20Man%2C%20The%20(1997)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -1623,7 +1609,6 @@
 1622,"Paris, France (1993)","01-Jan-1993","http://us.imdb.com/M/title-exact?Paris,%20France%20(1993)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1623,"Cérémonie, La (1995)","20-Dec-1996","http://us.imdb.com/M/title-exact?C%E9r%E9monie%2C%20La%20%281995%29",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1624,"Hush (1998)","10-Mar-1998","http://us.imdb.com/Title?Hush+(1998)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
-1625,"Nightwatch (1997)","22-Apr-1997","http://us.imdb.com/M/title-exact?Nightwatch%20(1997)",0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0
 1626,"Nobody Loves Me (Keiner liebt mich) (1994)","09-Feb-1996","http://us.imdb.com/M/title-exact?Keiner%20liebt%20mich%20(1994)",0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
 1627,"Wife, The (1995)","26-Jul-1996","http://us.imdb.com/Title?Wife,+The+(1995)",0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0
 1628,"Lamerica (1994)","01-Jan-1994","http://us.imdb.com/M/title-exact?Lamerica%20(1994)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -1648,15 +1633,12 @@
 1647,"Hana-bi (1997)","20-Mar-1998","http://us.imdb.com/Title?Hana-bi+(1997)",0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,0,0
 1648,"Niagara, Niagara (1997)","20-Mar-1998","http://us.imdb.com/Title?Niagara,+Niagara+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1649,"Big One, The (1997)","27-Mar-1998","http://us.imdb.com/Title?Big+One,+The+(1997)",0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-1650,"Butcher Boy, The (1998)","01-Jan-1998","http://us.imdb.com/M/title-exact?imdb-title-118804",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1651,"Spanish Prisoner, The (1997)","27-Mar-1998","http://us.imdb.com/Title?Spanish+Prisoner,+The+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0
 1652,"Temptress Moon (Feng Yue) (1996)","13-Jun-1997","http://us.imdb.com/M/title-exact?Feng%20Yue%20%281996%29",0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0
 1653,"Entertaining Angels: The Dorothy Day Story (1996)","27-Sep-1996","http://us.imdb.com/M/title-exact?Entertaining%20Angels:%20The%20Dorothy%20Day%20Story%20(1996)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-1654,"Chairman of the Board (1998)","01-Jan-1998","http://us.imdb.com/Title?Chairman+of+the+Board+(1998)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1655,"Favor, The (1994)","01-Jan-1994","http://us.imdb.com/M/title-exact?Favor,%20The%20(1994)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
 1656,"Little City (1998)","20-Feb-1998","http://us.imdb.com/M/title-exact?Little+City+(1998)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0
 1657,"Target (1995)","28-Feb-1996","http://us.imdb.com/M/title-exact?Target%20(1995)",0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
-1658,"Substance of Fire, The (1996)","06-Dec-1996","http://us.imdb.com/M/title-exact?Substance%20of%20Fire,%20The%20(1996)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1659,"Getting Away With Murder (1996)","12-Apr-1996","http://us.imdb.com/Title?Getting+Away+With+Murder+(1996)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1660,"Small Faces (1995)","09-Aug-1996","http://us.imdb.com/M/title-exact?Small%20Faces%20(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1661,"New Age, The (1994)","01-Jan-1994","http://us.imdb.com/M/title-exact?New%20Age,%20The%20(1994)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
@@ -1678,6 +1660,5 @@
 1677,"Sweet Nothing (1995)","20-Sep-1996","http://us.imdb.com/M/title-exact?Sweet%20Nothing%20(1995)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1678,"Mat' i syn (1997)","06-Feb-1998","http://us.imdb.com/M/title-exact?Mat%27+i+syn+(1997)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
 1679,"B. Monkey (1998)","06-Feb-1998","http://us.imdb.com/M/title-exact?B%2E+Monkey+(1998)",0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0
-1680,"Sliding Doors (1998)","01-Jan-1998","http://us.imdb.com/Title?Sliding+Doors+(1998)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0
 1681,"You So Crazy (1994)","01-Jan-1994","http://us.imdb.com/M/title-exact?You%20So%20Crazy%20(1994)",0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0
 1682,"Scream of Stone (Schrei aus Stein) (1991)","08-Mar-1996","http://us.imdb.com/M/title-exact?Schrei%20aus%20Stein%20(1991)",0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0
