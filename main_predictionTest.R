@@ -5,7 +5,7 @@
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
 #       Fichier : main_predictionTest.R
-#       Description : rÃ©sultats des tests par validation croisÃ©e
+#       Description : résultats des tests par validation croisée
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 # ===================================== 1.PREAMBULE ===============================================
@@ -16,34 +16,33 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-source("open_file.R")
-#open_file(repository = ml-100k)
+source("open_files.R")
 
 # ====================== 3.GENERATION DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
-source("decoupage_de_la_base.R")
-#split_Ratings(n=5)
+source("split_data.R")
 
 # =================== 4.GENERATION DES TABLEAUX DE PREDICTION ================================
 
 source("stat_Users.R")
 source("stat_Movies.R")
-source("naive_prediction.R")
+source("naive_predictions.R")
 source("error_function.R")
 
 error_names = c("RMSE", "MAE", "01")
 nb.Errors = length(error_names)
-predictor_names = c("random", "meanOfUsers", "meanOfMovies", "meanByUser", "meanByMovie")
+
+predictor_names = c("random_unif", "random_samp", "meanOfMovies", "meanOfUsers", "mean", "meanByUser", "meanByMovie")
 nb.Predictors = length(predictor_names)
 
 for(error in error_names){
-  assign(paste0('result_',error),as.data.frame(matrix(0, nrow=n, ncol = nb.Predictors), row.names = predictor_names))
+  assign(paste0('result_',error),as.data.frame(matrix(0, nrow=nb.Predictors, ncol = n), row.names = predictor_names))
 }
 
 # =================== 5.CALCUL DES TABLEAUX DE PREDICTION ================================
 
-for(vc in 1:n){ # pour chaque couple train/test de la validation croisÃ©e
-  pred = naive_prediction(get(paste0('TrainingU',vc)), get(paste0('TestU',vc)))
+for(vc in 1:n){ # pour chaque couple train/test de la validation croisée
+  pred = naive_predictions(get(paste0('TrainingU',vc)), get(paste0('TestU',vc)))
   
   for(error in error_names){ #pour chaque erreur
     for(model in predictor_names){ #pour chaque predicteur
