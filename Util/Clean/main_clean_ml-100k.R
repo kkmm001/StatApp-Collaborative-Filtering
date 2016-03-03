@@ -11,18 +11,18 @@
 
 # ===================================== 1.PREAMBULE ===============================================
 
-## Clean up
+# Clean up
 rm(list=ls()) 
 cat("\014") 
 
 # ================================ 2.OUVERTURE DES FICHIERS =======================================
 
-##Ouverture du fichier des notes
+#Ouverture du fichier des notes
 file.Ratings = file.choose() # u.data
 data.Ratings = read.table(file=file.Ratings,header=F,colClasses = c(V4 = "NULL"))
 colnames(data.Ratings) = c("userID", "movieID", "rating")
 
-##Ouverture du  fichier des films
+#Ouverture du  fichier des films
 file.Movies = file.choose() # u.item
 data.Movies = read.table(file=file.Movies,header=F,sep="|", quote = "\"",colClasses = c(V4 = "NULL"))
 
@@ -33,7 +33,7 @@ vect.MovieGenres = c("unknown", "Action", "Adventure", "Animation", "Children's"
 nb.Genres = length(vect.MovieGenres)
 colnames(data.Movies) = c("movieID", "title", "date", "IMDbURL", vect.MovieGenres)
 
-##Ouverture du fichiers des utilisateurs
+#Ouverture du fichiers des utilisateurs
 file.Users = file.choose() # u.user
 data.Users = read.table(file=file.Users,header=F, sep='|', stringsAsFactors = TRUE)
 colnames(data.Users) = c("userID", "age", "sex", "occupation", "zip.code")
@@ -60,9 +60,10 @@ merge_movies = function(data.Ratings,data.Movies,data.Users){
   
   print(doublons)
   
-  write.csv2(data.Ratings, "./ml-100k/data.Ratings.csv",row.names = FALSE)
-  write.csv2(data.Movies, "./ml-100k/data.Movies.csv",row.names = FALSE)
-  write.csv2(data.Users, "./ml-100k/data.Users.csv",row.names = FALSE)
+  #Enregistrement
+  write.csv2(data.Ratings, "./Data/ml-100k/data.Ratings.csv",row.names = FALSE)
+  write.csv2(data.Movies, "./Data/ml-100k/data.Movies.csv",row.names = FALSE)
+  write.csv2(data.Users, "./Data/ml-100k/data.Users.csv",row.names = FALSE)
   
 }
 
