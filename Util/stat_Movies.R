@@ -27,4 +27,3 @@ stat_Movies = function(data.Ratings){
   return(stat.RatingPerMovie)
   
 }
-
