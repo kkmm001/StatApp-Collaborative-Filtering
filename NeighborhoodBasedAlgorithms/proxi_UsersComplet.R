@@ -2,6 +2,8 @@
 
 proxi_UsersComplet_Pearson = function(userID, data.Ratings){
   
+  source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
+  
   isPresent = !(is.null(intersect(userID,data.Ratings$userID)))
   
   if (isPresent){
@@ -30,6 +32,8 @@ proxi_UsersComplet_Pearson = function(userID, data.Ratings){
 #====================================== 2. Distance Euclidienne ===============================
 
 proxi_UsersComplet_euclid = function(userID, data.Ratings){
+  
+  source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
   
   isPresent = !(is.null(intersect(userID,data.Ratings$userID)))
   
