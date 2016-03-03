@@ -4,6 +4,6 @@ isRated = function(userID, movieID, data.Ratings){
   #       data.Ratings  : la base des notes
   #OUTPUT               : renvoie TRUE si userID a noté le film movieID, sinon FALSE
   
-  res = movieID %in% data.Ratings[data.Ratings$user == userID,"movieID"]
+  res = movieID %in% data.Ratings[data.Ratings$userID == userID,"movieID"]
   return(res)
 }
