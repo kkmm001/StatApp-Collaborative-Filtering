@@ -16,7 +16,7 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-source("open_file.R")
+source("./Util/open_files.R")
 
 # ======================== 3.DETERMINATION DU VOLUME DE DONNEES DES BASES (controles) ============================
 
@@ -144,7 +144,7 @@ barplot(vect.nb.MoviesPerGenre[order.nb.MoviesPerGenre],
 
 #5.1# Statistiques par utilisateur
 
-source("stat_Users.R")
+source("./Util/stat_Users.R")
 stat.Users = stat_Users(data.Ratings)
 recap.Users = merge(data.Users, stat.Users, by.x = "userID", by.y = "userID")
 rm(stat.Users)
@@ -167,7 +167,7 @@ boxplot(recap.Users$mean, main = "Note moyenne donnee par utilisateur")
 
 #5.2# Statistiques par film
 
-source("stat_Movies.R")
+source("./Util/stat_Movies.R")
 stat.Movies = stat_Movies(data.Ratings)
 recap.Movies = merge(data.Movies, stat.Movies, by.x = "movieID", by.y = "movieID")
 rm(stat.Movies)
