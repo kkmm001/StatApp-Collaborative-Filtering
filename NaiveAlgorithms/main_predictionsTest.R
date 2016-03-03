@@ -4,7 +4,7 @@
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
-#       Fichier : main_predictionTest.R
+#       Fichier : main_predictionsTest.R
 #       Description : résultats des tests par validation croisée
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -16,18 +16,18 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-source("open_files.R")
+source("./Util/open_files.R")
 
 # ====================== 3.GENERATION DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
-source("split_data.R")
+source("./Util/split_data.R")
 
 # =================== 4.GENERATION DES TABLEAUX DE PREDICTION ================================
 
-source("stat_Users.R")
-source("stat_Movies.R")
-source("naive_predictions.R")
-source("error_function.R")
+source("./Util/stat_Users.R")
+source("./Util/stat_Movies.R")
+source("./NaiveAlgorithms/naive_predictions.R")
+source("./Util/error_function.R")
 
 error_names = c("RMSE", "MAE", "01")
 nb.Errors = length(error_names)
