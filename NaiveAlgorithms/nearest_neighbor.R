@@ -4,7 +4,7 @@ nearest_neighbor= function(user_ID,data.Ratings, similarity=P){
   if(similarity=P){
     g=max}
   else{
-    if(similarity=S){
+    if(similarity=DE){
       g=min}
     else{
       break
