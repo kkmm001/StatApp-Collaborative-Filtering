@@ -1,11 +1,15 @@
-#============================= 1. Du point de vue du coefficient de corrélation de Pearson ===========================
+#=============== Par defaut on prends la similarité de Pearson / autre similarite possible distance euclidienne sinon message d'erreur ===========================
 
-nearest_neighborP = function(user_ID,data.Ratings){
-  mat.cor_pearson = proxi_UsersComplet_Pearson(user_ID,data.Ratings)
-  colnames(mat.cor_pearson) = c("ID","corcoef")
-  mat.cor_pearson = as.data.frame(mat.cor_pearson)
-  mat.cor_pearson = mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pearson) !any(is.na(mat.cor_pearson))),]
-  near_n_P = mat.cor_pearson[mat.cor_pearson[2] == max(mat.cor_pearson[2]),]
+nearest_neighbor= function(user_ID,data.Ratings, similarity=P){
+  if(similarity=P){
+  Mat= proxi_UsersComplet_Pearson(user_ID,data.Ratings)
+  g=max ifelse(similarity=S,Mat=t.dist_euclid = proxi_UsersComplet_Pearson(user_ID,data.Ratings),Mat=null))
+  if(Mat=NULL){break}
+  colnames(Mat) = c("ID","corcoef")
+  Mat = as.data.frame(Mat)
+  
+  Mat = Mat[apply(Mat,1,function(Mat) !any(is.na(Mat))),]
+  if(similarity=P,near_n = Mat[Mat[2] == max(Mmat.cor_pearson[2]),]
   return (near_n_P)
 }
 
