@@ -1,4 +1,4 @@
-proxi_Users_Pearson = function(mat.MoviesOfuserID1, userID2, data.Ratings,similarity=P){
+proxi_Users_Pearson = function(mat.MoviesOfuserID1, userID2, data.Ratings,similarity="P"){
  
     mat.MoviesOfuserID2 = data.Ratings[data.Ratings$userID == userID2, c("movieID", "rating")]
     mat.MoviesOfuserID2 = mat.MoviesOfuserID2[sort.list(mat.MoviesOfuserID2[,1]),]
@@ -9,16 +9,16 @@ proxi_Users_Pearson = function(mat.MoviesOfuserID1, userID2, data.Ratings,simila
     mat.MoviesinCommon[1,] = mat.MoviesOfuserID1$rating[mat.MoviesOfuserID1$movieID %in% vect.MoviesInCommon]
     mat.MoviesinCommon[2,] = mat.MoviesOfuserID2$rating[mat.MoviesOfuserID2$movieID %in% vect.MoviesInCommon]
   
-  if(similarity=P){
+  if(similarity=="P"){
     res = cor(mat.MoviesinCommon[1,],mat.MoviesinCommon[2,], method="pearson")}
-  else{
-    if(similarity=DE){
+ }else{
+   if(similarity=="DE"){
       res = dist(mat.MoviesinCommon, method="euclidean")}
-    else{
-      break
-    }
-  } 
-  
+   }else{
+    break
+   }
+ }
+
   return(res)
 }
 
