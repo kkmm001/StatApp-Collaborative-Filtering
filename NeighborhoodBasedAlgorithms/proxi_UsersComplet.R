@@ -1,5 +1,5 @@
 
-proxi_UsersComplet = function(userID, data.Ratings,similarity=P){
+proxi_UsersComplet = function(userID, data.Ratings,similarity="P"){
   source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
   isPresent = !(is.null(intersect(userID,data.Ratings$userID)))
   if (isPresent){
@@ -23,13 +23,13 @@ proxi_UsersComplet = function(userID, data.Ratings,similarity=P){
 
 # On teste pour un individu quelconque
 #======== PEARSON ====================
-mat.cor_pearson = proxi_UsersComplet(1,TestU1,P)
+mat.cor_pearson = proxi_UsersComplet(1,TestU1,"P")
 colnames(mat.cor_pearson) = c("ID","corcoef")
 mat.cor_pearson = as.data.frame(mat.cor_pearson)
 mat.cor_pearson = mat.cor_pearson[apply(mat.cor_pearson,1,function(mat.cor_pearson) !any(is.na(mat.cor_pearson))),] # On supprime les NA
 
 #======== EUCLIDE ====================
-mat.dist_euclid = proxi_UsersComplet(1,TestU1,DE)
+mat.dist_euclid = proxi_UsersComplet(1,TestU1,"DE")
 colnames(mat.dist_euclid) = c("ID","euclidist")
 mat.dist_euclid = as.data.frame(mat.dist_euclid)
 mat.dist_euclid = mat.dist_euclid[apply(mat.dist_euclid,1,function(mat.dist_euclid) !any(is.na(mat.dist_euclid))),] # On supprime les NA
