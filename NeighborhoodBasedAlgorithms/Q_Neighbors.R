@@ -11,7 +11,7 @@ Q_neighbors = function(data.Ratings,vect.similarity,movieID,Q){
   while((q<Q)&(i<Nu)){
     if(isRated(vect.similarity[i],movieID,data.Ratings)){
       q = q+1
-      neighbors[q] = vect.similarity[1,i]
+      neighbors[q] = vect.similarity[i]
     }
     i = i+1
   }
