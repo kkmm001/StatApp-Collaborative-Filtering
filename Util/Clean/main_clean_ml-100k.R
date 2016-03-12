@@ -42,6 +42,7 @@ colnames(data.Users) = c("userID", "age", "sex", "occupation", "zip.code")
 
 merge_movies = function(data.Ratings,data.Movies,data.Users){
   
+  #Détermination des films doublons
   data.SameMovies = data.Movies[duplicated(data.Movies$title),c("movieID", "title", "date")]
   doublons = matrix(NA,nrow = dim(data.SameMovies)[1], ncol = 1)
   for(ind in 1:dim(data.SameMovies)[1]){
@@ -49,6 +50,9 @@ merge_movies = function(data.Ratings,data.Movies,data.Users){
     doublons[ind] = list(data.Movies$movieID[data.Movies$title == title])
   }
   
+  print(doublons)
+  
+  #Suppression des ID-doublons des films incriminés dans la base data.Movies et correction des IDmovie dans la base data.Ratings
   for(doublon in 1:length(doublons)){
     realID = doublons[[doublon]][1]
     for(ind_other in 2:length(doublons[[doublon]])){
@@ -58,7 +62,9 @@ merge_movies = function(data.Ratings,data.Movies,data.Users){
     }
   }
   
-  print(doublons)
+  #Correction des doubles notations
+  data.Ratings$duplicated = duplicated(data.Ratings[,c("userID", "movieID")])
+  data.Ratings = data.Ratings[data.Ratings$duplicated == FALSE, c("userID","movieID","rating")]
   
   #Enregistrement
   write.csv2(data.Ratings, "./Data/ml-100k/data.Ratings.csv",row.names = FALSE)
