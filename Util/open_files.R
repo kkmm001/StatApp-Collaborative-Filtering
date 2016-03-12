@@ -10,9 +10,9 @@
 
 repository <- readline(prompt="Choisissez un dossier : ")
 
-data.Ratings = read.csv(file = paste0("Data/", repository, "/data.Ratings.csv"), header=T, sep=',')
-data.Movies = read.csv(file = paste0("Data/", repository, "/data.Movies.csv"), header=T, sep=',')
-data.Users = read.csv(file = paste0("Data/", repository, "/data.Users.csv"), header=T, sep=',')
+data.Ratings = read.csv2(file = paste0("Data/", repository, "/data.Ratings.csv"), header=T)
+data.Movies = read.csv2(file = paste0("Data/", repository, "/data.Movies.csv"), header=T)
+data.Users = read.csv2(file = paste0("Data/", repository, "/data.Users.csv"), header=T)
 
 if(repository == "ml-100k"){
   
