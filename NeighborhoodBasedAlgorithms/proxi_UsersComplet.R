@@ -18,7 +18,7 @@ proxi_UsersComplet = function(userID, data.Ratings, similarity){
     for(userIND in 1:length(vect.Users)){
         user = vect.Users[userIND]
         mat.cor[userIND,1] = user
-        mat.cor[ind.User,2] = proxi_Users(mat.MoviesOfuserID,user,data.Ratings, similarity = similarity)
+        mat.cor[userIND,2] = proxi_Users(mat.MoviesOfuserID,user,data.Ratings, similarity = similarity)
     }
     
     return(mat.cor)
