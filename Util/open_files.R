@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# ENSAE - 2AD - Groupe de statistique appliquee
-#    Sujet : Filtrage collaborative
+# ENSAE - 2AD - Groupe de statistique appliquée
+#    Sujet : Filtrage collaboratif
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
@@ -10,9 +10,9 @@
 
 repository <- readline(prompt="Choisissez un dossier : ")
 
-data.Ratings = read.csv2(file = paste0("Data/", repository, "/data.Ratings.csv"), header=T)
-data.Movies = read.csv2(file = paste0("Data/", repository, "/data.Movies.csv"), header=T)
-data.Users = read.csv2(file = paste0("Data/", repository, "/data.Users.csv"), header=T)
+data.Ratings = read.table(file = paste0("Data/", repository, "/data.Ratings.tsv"), header=T, sep='\t')
+data.Movies = read.table(file = paste0("Data/", repository, "/data.Movies.tsv"), header=T, sep='\t')
+data.Users = read.table(file = paste0("Data/", repository, "/data.Users.tsv"), header=T, sep='\t')
 
 if(repository == "ml-100k"){
   
