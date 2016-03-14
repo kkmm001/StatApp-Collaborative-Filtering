@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# ENSAE - 2AD - Groupe de statistique appliquÃ©e
-#    Sujet : Filtrage collaborative
+# ENSAE - 2AD - Groupe de statistique appliquée
+#    Sujet : Filtrage collaboratif
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
@@ -57,6 +57,10 @@ colnames(cross_validation) = error_names
 rownames(cross_validation) = predictor_names
 for(error in error_names){
   for(model in predictor_names){
-    cross_validation[model,error] = sum(get(paste0('result_',error))[model,])/n
+    cross_validation[model,error] = round(sum(get(paste0('result_',error))[model,])/n, digits = 3)
   }
 }
+
+# =================== 6.ENREGISTREMENT DES RESULTATS DE LA VC ================================
+
+#write.table(cross_validation, "./Results/ml-100k/results_naivePredictionTest.tsv", col.names=NA, sep="\t")
