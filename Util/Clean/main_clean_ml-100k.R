@@ -1,6 +1,6 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# ENSAE - 2AD - Groupe de statistique appliquee
-#    Sujet : Filtrage collaborative
+# ENSAE - 2AD - Groupe de statistique appliquée
+#    Sujet : Filtrage collaboratif
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
@@ -52,7 +52,7 @@ merge_movies = function(data.Ratings,data.Movies,data.Users){
   
   print(doublons)
   
-  #Suppression des ID-doublons des films incriminés dans la base data.Movies et correction des IDmovie dans la base data.Ratings
+  #Suppression des ID-doublons des films incriminés dans la base data.Movies et correction des movieID dans la base data.Ratings
   for(doublon in 1:length(doublons)){
     realID = doublons[[doublon]][1]
     for(ind_other in 2:length(doublons[[doublon]])){
@@ -67,10 +67,10 @@ merge_movies = function(data.Ratings,data.Movies,data.Users){
   data.Ratings = data.Ratings[data.Ratings$duplicated == FALSE, c("userID","movieID","rating")]
   
   #Enregistrement
-  write.csv2(data.Ratings, "./Data/ml-100k/data.Ratings.csv",row.names = FALSE)
-  write.csv2(data.Movies, "./Data/ml-100k/data.Movies.csv",row.names = FALSE)
-  write.csv2(data.Users, "./Data/ml-100k/data.Users.csv",row.names = FALSE)
-  
+  write.table(data.Ratings, "./Data/ml-100k/data.Ratings.tsv",row.names = FALSE, sep="\t")
+  write.table(data.Movies, "./Data/ml-100k/data.Movies.tsv",row.names = FALSE, sep = "\t")
+  write.table(data.Users, "./Data/ml-100k/data.Users.tsv",row.names = FALSE, sep = "\t")
+
 }
 
 # ======================= 4.FONCTION PRINCIPAL ===================================================
