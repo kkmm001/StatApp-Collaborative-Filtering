@@ -20,9 +20,9 @@ cat("\014")
 # Ouverture des fichiers
 
 ```{r,echo = FALSE}
-data.Ratings = read.csv2(file = "../Data/ml-100k/data.Ratings.csv", header=T)
-data.Movies = read.csv2(file = "../Data/ml-100k/data.Movies.csv", header=T)
-data.Users = read.csv2(file = "../Data/ml-100k/data.Users.csv", header=T)
+data.Ratings = read.table(file = paste0("../Data/ml-100k/data.Ratings.tsv"), header=T, sep='\t')
+data.Movies = read.table(file = paste0("../Data/ml-100k/data.Movies.tsv"), header=T, sep='\t')
+data.Users = read.table(file = paste0("../Data/ml-100k/data.Users.tsv"), header=T, sep='\t')
 
 vect.MovieGenres = c("unknown", "Action", "Adventure", "Animation", "Children's", "Comedy", 
                        "Crime", "Documentary", "Drama", "Fantasy", "Film-noir", "Horror", 
