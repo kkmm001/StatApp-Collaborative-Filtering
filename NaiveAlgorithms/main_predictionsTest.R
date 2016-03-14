@@ -63,4 +63,4 @@ for(error in error_names){
 
 # =================== 6.ENREGISTREMENT DES RESULTATS DE LA VC ================================
 
-#write.table(cross_validation, "./Results/ml-100k/results_naivePredictionTest.tsv", col.names=NA, sep="\t")
+#write.table(cross_validation, paste0("./Results/", repository, "/results_naivePredictionTest.tsv"), col.names=NA, sep="\t")
