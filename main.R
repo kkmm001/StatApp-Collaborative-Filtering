@@ -14,20 +14,22 @@
 rm(list=ls()) 
 cat("\014") 
 
-repository = readline(prompt="Choisissez un problème : ")
+repository = readline(prompt = "Choisissez un problème : ")
 
 # ========================== 2.PREPARATION DE L'ALGORITHME NAIF ===========================
 
 recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
-load(file = paste0("./Results/", repository, "/dejaVu.Rdata"))
+load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
 
 # ======================= 3.RECOMMANDATION VIA ALGORITHME NAIF ===========================
 
 source("./NaiveAlgorithms/recommandation_meanByMovie.R")
-nb.recommandations = as.integer(readline(prompt="Choisissez un nombre de recommandation : "))
-userID = as.integer(readline(prompt="Choisissez un utilisateur : "))
+nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
+seuil = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
 
-vect.RecommendedMovies = recommandation_meanByMovie(recap.Movies, dv, userID, nb.recommandations, threshold = 50)
+userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+
+vect.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, threshold = seuil)
 print(vect.RecommendedMovies)
 
 # ================== 4.PREPARATION DE L'ALGORITHME DES KNN USER-USER ===========================
