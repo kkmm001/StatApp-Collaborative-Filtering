@@ -30,7 +30,16 @@ seuil = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
 userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
 
 vect.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, threshold = seuil)
-print(vect.RecommendedMovies)
+
+cat(sprintf("Les %.0f films recommandés pour vous : \n", nb.recommandations))
+for (recom in 1:nb.recommandations){
+  cat(sprintf("%.0f \t %-40s \t noté %.2f/5\n", 
+              recom, 
+              recap.Movies$title[recap.Movies$movieID == vect.RecommendedMovies[recom]], 
+              recap.Movies$mean[recap.Movies$movieID == vect.RecommendedMovies[recom]]
+              )
+      )
+}
 
 # ================== 4.PREPARATION DE L'ALGORITHME DES KNN USER-USER ===========================
 
