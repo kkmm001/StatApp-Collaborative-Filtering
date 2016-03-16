@@ -1,0 +1,49 @@
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# ENSAE - 2AD - Groupe de statistique appliquée
+#    Sujet : Filtrage collaboratif
+#       Encadrants : Vincent Cottet et Mehdi Sebbar
+#       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
+#
+#       Fichier : main.R
+#       Description : fonction principal pour les recommandations
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+
+# ======================================== 1.PREAMBULE =============================================
+
+## Clean up
+rm(list=ls()) 
+cat("\014") 
+
+repository = readline(prompt = "Choisissez un problème : ")
+
+# ========================== 2.PREPARATION DE L'ALGORITHME NAIF ===========================
+
+recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
+load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
+
+# ======================= 3.RECOMMANDATION VIA ALGORITHME NAIF ===========================
+
+source("./NaiveAlgorithms/recommandation_meanByMovie.R")
+nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
+seuil = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
+
+userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+
+vect.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, threshold = seuil)
+
+cat(sprintf("Les %.0f films recommandés pour vous : \n", nb.recommandations))
+for (recom in 1:nb.recommandations){
+  cat(sprintf("%.0f \t %-40s \t noté %.2f/5\n", 
+              recom, 
+              recap.Movies$title[recap.Movies$movieID == vect.RecommendedMovies[recom]], 
+              recap.Movies$mean[recap.Movies$movieID == vect.RecommendedMovies[recom]]
+              )
+      )
+}
+
+# ================== 4.PREPARATION DE L'ALGORITHME DES KNN USER-USER ===========================
+
+# ================ 5.RECOMMANDATION VIA L'ALGORITHME des KNN USER-USER =======================
+
+#nb.recommandations = readline(prompt="Choisissez un nombre de recommandation : ")
+#userID = readline(prompt="Choisissez un utilisateur : ")
