@@ -20,13 +20,13 @@ source("./Util/open_files.R")
 
 source("./Util/stat_Users.R")
 stat.Users = stat_Users(data.Ratings)
-recap.Users = merge(data.Users, stat.Users, by.x = "userID", by.y = "userID")
-write.table(recap.Users, paste0("./Results/", repository, "/recap.Users.tsv"), col.names=NA, sep="\t")
+recap.Users = as.data.frame(merge(data.Users, stat.Users, by.x = "userID", by.y = "userID"))
+write.table(recap.Users, paste0("./Results/", repository, "/recap.Users.tsv"), row.names = FALSE, sep="\t")
 
 source("./Util/stat_Movies.R")
 stat.Movies = stat_Movies(data.Ratings)
 recap.Movies = merge(data.Movies, stat.Movies, by.x = "movieID", by.y = "movieID")
-write.table(recap.Movies, paste0("./Results/", repository, "/recap.Movies.tsv"), col.names=NA, sep="\t")
+write.table(recap.Movies, paste0("./Results/", repository, "/recap.Movies.tsv"), row.names = FALSE, sep="\t")
 
 source("./Util/deja_Vu.R")
 list.dejaVu = deja_Vu(data.Ratings)
