@@ -1,0 +1,22 @@
+proxi_Users_AllvsAll = function(data.Ratings, similarity){
+  #INPUT    data.Ratings  : la base des notes
+  #         similarity    : la métrique utilisée pour calculer la similarité ("pearson", "nrmse", "nmae")
+  #OUTPUT   mat.sim       : matrice contenant le degré de similarité entre les utilisateurs
+  
+  vect.Users = unique(data.Ratings$userID)
+  N=length(vect.Users) # nombre d’individus différents dans la data frame data.Ratings
+  mat.sim=diag(N) # création d'une matrice identité de taille N
+
+  for (i in 1 : (N-1) ){
+    userID = vect.Users[i]
+    mat.MoviesOfuserID = data.Ratings[data.Ratings$userID == userID, c("movieID", "rating")]
+    mat.MoviesOfuserID = mat.MoviesOfuserID[sort.list(mat.MoviesOfuserID[,1]),]
+    for(k in (i+1) : N){
+      H=proxi_Users(mat.MoviesOfuserID,vect.Users[k], data.Ratings,similarity)
+      mat.sim[i,k]=h
+      mat.sim[k,i]=h
+    }
+  }
+
+  retrun(mat.sim)
+}
