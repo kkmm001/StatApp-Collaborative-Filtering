@@ -538,35 +538,11 @@ summary(recap.FemaleUser)
 
 # Nombre de films en commun 
 ```{r, echo = FALSE}
-mat.MoviesOfuserID2 = data.Ratings[data.Ratings$userID == userID2, c("movieID", "rating")]
-mat.MoviesOfuserID2 = mat.MoviesOfuserID2[sort.list(mat.MoviesOfuserID2[,1]),]
 
-vect.MoviesInCommon = as.matrix(intersect(mat.MoviesOfuserID1$movieID, mat.MoviesOfuserID2$movieID))
+mat.InCommon = as.matrix(read.table(file = "../Results/ml-100k/mat.InCommon.tsv", header=T, sep='\t'))
 
-
-  vect.Users = sort(unique(data.Ratings$userID))
-  nb.Users = length(vect.Users) # nombre d’individus différents dans la data frame data.Ratings
-  
-  mat.com = matrix(NA, nrow = nb.Users, ncol = nb.Users) 
-  
-  for (userIND1 in 1:(nb.Users-1)){
-    
-    userID1 = vect.Users[userIND1]
-    mat.MoviesOfuserID1 = data.Ratings[data.Ratings$userID == userID1, c("movieID", "rating")]
-    mat.MoviesOfuserID1 = mat.MoviesOfuserID1[sort.list(mat.MoviesOfuserID1[,1]),]
-    
-    for(userIND2 in (userID1+1):nb.Users){
-      
-      userID2 = vect.Users[userIND2]
-      mat.MoviesOfuserID2 = data.Ratings[data.Ratings$userID == userID2, c("movieID", "rating")]
-      mat.MoviesOfuserID2 = mat.MoviesOfuserID2[sort.list(mat.MoviesOfuserID2[,1]),]
-
-      mat.com[userIND1, userIND2] = length(intersect(mat.MoviesOfuserID1$movieID, mat.MoviesOfuserID2$movieID))
-
-      hist(mat.com, breaks = 100, xlim = c(0,100))
-      table(mat.com)
-    }
-  }
+hist(mat.InCommon, breaks = 100, xlim = c(0,100))
+table(mat.InCommon)[0:11]
 ```
 
 # Etude sur les similarités
@@ -574,7 +550,7 @@ vect.MoviesInCommon = as.matrix(intersect(mat.MoviesOfuserID1$movieID, mat.Movie
 ## Corrélation de Pearson
 
 ```{r, echo = FALSE}
-mat.sim_pearson = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_pearson.tsv"), header=T, sep='\t'))
+mat.sim_pearson = as.matrix(read.table(file = "../Results/ml-100k/mat.sim_pearson.tsv", header=T, sep='\t'))
 
 hist(mat.sim_pearson, 
      freq = FALSE, 
@@ -587,7 +563,7 @@ hist(mat.sim_pearson,
 ## Distance euclidienne
 
 ```{r, echo = FALSE}
-mat.sim_nrmse = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_nrmse.tsv"), header=T, sep='\t'))
+mat.sim_nrmse = as.matrix(read.table(file = "../Results/ml-100k/mat.sim_nrmse.tsv", header=T, sep='\t'))
 
 hist(mat.sim_nrmse, 
      freq = FALSE, 
@@ -600,7 +576,7 @@ hist(mat.sim_nrmse,
 ## Distance manhattan
 
 ```{r, echo = FALSE}
-mat.sim_nmae = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_nmae.tsv"), header=T, sep='\t'))
+mat.sim_nmae = as.matrix(read.table(file = "../Results/ml-100k/mat.sim_nmae.tsv", header=T, sep='\t'))
 
 hist(mat.sim_nmae, 
      freq = FALSE, 
