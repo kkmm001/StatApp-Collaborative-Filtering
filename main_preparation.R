@@ -48,3 +48,7 @@ write.table(mat.sim_nrmse, paste0("./Results/", repository, "/mat.sim_nrmse.tsv"
 mat.sim_nmae = proxi_Users_AllvsAll(data.Ratings, "nmae")
 write.table(mat.sim_nmae, paste0("./Results/", repository, "/mat.sim_nmae.tsv"), row.names = FALSE, sep="\t")
 
+# Matrice du nombre de films notés en commun
+source("./NeighborhoodBasedAlgorithms/nb_MoviesInCommon.R")
+mat.InCommon = nb_MoviesInCommon(data.Ratings)
+write.table(mat.InCommon, paste0("./Results/", repository, "/mat.InCommon.tsv"), row.names = FALSE, sep="\t")
