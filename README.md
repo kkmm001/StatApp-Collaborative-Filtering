@@ -8,11 +8,12 @@ Tutors group: COTTET Vincent/ SEBBAR Mehdi
 
 ```
 project
-|   README.md
+|   main.R
 |   main_preparation.R
+|   README.md
 
 |___ANALYSIS
-    |   pdf_analysis.Rmd
+    |   pdf_analysis_ml-100k.Rmd
 
 |___DATA
     |   ml-100k
@@ -26,17 +27,22 @@ project
     |   recommandation_meanByMovie.R
     
 |___NEIGHBORHOODBASEDALGORITHMS
-    |   nearest_neighbor.R
+    |   nb_MoviesInCommon.R
     |   proxi_Users.R
-    |   proxi_UsersComplet.R
-    |   Q_Neighbors.R
+    |   proxi_Users_AllvsAll.R
+    |   Q_nearest_neighbors.R
+    |   recommendation_knn_user.R
     
 |___RESULTS
-    |   ml-100k
-    		|   dejaVu.Rdata
-    		|   recap.Movies.tsv
-    		|   recap.Users.tsv
-	  	|   results_naivePredictionTest.tsv
+    |   ml-100
+        |   list.dejaVu.Rdata
+        |   mat.InCommon.tsv   
+        |   mat.sim_nmae.tsv   
+        |   mat.sim_nrmse.tsv   
+        |   mat.sim_pearson.tsv   
+        |   recap.Movies.tsv
+        |   recap.Users.tsv
+        |   results_naivePredictionTest.tsv
 
 |___UTIL
     |   Clean
@@ -57,10 +63,12 @@ project
 naive_predictions.R <br />
 recommandation_meanByMovie.R <br />
 
-nearest_neighbor.R <br />
+nb_MoviesInCommon.R <br />
 proxi_Users.R <br />
-proxi_UsersComplet.R <br />
-Q_Neighbors.R <br />
+proxi_Users_AllvsAll.R <br />
+Q_nearest_neighbors.R <br />
+recommendation_knn_user.R <br />
+
 
 deja_Vu.R <br />
 error_function.R <br />
@@ -75,4 +83,6 @@ main_predictionsTest.R <br />
 
 main_clean_ml-100k.R  <br />
 
-main_preparation.R
+main_preparation.R <br />
+
+main
