@@ -1,6 +1,6 @@
 ---
 output: pdf_document
-title: "Filtrage collaboratif"
+title: "Filtrage collaboratif - Analyse de ml-100k"
 author : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 ---
 
@@ -536,3 +536,76 @@ summary(recap.FemaleUser)
 
 # Etude par genre de films
 
+# Nombre de films en commun 
+```{r, echo = FALSE}
+mat.MoviesOfuserID2 = data.Ratings[data.Ratings$userID == userID2, c("movieID", "rating")]
+mat.MoviesOfuserID2 = mat.MoviesOfuserID2[sort.list(mat.MoviesOfuserID2[,1]),]
+
+vect.MoviesInCommon = as.matrix(intersect(mat.MoviesOfuserID1$movieID, mat.MoviesOfuserID2$movieID))
+
+
+  vect.Users = sort(unique(data.Ratings$userID))
+  nb.Users = length(vect.Users) # nombre d’individus différents dans la data frame data.Ratings
+  
+  mat.com = matrix(NA, nrow = nb.Users, ncol = nb.Users) 
+  
+  for (userIND1 in 1:(nb.Users-1)){
+    
+    userID1 = vect.Users[userIND1]
+    mat.MoviesOfuserID1 = data.Ratings[data.Ratings$userID == userID1, c("movieID", "rating")]
+    mat.MoviesOfuserID1 = mat.MoviesOfuserID1[sort.list(mat.MoviesOfuserID1[,1]),]
+    
+    for(userIND2 in (userID1+1):nb.Users){
+      
+      userID2 = vect.Users[userIND2]
+      mat.MoviesOfuserID2 = data.Ratings[data.Ratings$userID == userID2, c("movieID", "rating")]
+      mat.MoviesOfuserID2 = mat.MoviesOfuserID2[sort.list(mat.MoviesOfuserID2[,1]),]
+
+      mat.com[userIND1, userIND2] = length(intersect(mat.MoviesOfuserID1$movieID, mat.MoviesOfuserID2$movieID))
+
+      hist(mat.com, breaks = 100, xlim = c(0,100))
+      table(mat.com)
+    }
+  }
+```
+
+# Etude sur les similarités
+
+## Corrélation de Pearson
+
+```{r, echo = FALSE}
+mat.sim_pearson = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_pearson.tsv"), header=T, sep='\t'))
+
+hist(mat.sim_pearson, 
+     freq = FALSE, 
+     main = "distribution pour ml-100k des similarités", 
+    xlab = "Similarité : pearson", 
+    ylab = "Densité"
+    )
+```
+
+## Distance euclidienne
+
+```{r, echo = FALSE}
+mat.sim_nrmse = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_nrmse.tsv"), header=T, sep='\t'))
+
+hist(mat.sim_nrmse, 
+     freq = FALSE, 
+     main = "distribution pour ml-100k des similarités", 
+    xlab = "Similarité : nrmse", 
+    ylab = "Densité"
+    )
+```
+
+## Distance manhattan
+
+```{r, echo = FALSE}
+mat.sim_nmae = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_nmae.tsv"), header=T, sep='\t'))
+
+hist(mat.sim_nmae, 
+     freq = FALSE, 
+     main = "distribution pour ml-100k des similarités", 
+    xlab = "Similarité : nmae", 
+    ylab = "Densité"
+    )
+```
