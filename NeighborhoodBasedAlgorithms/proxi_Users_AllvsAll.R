@@ -26,5 +26,7 @@ proxi_Users_AllvsAll = function(data.Ratings, similarity){
     }
   }
   
+  rm(vect.Users,nb.Users,userIND1,userID1,mat.MoviesOfuserID1,userIND2,userID2,sim) 
+  
   return(mat.sim)
 }
