@@ -13,7 +13,9 @@ rm(list=ls())
 cat("\014") 
 
 # Choix du problème et de la méthode de recommandation
+cat(sprintf("Les problèmes proposés sont : ml-100k\n"))
 repository = readline(prompt = "Choisissez un problème : ") #ml-100k
+cat(sprintf("Les méthodes proposées sont : naive et knn_user\n"))
 method = readline(prompt = "Choisissez une méthode : ") #naive, knn_user
 
 if(method == "naive"){
@@ -37,13 +39,8 @@ if(method == "knn_user"){
   
   # Chargement des données
   load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
-  
+  cat(sprintf("Les métriques proposées sont : pearson, nrmse et nmae\n"))
   similarity = readline(prompt = "Choisissez une métrique pour la similarité : ") # "pearson", "nrmse" ou "nmae"
-  if (similarity == "pearson"){
-    betterIsHigh = TRUE
-  } else if(similarity %in% c("nrmse", "nmae")){
-    betterIsHigh = FALSE
-  }
   assign(paste0("mat.sim_", similarity), as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, ".tsv"), header=T, sep='\t')))
   
   recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
@@ -55,18 +52,12 @@ if(method == "knn_user"){
   Q = as.integer(readline(prompt = "Choisissez le nombre de plus proches voisins : "))
   nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
   userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
-
-  vect.Users = sort(unique(recap.Users$userID))
-  vect.Movies = sort(unique(recap.Movies$movieID[recap.Movies$nb.Ratings >= Q]))
   
   #Recommandation
   source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
   source("./NeighborhoodBasedAlgorithms/recommendation_knn_user.R")
   
-  userIND = which(vect.Users == userID)
-  vect.similarity = vect.Users[order(get(paste0("mat.sim_", similarity))[userIND,], decreasing = betterIsHigh)]
-  
-  vect.RecommendedMovies = recommendation_knn_user(userID, vect.Users, vect.Movies, data.Ratings, vect.similarity, list.dejaVu)
+  vect.RecommendedMovies = recommendation_knn_user(userID, recap.Users, recap.Movies, data.Ratings, similarity, list.dejaVu, Q, nb.recommandations)
 }
 
 cat(sprintf("Les %.0f films recommandés pour vous : \n", nb.recommandations))
