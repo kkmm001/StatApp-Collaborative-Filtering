@@ -4,114 +4,75 @@
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
-#       Fichier : main_predictionsTest2.R
-#       Description : fonction principal pour les recommandations
+#       Fichier : main_predictionsTest.R
+#       Description : résultats des tests par validation croisée
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-# ======================================== 1.PREAMBULE =============================================
+# ===================================== 1.PREAMBULE ===============================================
 
 ## Clean up
 rm(list=ls()) 
 cat("\014") 
 
+# ======================================== 2.OUVERTURE DES FICHIERS =================================
+
 source("./Util/open_files.R")
-# ========================== 2.SOUS-PREPARATION DE L'ALGORITHME KNN USER USER ===========================
 
-load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
+# ====================== 3.GENERATION DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
-similarity = "pearson"
-if (similarity == "pearson"){
-  betterIsHigh = TRUE
-} else if(similarity %in% c("nrmse", "nmae")){
-  betterIsHigh = FALSE
-}
+source("./Util/split_data.R")
 
-assign(paste0("mat.sim_", similarity), as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, ".tsv"), header=T, sep='\t')))
+# ====================== 4.GENERATION DES TABLEAUX DE PREDICTION ====================================
 
-# ======================= 3.RECOMMANDATION VIA ALGORITHME KNN USER USER ===========================
+source("./Util/deja_Vu.R")
+source("./Util/stat_Users.R")
+source("./Util/stat_Movies.R")
 
+source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
+source("./NeighborhoodBasedAlgorithms/proxi_Users_AllvsAll.R")
 source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
-recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
-
-vect.Users = sort(unique(data.Ratings$userID))
-nb.Users = 5 #length(vect.Users)
-
-start.time <- Sys.time()
-
-Qmax = 40
+source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R")
 
 source("./Util/error_function.R")
-mat.error = matrix(NA, nrow = nb.Users, ncol = Qmax)
 
-for(userIND in 1:nb.Users){
-  userID = vect.Users[userIND]
-  vect.similarity = vect.Users[order(get(paste0("mat.sim_", similarity))[userIND,], decreasing = betterIsHigh)]
-  nb.dejaVu = length(list.dejaVu[[userID]])
+error_names = c("RMSE", "MAE", "01")
+nb.Errors = length(error_names)
+
+Qmax = 20
+similarity_names = c("pearson") #TODO a rallonger
+nb.Similarity = length(similarity_names)
+
+predictor_names = paste0(similarity_names, "_Q_", 1:Qmax) #TODO a améliorer
+nb.Predictors = length(predictor_names)
+
+for(error in error_names){
+  assign(paste0('result_',error),as.data.frame(matrix(0, nrow=nb.Predictors, ncol = n), row.names = predictor_names))
+}
+
+# =================== 5.CALCUL DES TABLEAUX DE PREDICTION ================================
+
+#TODO a changer : 1:n et non 1:1
+for(vc in 1:1){ # pour chaque couple train/test de la validation croisée
+  pred = knn_user_predictions(get(paste0('TrainingU',vc)), get(paste0('TestU',vc)), Qmax)
   
-  mat.pronostic = matrix(NA, nrow = nb.dejaVu, ncol = Qmax)
-  vect.realRating = matrix(NA, nrow = nb.dejaVu, ncol = 1)
-  
-  for (movieIND in 1:nb.dejaVu){
-    
-    movieID = list.dejaVu[[userID]][movieIND]
-    qnn = Q_nearest_neighbors(list.dejaVu,vect.similarity,movieID,Qmax) #Attention aux NA !! => is.na dans le calcul de la moyenne
-      
-    # Pronostic
-      
-    vect.Ratings.byNN = matrix(NA, nrow = 1, ncol = Qmax)
-    for(q in 1:Qmax){
-      vect.Ratings.byNN[q] = data.Ratings$rating[(data.Ratings$userID == qnn[q]) & (data.Ratings$movieID == movieID)]
-      mat.pronostic[movieIND,q] = mean(vect.Ratings.byNN[1:q], na.rm = TRUE)
+  for(error in error_names){ #pour chaque erreur
+    for(model in predictor_names){ #pour chaque predicteur
+      assign(paste0("result_",error),'[<-' (get(paste0("result_",error)), model,vc, value = error_function(pred$rating, pred[,model], method=error)))
     }
-      
-    vect.realRating[movieIND] = data.Ratings$rating[(data.Ratings$userID == userID) & (data.Ratings$movieID == movieID)] 
-      
-    plot(1:Qmax,mat.pronostic[movieIND,], type ="l", 
-         ylim = c(0,5), 
-         main = paste("pronostic pour l'utilisateur", userID, "et le film", movieID), 
-         xlab = "nombre de plus proches voisins", 
-         ylab = "pronostic"
-    )
-    abline(vect.realRating[movieIND], 0, col = "red")
   }
   
-  for (q in 1:Qmax){
-    mat.error[userIND,q] = error_function(mat.pronostic[,q], c(vect.realRating), "RMSE")
+}
+
+cross_validation = as.data.frame(matrix(0,nrow=nb.Predictors, ncol = nb.Errors)) #predicteur x metrique
+colnames(cross_validation) = error_names
+rownames(cross_validation) = predictor_names
+for(error in error_names){
+  for(model in predictor_names){
+    cross_validation[model,error] = round(sum(get(paste0('result_',error))[model,])/n, digits = 3)
   }
-  
-  png(paste('./Results/ml-100k/KNN_', similarity, 'error_user', userID, '.png'),width = 600, height = 300)
-  plot(1:Qmax,mat.error[userIND,],
-       type ="l", 
-       col="green", 
-       main = paste("Erreur pour l'utilisateur", userID), 
-       xlab = "nombre de plus proches voisins", 
-       ylab = "error", 
-       ylim = c(0,2)
-  )
-  dev.off()
 }
 
-vect.nb.Ratings = matrix(NA, nrow = nb.Users, ncol = 1)
-for(userIND in 1:nb.Users){
-  userID = vect.Users[userIND]
-  vect.nb.Ratings[userIND] = length(list.dejaVu[[userID]])
-}
 
-vect.error = matrix(NA, nrow = 1, ncol = Qmax)
-for (q in 1:Qmax){
-  vect.error[q] = (mat.error[,q] %*% vect.nb.Ratings[1:nb.Users])/sum(vect.nb.Ratings[1:nb.Users])
-}
+# =================== 6.ENREGISTREMENT DES RESULTATS DE LA VC ================================
 
-png(paste('./Results/ml-100k/KNN _', similarity, '_ global error sur', nb.Users, 'utilisateurs .png'),width = 600, height = 300)
-plot(1:Qmax,vect.error, 
-     type ="s", 
-     col="blue", 
-     main = "Erreur globale", 
-     xlab = "nombre de plus proches voisins", 
-     ylab = "error"
-     )
-dev.off()
-
-end.time <- Sys.time() 
-time.taken <- end.time - start.time
-time.taken
+write.table(cross_validation, paste0("./Results/", repository, "/results_knn_userPredictionTest.tsv"), col.names=NA, sep="\t")
