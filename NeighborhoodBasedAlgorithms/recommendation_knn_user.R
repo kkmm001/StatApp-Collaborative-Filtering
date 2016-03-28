@@ -8,6 +8,11 @@ recommendation_knn_user = function(userID, recap.Users, recap.Movies, data.Ratin
   #       Q
   #       nb.recommandations
   #OUTPUT                     : retourne les nb.recommandations pour l'utilisateur userID
+  
+  # Plus spécifiquement, cette fonction retourne la liste de taille nb.recommandations, contenant les identifiants des films 
+  # (dans recap.Movies) à partir de l'algorithme des Q plus proches voisins (au sens de la similarity) présents dans recap.Users
+  # pour l'individu userID, calculé à partir des notes de la base data.Ratings. 
+  
   vect.Users = sort(unique(recap.Users$userID))
   vect.Movies = sort(unique(recap.Movies$movieID[recap.Movies$nb.Ratings >= Q]))
   
