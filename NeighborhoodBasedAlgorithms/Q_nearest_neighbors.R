@@ -6,17 +6,28 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, simi
   #       movieID             : ID du film dont on veut prédire la note
   #       Q                   : le nombre de voisins
   #OUTPUT neighbors           : les Q plus proches voisins pour le film movieID pour userID
+  
+  # Plus spécifiquement, cette fonction retourne le vecteur de taille Q contenant les valeurs 
+  # de vect.Users (ie les identifiants des utilisateurs), à partir des calculs de proximité 
+  # (au sens de similarity), de userID pour le film movieID. 
+  # Rq : un itulisateur peut se prétendre un plus proche voisin d'un utilisateur X pour le film Y
+  # a condition qu'il ait noté le film Y ! D'où l'utilité de list.dejaVu 
 
-  userIND = which(vect.Users == userID)
+  # Similarité et ordre
   if (similarity == "pearson"){
     betterIsHigh = TRUE
   } else if(similarity %in% c("nrmse", "nmae")){
     betterIsHigh = FALSE
   }
-  vect.similarity = vect.Users[order(get(paste0("mat.sim_", similarity))[userIND,], decreasing = betterIsHigh)]
   
+  # La position de userID dans la matrice de similarité
+  userIND = which(vect.Users == userID)
+  
+  # Le vecteur contenant les plus proches voisins de userID au sens général
+  vect.similarity = vect.Users[order(get(paste0("mat.sim_", similarity))[userIND,], decreasing = betterIsHigh)]
   nb.Users = length(vect.similarity)
   
+  # Création du vecteur des plus proches voisins pour le film movieID
   neighbors = vector()
   userIND2 = 1
   nb.Neighbors = 0
