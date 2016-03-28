@@ -18,17 +18,17 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, simi
   nb.Users = length(vect.similarity)
   
   neighbors = vector()
-  userIND = 1
+  userIND2 = 1
   nb.Neighbors = 0
   
-  while((nb.Neighbors<Q)&(userIND<nb.Users)){
-    userID = vect.similarity[userIND]
+  while((nb.Neighbors<Q)&(userIND2<nb.Users)){
+    userID2 = vect.similarity[userIND2]
     
-    if(movieID %in% list.dejaVu[[userID]]){
+    if(movieID %in% list.dejaVu[[userID2]]){
       nb.Neighbors = nb.Neighbors+1
-      neighbors[nb.Neighbors] = userID
+      neighbors[nb.Neighbors] = userID2
     }
-    userIND = userIND+1
+    userIND2 = userIND2+1
   }
   return(neighbors)
 }
