@@ -10,7 +10,10 @@ proxi_Users_AllvsAll = function(data.Ratings, similarity){
   # Création de la matrice des similarités
   mat.sim = matrix(NA, nrow = nb.Users, ncol = nb.Users) 
   
+  cat(nb.Users)
   for (userIND1 in 1:(nb.Users-1)){
+    
+    cat(paste0("|", userIND1, "|"))
     
     userID1 = vect.Users[userIND1]
     mat.MoviesOfuserID1 = data.Ratings[data.Ratings$userID == userID1, c("movieID", "rating")]
@@ -25,8 +28,6 @@ proxi_Users_AllvsAll = function(data.Ratings, similarity){
       mat.sim[userIND2,userIND1] = sim
     }
   }
-  
-  rm(vect.Users,nb.Users,userIND1,userID1,mat.MoviesOfuserID1,userIND2,userID2,sim) 
   
   return(mat.sim)
 }
