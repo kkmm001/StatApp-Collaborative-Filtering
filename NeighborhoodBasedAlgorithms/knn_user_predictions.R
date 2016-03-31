@@ -49,7 +49,7 @@ knn_user_predictions = function(train.Ratings, test.Ratings, Qmax){
     vect.Ratings.byNN = matrix(NA, nrow = 1, ncol = Qmax)
     nb.Ratings = recap.Movies$nb.Ratings[recap.Movies$movieID == movieID]
     for(q in 1:min(Qmax,nb.Ratings)){
-      vect.Ratings.byNN[q] = data.Ratings$rating[(data.Ratings$userID == qnn[q]) & (data.Ratings$movieID == movieID)]
+      vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
       
       resultTest[test, paste0(similarity, "_Q_", q)] = mean(vect.Ratings.byNN[1:q], na.rm = TRUE)
     }
