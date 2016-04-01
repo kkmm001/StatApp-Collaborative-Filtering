@@ -1,37 +1,26 @@
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-#       Fichier : split_data.R
-#       Description : DECOUPAGE DE LA BASE EN n SOUS-BASES DE MEME TAILLE
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+split_data = function(data.Ratings, nb.Tests){
+  # INPUT   data.Ratings  : la base des notes
+  #         nb.Tests      : le nombre de test de validation croisée
+  # OUTPUT  list.Datasets : la liste des nb.Tests sub-datasets de data.Ratings
 
-#Choix des paramètres
-set.seed(100)
-n = 5
+  # Génération d'un vecteur aléatoire
+  alea = runif(nrow(data.Ratings))
 
-base = data.Ratings
-alea = runif(nrow(base))
-base = cbind(base,alea)
-
-#Decoupage de la base en n
-U = list()
-for(i in 1:n){
-  if (i==1){
-    U[[1]] = subset(base, (alea<quantile(alea,1/n)))[,-c(length(base))]
+  # Découpage de la base des notes en nb.Tests
+  list.Datasets = list()
+  
+  for(i in 1:nb.Tests){
+    if (i==1){
+      list.Datasets[[i]] = subset(data.Ratings, (alea<quantile(alea,1/nb.Tests)))
+    }
+    else if(i==nb.Tests){
+      list.Datasets[[i]] = subset(data.Ratings, (alea>=quantile(alea,(nb.Tests-1)/nb.Tests)))
+    }
+    else{
+      list.Datasets[[i]] = subset(data.Ratings, (alea<quantile(alea,i/nb.Tests))&(alea>=quantile(alea,(i-1)/nb.Tests)))
+    }
   }
-  else if(i==n){
-    U[[n]] = subset(base, (alea>=quantile(alea,(n-1)/n)))[,-c(length(base))]
+  
+  return(list.Datasets)
+
   }
-  else{
-    U[[i]] = subset(base, (alea<quantile(alea,i/n))&(alea>=quantile(alea,(i-1)/n)))[,-c(length(base))]
-  }
-}
-
-all_ind = 1:n
-
-#Creation des bases d'apprentissage et de test
-for(ind in 1:n){
-  ind_row = all_ind[all_ind != ind]
-  assign(paste0('TrainingU',ind),do.call("rbind",U[ind_row]))
-  assign(paste0('TestU',ind),U[[ind]])
-}
-
-rm(base, alea,U, all_ind, i, ind, ind_row)
