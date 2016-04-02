@@ -182,8 +182,10 @@ barplot(vect.nb.MoviesPerGenre[order.nb.MoviesPerGenre],
 ## Statistique par utilisateur
 
 ```{r, echo = FALSE}
-source("../Util/recap_Users.R")
-recap.Users = recap_Users(data.Users, data.Ratings)
+source("../Util/stat_Users.R")
+stat.Users = stat_Users(data.Ratings)
+recap.Users = merge(data.Users, stat.Users, by.x = "userID", by.y = "userID")
+rm(stat.Users)
 ```
 
 ```{r,echo = FALSE}
@@ -206,8 +208,10 @@ hist(recap.Users$mean, main = "Note moyenne donnee par utilisateur")
 ## Statistique par film
 
 ```{r, echo = FALSE}
-source("../Util/recap_Movies.R")
-recap.Movies = recap_Movies(data.Movies, data.Ratings)
+source("../Util/stat_Movies.R")
+stat.Movies = stat_Movies(data.Ratings)
+recap.Movies = merge(data.Movies, stat.Movies, by.x = "movieID", by.y = "movieID")
+rm(stat.Movies)
 ```
 
 ```{r,echo = FALSE}
