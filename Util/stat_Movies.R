@@ -1,29 +1,36 @@
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : stat_Movies.R                                                                   #
-#       Description : Fonction récap des films sur les bases                                       #
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-
 stat_Movies = function(data.Ratings){
+  # INPUT data.Ratings  : la base des notes
+  # OUTPUT              : la base contenant les statistiques sur les notes des films
   
-  vect.Movies = unique(data.Ratings$movieID)
-  nb.Movies = length(vect.Movies)
+  # Les statistiques pour un film donné sont : 
+  # - nb.Ratings  : le nombre de notes reçues ; 
+  # - mean        : la moyenne de ses notes ; 
+  # - sd          : l'écart-type de ses notes ; 
+  # - max         : la note maximale reçue ; 
+  # - min         : la note minimale reçue ; 
+  # - med         : la note médiane
   
-  stat.RatingPerMovie= as.data.frame(matrix(0, nrow = nb.Movies, ncol = 7) )
-  colnames(stat.RatingPerMovie) = c("movieID","nb.Ratings","mean","sd", "max","min","med")
-  # matrice comprenant l'ID du film 
-  #                    le nombre d'utilisateurs ayant note le film
-  #                    la moyenne des notes
-  #                    l'ecart-type des notes
-  #                    la note maximale 
-  #                    la note minimale 
-  #                    la mediane des notes
+  movieID = sort(unique(data.Ratings$movieID))
+  stat.Movies = as.data.frame(movieID)
   
-  for (movie_fakeID in 1:nb.Movies){
-    movie = vect.Movies[movie_fakeID]
-    x=data.Ratings$rating[data.Ratings$movieID == movie]
-    stat.RatingPerMovie[movie_fakeID,] = c(movie,length(x),round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
-  }
+  # Détermination du nombre de notes reçues
+  stat.Movies$nb.Ratings = tapply(data.Ratings$rating, data.Ratings$movieID, length)
 
-  return(stat.RatingPerMovie)
+  # Détermination de la moyenne de chaque film
+  stat.Movies$mean = tapply(data.Ratings$rating, data.Ratings$movieID, function(x) round(mean(x),2))
+  
+  # Détermination de l'écart-type de chaque film
+  stat.Movies$sd = tapply(data.Ratings$rating, data.Ratings$movieID, function(x) round(sd(x),2))
+  
+  # Détermination de la note maximale de chaque film
+  stat.Movies$max = tapply(data.Ratings$rating, data.Ratings$movieID, function(x) round(max(x),2))
+  
+  # Détermination de la note minimale de chaque film
+  stat.Movies$min = tapply(data.Ratings$rating, data.Ratings$movieID, function(x) round(min(x),2))
+  
+  # Détermination de la note médiane de chaque film
+  stat.Movies$med = tapply(data.Ratings$rating, data.Ratings$movieID, function(x) round(median(x),2))
+  
+  return(stat.Movies)
   
 }
