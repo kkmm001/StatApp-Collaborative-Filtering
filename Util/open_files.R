@@ -8,7 +8,7 @@
 #       Description : charge les fichiers du problème sélectionné 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-repository <- readline(prompt="Choisissez un problème : ")
+repository <- readline(prompt= "Choisissez un problème : ")
 
 data.Ratings = read.table(file = paste0("Data/", repository, "/data.Ratings.tsv"), header=T, sep='\t')
 data.Movies = read.table(file = paste0("Data/", repository, "/data.Movies.tsv"), header=T, sep='\t')
