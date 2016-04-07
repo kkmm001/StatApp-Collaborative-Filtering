@@ -3,6 +3,8 @@ split_data = function(data.Ratings, nb.Tests){
   #         nb.Tests      : le nombre de test de validation croisée
   # OUTPUT  list.Datasets : la liste des nb.Tests sub-datasets de data.Ratings
 
+  set.seed(42)
+  
   # Génération d'un vecteur aléatoire
   alea = runif(nrow(data.Ratings))
 
