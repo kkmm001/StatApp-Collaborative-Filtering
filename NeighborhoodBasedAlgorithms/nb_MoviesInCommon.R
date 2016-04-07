@@ -1,13 +1,19 @@
 nb_MoviesInCommon = function(data.Ratings){
   #INPUT  data.Ratings  : la base des notes
-  #OUTPUT mat.com       : la matrice contenant le nombre de films notés en commun pour chaque couple d'utilisateurs
-
+  #OUTPUT mat.InCommon  : la matrice contenant le nombre de films notés en commun pour chaque couple d'utilisateurs
+  
+  # Dimension du problème
   vect.Users = sort(unique(data.Ratings$userID))
   nb.Users = length(vect.Users) # nombre d’individus différents dans la data frame data.Ratings
   
-  mat.com = matrix(NA, nrow = nb.Users, ncol = nb.Users) 
+  # Création de la matrice contenant le nombre de films notés en commun pour chaque couple d'utilisateurs
+  mat.InCommon = matrix(NA, nrow = nb.Users, ncol = nb.Users) 
+  
+  cat(nb.Users)
   
   for (userIND1 in 1:(nb.Users-1)){
+    
+    cat(sprintf("|%0.f", userIND1))
     
     userID1 = vect.Users[userIND1]
     mat.MoviesOfuserID1 = data.Ratings[data.Ratings$userID == userID1, c("movieID", "rating")]
@@ -21,10 +27,10 @@ nb_MoviesInCommon = function(data.Ratings){
       
       inCommon = length(intersect(mat.MoviesOfuserID1$movieID, mat.MoviesOfuserID2$movieID))
       
-      mat.com[userIND1, userIND2] = inCommon
-      mat.com[userIND2, userIND1] = inCommon 
+      mat.InCommon[userIND1, userIND2] = inCommon
+      mat.InCommon[userIND2, userIND1] = inCommon 
     }
   }
   
-  return(mat.com)
+  return(mat.InCommon)
 }
