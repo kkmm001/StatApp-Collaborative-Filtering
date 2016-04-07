@@ -1,57 +1,49 @@
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : knn_user_predictions.R                                                               #
-#       Description : Fonction de predictions de plus proches voisins sur les bases                                   #
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-
-knn_user_predictions = function(train.Ratings, test.Ratings, Qmax){
+knn_user_predictions = function(list.Datasets, vc, Qmax, mat.sim, predicteur, list.dejaVu, stat.Users, stat.Movies){
+  # INPUT
+  # OUTPUT  : prédit les notes pour les couples (train, test)
   
-  ## Génération des outils sur la base d'apprentissage
-  # Base de données des utilisateurs et leurs statistiques
+  # Plus spécifiquement, à partir de list.Datasets et vc, la fonction crée les bases d'apprentissages et de tests. Ensuite, elle 
+  # recherche les plus proches voisins au sens de la similarité de mat.sim et donne sa prédiction pour chaque couple (movieID, userID)
   
-  cat(sprintf("Création de la base recap.Users en cours \n"))
-  stat.Users = stat_Users(train.Ratings)
-  recap.Users = as.data.frame(merge(data.Users, stat.Users, by.x = "userID", by.y = "userID"))
+  ## BASES D'APPRENTISSAGE ET DE TEST
+  nb.Tests = length(list.Datasets)
+  dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != vc]
+  
+  train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
+  test.Ratings = list.Datasets[[vc]]
+  
+  # Ensemble des utilisateurs
   vect.Users = sort(unique(train.Ratings$userID))
-  
-  # Base de données des films et leurs statistiques
-  cat(sprintf("Création de la base recap.Movies en cours \n"))
-  stat.Movies = stat_Movies(train.Ratings)
-  recap.Movies = merge(data.Movies, stat.Movies, by.x = "movieID", by.y = "movieID")
 
-  # Listes des films notés par utilisateur
-  cat(sprintf("Création de la base list.dejaVu en cours \n"))
-  list.dejaVu = deja_Vu(train.Ratings)
-
-  # Matrice des similarités (pearson, nrmse, nmae)
-  cat(sprintf("Création de la matrice de similarité en cours \n"))
-  mat.sim_pearson <<- proxi_Users_AllvsAll(train.Ratings, "pearson") #variable globale 
-  
-  #similarity = "pearson"
-  #assign(paste0("mat.sim_", similarity), as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, ".tsv"), header=T, sep='\t')), envir = globalenv())
-  
-  #mat.sim_nrmse = proxi_Users_AllvsAll(train.Ratings, "nrmse")
-  #mat.sim_nmae = proxi_Users_AllvsAll(train.Ratings, "nmae")
-
-  # Paramétres du test
+  ## TESTS
   cat(sprintf("Début du test \n"))
   nb.Tests = dim(test.Ratings)[1]
   resultTest = test.Ratings
   
-  cat(paste0("|", nb.Tests, "|"))
-  # Prédiction
+  cat(paste0(nb.Tests))
+  
+  ## PREDICTION
   for(test in 1:nb.Tests){
-    cat(paste0("|", test, "|"))
+    
+    cat(paste0("|", test))
+    
     userID = test.Ratings$userID[test]
     movieID = test.Ratings$movieID[test]
-    similarity = "pearson" #TODO boucle
-    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, similarity)
     
+    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)
     vect.Ratings.byNN = matrix(NA, nrow = 1, ncol = Qmax)
-    nb.Ratings = recap.Movies$nb.Ratings[recap.Movies$movieID == movieID]
-    for(q in 1:min(Qmax,nb.Ratings)){
-      vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
-      
-      resultTest[test, paste0(similarity, "_Q_", q)] = mean(vect.Ratings.byNN[1:q], na.rm = TRUE)
+
+    estPresent = movieID %in% stat.Movies$movieID
+    if(estPresent){
+      nb.Ratings = stat.Movies$nb.Ratings[stat.Movies$movieID == movieID]
+    
+      for(q in 1:min(Qmax,nb.Ratings)){
+        vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
+        resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur)
+      }
+    }
+    else{
+        resultTest[test,] = NA
     }
     
   }
@@ -59,4 +51,3 @@ knn_user_predictions = function(train.Ratings, test.Ratings, Qmax){
   return(resultTest)
   
 }
-
