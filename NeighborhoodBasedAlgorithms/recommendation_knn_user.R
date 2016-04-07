@@ -1,4 +1,4 @@
-recommendation_knn_user = function(userID, recap.Users, recap.Movies, data.Ratings, similarity, list.dejaVu, Q, nb.recommandations){
+knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, similarity, list.dejaVu, Q, nb.recommandations){
   #INPUT  userID
   #       recap.Users
   #       recap.Movies
