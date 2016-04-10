@@ -87,5 +87,9 @@ svd=function(AvrRtg=Item,train.Ratings,data.Movies,data.Users,X){
   sqr_Sk=sqrtm(Sk)
   
   # compute two resultant matrices: UkSk^(1/2) and Sk^(1/2)Vk
+  UkSk=1 # a changer !!
+  SkVk=2 # a changer !!
+  res=list(US=UkSk,SV=SkVk)
+  return(res)
   
 }
