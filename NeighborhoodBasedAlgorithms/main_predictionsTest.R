@@ -4,7 +4,7 @@
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
-#       Fichier : main_predictionsTest.R
+#       Fichier : main_knn_user_predictionsTest.R
 #       Description : résultats des tests par validation croisée
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -16,63 +16,80 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-source("./Util/open_files.R")
+#source("./Util/open_files.R", encoding = 'UTF-8')
+repository = readline(prompt = "Choisissez un problème : ") #ml-100k
 
 # ====================== 3.GENERATION DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
-source("./Util/split_data.R")
+file_list.Datasets = paste0("./CrossValidation/", repository, "/list.Datasets.Rdata")
+load(file = file_list.Datasets)
+nb.Tests = length(list.Datasets)
 
-# ====================== 4.GENERATION DES TABLEAUX DE PREDICTION ====================================
+# ============================== 4.CHOIX DE PARAMETRES =========================================
+library("hydroGOF")
 
-source("./Util/deja_Vu.R")
-source("./Util/stat_Users.R")
-source("./Util/stat_Movies.R")
-
-source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
-source("./NeighborhoodBasedAlgorithms/proxi_Users_AllvsAll.R")
-source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
-source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R")
-
-source("./Util/error_function.R")
-
-error_names = c("RMSE", "MAE", "01")
-nb.Errors = length(error_names)
+#source("./Util/error_function.R")
+#error_names = c("RMSE")
+#nb.Errors = length(error_names)
 
 Qmax = 20
-similarity_names = c("pearson") #TODO a rallonger
+
+similarity_names = c("pearson") #TODO A BOUCLER
 nb.Similarity = length(similarity_names)
 
-predictor_names = paste0(similarity_names, "_Q_", 1:Qmax) #TODO a améliorer
-nb.Predictors = length(predictor_names)
+list.nbMin.InCommon = c(0,2) #4,6,8)
+nb.nbMin.InCommon = length(list.nbMin.InCommon)
 
-for(error in error_names){
-  assign(paste0('result_',error),as.data.frame(matrix(0, nrow=nb.Predictors, ncol = n), row.names = predictor_names))
-}
+method_names = c("mean") #, "pondered", "centred-pondered")
+nb.method = length(method_names)
 
-# =================== 5.CALCUL DES TABLEAUX DE PREDICTION ================================
+mat.names_predictors = expand.grid(similarity_names, list.nbMin.InCommon, method_names)
+colnames(mat.names_predictors) = c("similarity", "nbMin.InCommon", "predicteur")
+nb.Predictors.byQ = nb.Similarity * nb.nbMin.InCommon * nb.method
+
+# ====================== 5.CHARGEMENT DES TABLEAUX DE PREDICTION ====================================
+
+source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
+source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R")
+source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
+
+#for(error in error_names){
+#  assign(paste0('result_',error),as.data.frame(matrix(0, nrow=nb.Predictors.byQ, ncol = n)))
+#}
+
+result_error = as.data.frame(matrix(0, nrow=nb.Predictors.byQ, ncol = Qmax))
+
+# =================== 6.CALCUL DES TABLEAUX DE PREDICTION ================================
 
 #TODO a changer : 1:n et non 1:1
-for(vc in 1:1){ # pour chaque couple train/test de la validation croisée
-  pred = knn_user_predictions(get(paste0('TrainingU',vc)), get(paste0('TestU',vc)), Qmax)
+for(train in 1:1){ # pour chaque couple train/test de la validation croisée
   
-  for(error in error_names){ #pour chaque erreur
-    for(model in predictor_names){ #pour chaque predicteur
-      assign(paste0("result_",error),'[<-' (get(paste0("result_",error)), model,vc, value = error_function(pred$rating, pred[,model], method=error)))
+  # Chargement des listes déjà vus
+  file_list.dejaVu = paste0("./CrossValidation/", repository, "/train", train, "/list.dejaVu.Rdata")
+  load(file = file_list.dejaVu)
+  
+  # Statistiques sur les utilisateurs
+  file_stat.Users = paste0("./CrossValidation/", repository, "/train", train, "/stat.Users.tsv")
+  stat.Users = read.table(file = file_stat.Users, header=T, sep='\t')
+  
+  # Statistiques sur les films
+  file_stat.Movies = paste0("./CrossValidation/", repository, "/train", train, "/stat.Movies.tsv")
+  stat.Movies = read.table(file = file_stat.Movies, header=T, sep='\t')
+  
+  
+  for(model in 1:nb.Predictors.byQ){
+    similarity = mat.names_predictors$similarity[model]
+    nbMin.InCommon = mat.names_predictors$nbMin.InCommon[model]
+    method_pred = mat.names_predictors$predicteur[model]
+    
+    file_mat.sim = paste0("./CrossValidation/", repository, "/train", train, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv")
+    mat.sim = as.matrix(read.table(file = file_mat.sim, header=T, sep='\t'))
+      
+    pred = knn_user_predictions(list.Datasets, train, Qmax, mat.sim, method_pred, list.dejaVu, stat.Users, stat.Movies)
+    
+    for(q in 1:Qmax){
+      result_error[model,q] = rmse(pred$rating, pred[,q+3])
     }
   }
-  
+  write.table(result_error, paste0("./Results/", repository, "/results_knn_userPredictionTest_train", train, ".tsv"), col.names=NA, sep="\t")
 }
-
-cross_validation = as.data.frame(matrix(0,nrow=nb.Predictors, ncol = nb.Errors)) #predicteur x metrique
-colnames(cross_validation) = error_names
-rownames(cross_validation) = predictor_names
-for(error in error_names){
-  for(model in predictor_names){
-    cross_validation[model,error] = round(sum(get(paste0('result_',error))[model,])/n, digits = 3)
-  }
-}
-
-
-# =================== 6.ENREGISTREMENT DES RESULTATS DE LA VC ================================
-
-write.table(cross_validation, paste0("./Results/", repository, "/results_knn_userPredictionTest.tsv"), col.names=NA, sep="\t")

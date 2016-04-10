@@ -1,29 +1,36 @@
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-#       Fichier : stat_Users.R                                                                    #
-#       Description : Fonction récap des users sur les bases                                       #
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
-
-stat_Users=function(data.Ratings){ 
+stat_Users = function(data.Ratings){
+  # INPUT data.Ratings  : la base des notes
+  # OUTPUT              : la base contenant les statistiques sur les notes attribuées
   
-  vect.Users = unique(data.Ratings$userID)
-  nb.Users = length(vect.Users)
+  # Les statistiques pour un utilisateur donné sont : 
+  # - nb.Ratings  : le nombre de notes attribuées ; 
+  # - mean        : la moyenne de ses notes ; 
+  # - sd          : l'écart-type de ses notes ; 
+  # - max         : la note maximale attribuée ; 
+  # - min         : la note minimale attribuée ; 
+  # - med         : la note médiane
   
-  stat.RatingPerUser = as.data.frame(matrix(0, nrow = nb.Users, ncol = 7))
-  colnames(stat.RatingPerUser) = c("userID", "nb.Ratings","mean", "sd", "max", "min", "med")
-  # matrice comprenant l'ID de l'utilisateur 
-  #                    le nombre de films notes par utilisateur
-  #                    la moyenne des notes
-  #                    l'ecart-type des notes
-  #                    la note maximale 
-  #                    la note minimale
-  #                    la mede des notes
+  userID = sort(unique(data.Ratings$userID))
+  stat.Users = as.data.frame(userID)
   
-  for (user_fakeID in 1:nb.Users){ 
-    user = vect.Users[user_fakeID]
-    x=data.Ratings$rating[data.Ratings$userID == user]
-    stat.RatingPerUser[user_fakeID,] = c(user,length(x),round(mean(x),2),round(sd(x),2),max(x),min(x),median(x))
-  }
+  # Détermination du nombre de notes attribuées
+  stat.Users$nb.Ratings = tapply(data.Ratings$rating, data.Ratings$userID, length)
   
-  return(stat.RatingPerUser)
+  # Détermination de la moyenne de chaque utilisateur
+  stat.Users$mean = tapply(data.Ratings$rating, data.Ratings$userID, function(x) round(mean(x),2))
+  
+  # Détermination de l'écart-type de chaque utilisateur
+  stat.Users$sd = tapply(data.Ratings$rating, data.Ratings$userID, function(x) round(sd(x),2))
+  
+  # Détermination de la note maximale de chaque utilisateur
+  stat.Users$max = tapply(data.Ratings$rating, data.Ratings$userID, function(x) round(max(x),2))
+  
+  # Détermination de la note minimale de chaque utilisateur
+  stat.Users$min = tapply(data.Ratings$rating, data.Ratings$userID, function(x) round(min(x),2))
+  
+  # Détermination de la note médiane de chaque utilisateur
+  stat.Users$med = tapply(data.Ratings$rating, data.Ratings$userID, function(x) round(median(x),2))
+  
+  return(stat.Users)
   
 }

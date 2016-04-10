@@ -75,7 +75,7 @@ if (nb.Movies == dim(data.Movies)[1]){
 }
 ```
 
-# Statistique d'ordre 1
+# Statistique univariée
 
 ## Sur les notes
 
@@ -177,7 +177,7 @@ barplot(vect.nb.MoviesPerGenre[order.nb.MoviesPerGenre],
         )
 ```
 
-# Statistique d'ordre 2
+# Statistique bivariée
 
 ## Statistique par utilisateur
 
@@ -189,7 +189,7 @@ rm(stat.Users)
 ```
 
 ```{r,echo = FALSE}
-## Statistiques sur le nombre de films notees par utilisateur
+## Statistiques sur le nombre de films notées par utilisateur
 summary(recap.Users$nb.Ratings)
 plot(table(recap.Users$nb.Ratings), 
      main = "Nombre de films notes par utilisateur", 
@@ -229,20 +229,20 @@ hist(recap.Movies$mean,
 ```
 
 ```{r,echo = FALSE}
-## Nombre d'hommes et de femmes ayant vu un film donne (ainsi que la moyenne des notes attribuees)
-RatingPerMoviePerSex = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
+## Nombre d'hommes et de femmes ayant vu un film donné (ainsi que la moyenne des notes attribuees)
+ratingsPerMoviePerSex = matrix(0, nrow = nb.Movies, ncol = 5) #matrice comprenant l'ID du film 
 MoyWomen=matrix(0, nrow = nb.Movies, ncol = 2) 
 cond2=(data.Users$sex[data.Ratings$userID]=="M")
 for (movie in 1:nb.Movies) { 
   cond1=data.Ratings$movieID == movie
   x=data.Ratings$rating[cond1&cond2]
   y=data.Ratings$rating[cond1&!(cond2)]
-  RatingPerMoviePerSex[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
+  ratingsPerMoviePerSex[movie,] = c(movie,length(x),round(mean(x),2),length(y),round(mean(y),2))
   MoyWomen[movie,]=c(movie,(mean(data.Ratings$movieID == movie)-mean(x)*(length(x)/(length(x)+length(y))))*((length(x)+length(y))/length(y)))
 }
 
-RatingPerMoviePerSex = as.data.frame(RatingPerMoviePerSex)
-colnames(RatingPerMoviePerSex ) = c("movieID", "nbMen","avgRatingMen","nbWomen","avgRatingWomen")
+ratingsPerMoviePerSex = as.data.frame(ratingsPerMoviePerSex)
+colnames(ratingsPerMoviePerSex ) = c("movieID", "nbMen","avgRatingMen","nbWomen","avgRatingWomen")
 
 # on verifie que moyeWomen[i,2]=RatingPerMOviePerSex$avrRatingWomen[i] pour tout i
 
@@ -250,7 +250,7 @@ colnames(RatingPerMoviePerSex ) = c("movieID", "nbMen","avgRatingMen","nbWomen",
 
 # Corrélations entre les utilisateurs et les films
 
-## Correlation entre note des films et nombre de visionnage de ce film
+## Corrélation entre note des films et nombre de visionnage de ce film
 
 ```{r, echo = FALSE}
 plot(recap.Movies$nb.Ratings, recap.Movies$mean, 
@@ -259,31 +259,31 @@ plot(recap.Movies$nb.Ratings, recap.Movies$mean,
      ylab = "note moyenne")
 ```
 
-## Correlation entre note attribuee et nombre de films vus
+## Corrélation entre note attribuée et nombre de films vus
 
 ```{r, echo = FALSE}
 plot(recap.Users$nb.Ratings, recap.Users$mean, 
-     main = "Lien entre nombre de films notes et note moyenne par utilisateur", 
-     xlab = "nombre de films notes", 
+     main = "Lien entre nombre de films notés et note moyenne par utilisateur", 
+     xlab = "nombre de films notés", 
      ylab = "note moyenne")
 ```
 
-## Correlation entre age et note moyenne
+## Corrélation entre âge et note moyenne
 
 ```{r, echo = FALSE}
 boxplot(recap.Users$mean ~ recap.Users$age, 
-     main = "Lien entre age et note moyenne", 
+     main = "Lien entre âge et note moyenne", 
      xlab = "âge", 
      ylab = "note moyenne")
 ```
 
-## Correlation entre age et nombre de films notes
+## Corrélation entre âge et nombre de films notés
 
 ```{r, echo = FALSE}
 boxplot(recap.Users$nb.Ratings ~ recap.Users$age,
-     main = "Lien entre age et nombre de films notes", 
+     main = "Lien entre âge et nombre de films notés", 
      xlab = "âge", 
-     ylab = "nombre de films notes")
+     ylab = "nombre de films notés")
 ```
 
 # Statistique d'ordre
@@ -335,6 +335,18 @@ cat(sprintf("Il y a %.0f films qui ont reçu moins de %.0f votes.\n",
     ))
 ```
 
+```{r, echo = FALSE}
+nbMax.Ratings = 50
+vect.NbMoviesUnderNbRatings = sapply(1:nbMax.Ratings, function(x) sum(recap.Movies$nb.Ratings <= x))
+
+plot(1:nbMax.Ratings, vect.NbMoviesUnderNbRatings/nb.Movies, 
+     type = "l",
+     main = "Proportion de films notés en dessous d'un certain seuil", 
+     ylab = "Proportion", 
+     xlab = "Seuil"
+     )
+```
+
 ### Films ayant les meilleurs notes
 
 ```{r, echo = FALSE}
@@ -365,7 +377,10 @@ order.BestMoviesUppernbLimit.Ratings = order(recap.MovieUppernbLimit.Ratings$mea
 for (movie in 1:nb.BestMovies){
   id.order = order.BestMoviesUppernbLimit.Ratings[movie]
   cat(sprintf("Le film d'ID %.0f, %s, a une note moyenne de %.2f sur %.0f votes.\n",
-      recap.MovieUppernbLimit.Ratings$movieID[id.order], recap.MovieUppernbLimit.Ratings$title[id.order], recap.MovieUppernbLimit.Ratings$mean[id.order], recap.MovieUppernbLimit.Ratings$nb.Ratings[id.order]
+      recap.MovieUppernbLimit.Ratings$movieID[id.order], 
+      recap.MovieUppernbLimit.Ratings$title[id.order],
+      recap.MovieUppernbLimit.Ratings$mean[id.order], 
+      recap.MovieUppernbLimit.Ratings$nb.Ratings[id.order]
       ))
 }
 ```
@@ -379,7 +394,10 @@ cat(sprintf("Les %.0f pires films :\n", nb.WorstMovies))
 for (movie in 1:nb.WorstMovies){
   id.order = order.WorstMovies[movie]
   cat(sprintf("Le film d'ID %.0f, %s, a une note moyenne de %.2f sur %.0f vote(s).\n",
-      recap.Movies$movieID[id.order], recap.Movies$title[id.order], recap.Movies$mean[id.order], recap.Movies$nb.Ratings[id.order]
+      recap.Movies$movieID[id.order], 
+      recap.Movies$title[id.order], 
+      recap.Movies$mean[id.order],
+      recap.Movies$nb.Ratings[id.order]
       ))
 }
 ```
@@ -399,7 +417,10 @@ order.WorstMoviesUppernbLimit.RatingsForMovie = order(recap.MovieUppernbLimit.Ra
 for (movie in 1:nb.WorstMovies){
   id.order = order.WorstMoviesUppernbLimit.RatingsForMovie[movie]
   cat(sprintf("Le film d'ID %.0f, %s, a une note moyenne de %.2f sur %.0f votes.\n", 
-      recap.MovieUppernbLimit.Ratings$movieID[id.order], recap.MovieUppernbLimit.Ratings$title[id.order], recap.MovieUppernbLimit.Ratings$mean[id.order], recap.MovieUppernbLimit.Ratings$nb.Ratings[id.order]
+      recap.MovieUppernbLimit.Ratings$movieID[id.order], 
+      recap.MovieUppernbLimit.Ratings$title[id.order], 
+      recap.MovieUppernbLimit.Ratings$mean[id.order], 
+      recap.MovieUppernbLimit.Ratings$nb.Ratings[id.order]
       ))
 }
 ```
@@ -415,7 +436,8 @@ cat(sprintf("Les %.0f utilisateurs ayant note le plus de films :\n", nb.MostVote
 for (user in 1:nb.MostVotedUsers){
   id.order = order.MostVotedUsers[user]
   cat(sprintf("L'utilisateur d'ID %.0f a vote %.0f fois.\n", 
-      recap.Users$userID[id.order], recap.Users$nb.Ratings[id.order]
+      recap.Users$userID[id.order], 
+      recap.Users$nb.Ratings[id.order]
   ))
 }
 ```
@@ -429,7 +451,8 @@ cat(sprintf("Les %.0f utilisateurs ayant note le moins de films:\n", nb.LessVote
 for (user in 1:nb.LessVotedUsers){
   id.order = order.LessVotedUsers[user]
   cat(sprintf("L'utilisateur d'ID %.0f n'a vote que %.0f fois.\n",
-      recap.Users$userID[id.order], recap.Users$nb.Ratings[id.order]
+      recap.Users$userID[id.order], 
+      recap.Users$nb.Ratings[id.order]
   ))
 }
 ```
@@ -447,7 +470,8 @@ cat(sprintf("Il y a %.0f utilisateurs qui ont voté moins que 20 fois.\n", sum(r
 ```{r, echo = FALSE}
 nbLimit.RatingsForUser = 50
 cat(sprintf("Il y a %.0f utilisateurs qui ont vote moins de %.0f fois.\n", 
-    sum(recap.Users$nb.Ratings <= nbLimit.RatingsForUser), nbLimit.RatingsForUser
+    sum(recap.Users$nb.Ratings <= nbLimit.RatingsForUser), 
+    nbLimit.RatingsForUser
     ))
 ```
 
@@ -460,7 +484,9 @@ cat(sprintf("Les %.0f utilisateurs les plus gentils :\n", nb.NicestUsers))
 for (user in 1:nb.NicestUsers){
   id.order = order.NicestUsers[user]
   cat(sprintf("L'utilisateur d'ID %.0f a donne en moyenne une note de %.2f pour %.0f notes.\n",
-      recap.Users$userID[id.order], recap.Users$mean[id.order], recap.Users$nb.Ratings[id.order]
+      recap.Users$userID[id.order], 
+      recap.Users$mean[id.order], 
+      recap.Users$nb.Ratings[id.order]
   ))
 }
 ```
@@ -474,7 +500,9 @@ order.NicestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$mea
 for (user in 1:nb.NicestUsers){
   id.order = order.NicestUsersUppernbLimit.Ratings[user]
   cat(sprintf("L'utilisateur d'ID %.0f a donne en moyenne une note de %.2f pour %.0f notes.\n", 
-      recap.UserUppernbLimit.Ratings$userID[id.order], recap.UserUppernbLimit.Ratings$mean[id.order], recap.UserUppernbLimit.Ratings$nb.Ratings[id.order]
+      recap.UserUppernbLimit.Ratings$userID[id.order], 
+      recap.UserUppernbLimit.Ratings$mean[id.order], 
+      recap.UserUppernbLimit.Ratings$nb.Ratings[id.order]
       ))
 }
 ```
@@ -488,7 +516,9 @@ cat(sprintf("Les %.0f utilisateurs les plus severes :\n", nb.MeanestUsers))
 for (user in 1:nb.MeanestUsers){
   id.order = order.MeanestUsers[user]
   cat(sprintf("L'utilisateur d'ID %.0f a donne en moyenne une note de %.2f pour %.0f notes.\n",
-      recap.Users$userID[id.order], recap.Users$mean[id.order], recap.Users$nb.Ratings[id.order]
+      recap.Users$userID[id.order], 
+      recap.Users$mean[id.order], 
+      recap.Users$nb.Ratings[id.order]
       ))
 }
 ```
@@ -502,7 +532,9 @@ order.MeanestUsersUppernbLimit.Ratings = order(recap.UserUppernbLimit.Ratings$me
 for (user in 1:nb.MeanestUsers){
   id.order = order.MeanestUsersUppernbLimit.Ratings[user]
   cat(sprintf("L'utilisateur d'ID %.0f a donne en moyenne une note de %.2f pour %.0f notes.\n",
-      recap.UserUppernbLimit.Ratings$userID[id.order], recap.UserUppernbLimit.Ratings$mean[id.order], recap.UserUppernbLimit.Ratings$nb.Ratings[id.order]
+      recap.UserUppernbLimit.Ratings$userID[id.order], 
+      recap.UserUppernbLimit.Ratings$mean[id.order], 
+      recap.UserUppernbLimit.Ratings$nb.Ratings[id.order]
       ))
 }
 ```
