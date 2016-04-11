@@ -25,7 +25,7 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.
   userIND2 = 1
   nb.Neighbors = 0
   
-  while((nb.Neighbors < Q) & (userIND2 < nb.Users)){
+  while((nb.Neighbors < Q) & (userIND2 <= nb.Users)){
     userID2 = vect.similarity[userIND2]
     if(movieID %in% list.dejaVu[[userID2]]){ #TODO ind ou id
       nb.Neighbors = nb.Neighbors+1
