@@ -6,8 +6,8 @@ knn_user_predictions = function(list.Datasets, vc, Qmax, mat.sim, predicteur, li
   # recherche les plus proches voisins au sens de la similarité de mat.sim et donne sa prédiction pour chaque couple (movieID, userID)
   
   ## BASES D'APPRENTISSAGE ET DE TEST
-  nb.Tests = length(list.Datasets)
-  dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != vc]
+  nb.Datasets = length(list.Datasets)
+  dataset_to_keep = (1:nb.Datasets)[(1:nb.Datasets) != vc]
   
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
   test.Ratings = list.Datasets[[vc]]
@@ -39,7 +39,7 @@ knn_user_predictions = function(list.Datasets, vc, Qmax, mat.sim, predicteur, li
     
       for(q in 1:min(Qmax,nb.Ratings)){
         vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
-        resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur)
+        resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,qnn)
       }
     }
     else{
