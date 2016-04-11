@@ -21,8 +21,8 @@ proxi_Users = function(mat.MoviesOfuserID1, userID2, data.Ratings, similarity){
   # TODO ATTENTION AUX INFINITE DANS NMAE ET NRMSE
   switch(similarity,
          'pearson' = cor(mat.MoviesinCommon[1,],mat.MoviesinCommon[2,], method="pearson"),
-         'nrmse'   = as.numeric(length(vect.MoviesInCommon)/dist(mat.MoviesinCommon, method="euclidean")),
-         'nmae'    = as.numeric(length(vect.MoviesInCommon)/dist(mat.MoviesinCommon, method="manhattan")),
+         'nrmse'   = as.numeric(length(vect.MoviesInCommon)/(dist(mat.MoviesinCommon, method="euclidean")+1)),
+         'nmae'    = as.numeric(length(vect.MoviesInCommon)/(dist(mat.MoviesinCommon, method="manhattan")+1)),
          'RFP'     = cor(mat.MoviesinCommon[1,],mat.MoviesinCommon[2,], method="pearson") * log(length(vect.MoviesInCommon))
   )
   
