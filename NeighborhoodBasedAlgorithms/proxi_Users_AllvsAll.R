@@ -1,7 +1,7 @@
 proxi_Users_AllvsAll = function(data.Ratings, similarity){
   #INPUT    data.Ratings  : la base des notes
   #         similarity    : la métrique utilisée pour calculer la similarité ("pearson", "nrmse", "nmae", "RFP")
-  #OUTPUT   mat.sim       : matrice contenant le degré de similarité entre les utilisateurs
+  #OUTPUT   mat.sim       : matrice contenant le degré de similarité entre les utilisateurs (sans filtre)
   
   # Dimension du problème
   vect.Users = sort(unique(data.Ratings$userID))
