@@ -21,7 +21,7 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.
   nb.Users = length(vect.similarity)
   
   # Création du vecteur des plus proches voisins pour le film movieID
-  neighbors = vector(length = Q)
+  neighbors = matrix(NA, nrow = 1, ncol = Q)
   userIND2 = 1
   nb.Neighbors = 0
   
