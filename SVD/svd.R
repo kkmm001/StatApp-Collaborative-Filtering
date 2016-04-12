@@ -27,30 +27,34 @@ svd=function(AvrRtg="Item",train.Ratings,X){
   matR = matrix(NA, nrow =nb.Users , ncol = nb.Movies) 
   
   if(AvrRtg=="User"){
-    for (userID1 in 1:nb.Users){
+    for (userInd1 in 1:nb.Users){
+      userID1=vect.Users[userInd1]
       mat.MoviesOfuserID1 = train.Ratings[train.Ratings$userID == userID1, c("movieID", "rating")]
       meanID1=as.numeric(stat.Users$mean[stat.Users$userID==userID1])
-      for(movieID1 in 1 : nb.Movies){
+      for(movieInd1 in 1 : nb.Movies){
+        movieID1=vect.Movies[movieInd1]
         note=mat.MoviesOfuserID1$rating[mat.MoviesOfuserID1$movieID==movieID1]  
         # cette ligne peut sans doute etre améliorée mais je n'ai rien trouvé de mieu pour le moment
         if(isTRUE(note>0)){
-          matR[userID1,movieID1]=note
+          matR[userInd1,movieInd1]=note
         }else{
-          matR[userID1,movieID1]=meanID1
+          matR[userInd1,movieInd1]=meanID1
         }
       }
     }
   }else{
-    for (movieID1 in 1:nb.Movies){
+    for (movieInd1 in 1:nb.Movies){
+      movieID1=vect.Movies[movieInd1]
       mat.UsersOfmovieID1 = train.Ratings[train.Ratings$movieID == movieID1, c("userID", "rating")]
       meanID1=as.numeric(stat.Movies$mean[stat.Movies$movieID==movieID1])
-      for(userID1 in 1 : nb.Users){
+      for(userInd1 in 1 : nb.Users){
+        userID1=vect.Users[userInd1]
         note=mat.UsersOfmovieID1$rating[mat.UsersOfmovieID1$userID==userID1]  
         # cette ligne peut sans doute etre améliorée mais je n'ai rien trouvé de mieu pour le moment
         if(isTRUE(note>0)){
-          matR[userID1,movieID1]=note
+          matR[userInd1,movieInd1]=note
         }else{
-          matR[userID1,movieID1]=meanID1
+          matR[userInd1,movieInd1]=meanID1
         }
       }
     }
