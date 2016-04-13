@@ -36,26 +36,27 @@ knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratin
   
   # Complétion des vecteurs vect.Ratings.byNN et vect.Prediction
   for(movieIND in 1:length(vect.Recommandable)){
-    cat(sprintf("|",movieIND))
+    cat(sprintf("|%0.f",movieIND))
     
     movieID = vect.Recommandable[movieIND]
     qnn = Q_nearest_neighbors(userID, movieID, Q, list.dejaVu, vect.Users, mat.sim)
-    vect.QNeighbors_movie = qnn[,1] #vecteur contenant les identifiants des Q plus proches voisins
-    vect.Similarity.byNN = qnn[,2] #vecteur contenant les similarités des Q plus proches voisins
+    #vect.QNeighbors_movie = qnn[,1] #vecteur contenant les identifiants des Q plus proches voisins
+    #vect.Similarity.byNN = qnn[,2] #vecteur contenant les similarités des Q plus proches voisins
     
     #vecteur contenant les notes des Q plus proches voisins pour un film donné
-            #vect.Ratings.byNN = sapply(vect.QNeighbors_movie , function(x) data.Ratings$rating[(data.Ratings$userID == x) & (data.Ratings$movieID == movieID)])
     for(q in 1:Q){
-      vect.Ratings.byNN[q] = data.Ratings$rating[(data.Ratings$userID == vect.QNeighbors_movie[q]) & (data.Ratings$movieID == movieID)]
+      vect.Ratings.byNN[q] = data.Ratings$rating[(data.Ratings$userID == qnn[q,1]) & (data.Ratings$movieID == movieID)]
     }
  
-    vect.Prediction[movieIND] =  knn_user_predicteur(vect.Similarity.byNN, vect.Ratings.byNN, recap.Users, userID, predicteur, vect.QNeighbors_movie)
+    vect.Prediction[movieIND] =  knn_user_predicteur(qnn$similarities, vect.Ratings.byNN, recap.Users, userID, predicteur, qnn$neighbors)
   }
   
-  vect.RecommendedMovies = matrix(NA, nrow = nb.recommandations, ncol = 1)
+  mat.RecommendedMovies = as.data.frame(matrix(NA, nrow = nb.recommandations, ncol = 2))
+  colnames(mat.RecommendedMovies) = c("movieID", "prating")
   for(movieIND in 1:nb.recommandations){
-    vect.RecommendedMovies[movieIND] = vect.Recommandable[order(vect.Prediction, decreasing = TRUE)][movieIND]
+    mat.RecommendedMovies$movieID[movieIND] = vect.Recommandable[order(vect.Prediction, decreasing = TRUE)][movieIND]
+    mat.RecommendedMovies$prating[movieIND] = vect.Prediction[order(vect.Prediction, decreasing = TRUE)[movieIND]]
   }
   
-  return(vect.RecommendedMovies)
+  return(mat.RecommendedMovies)
 }
