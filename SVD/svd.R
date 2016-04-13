@@ -35,7 +35,7 @@ svd=function(AvrRtg="Item",train.Ratings,X){
         movieID1=vect.Movies[movieInd1]
         note=mat.MoviesOfuserID1$rating[mat.MoviesOfuserID1$movieID==movieID1]  
         # cette ligne peut sans doute etre améliorée mais je n'ai rien trouvé de mieu pour le moment
-        if(isTRUE(note>0)){
+        if(isTRUE(note>0)){ # Que se passe t'il si on enlève le isTrue?
           matR[userInd1,movieInd1]=note
         }else{
           matR[userInd1,movieInd1]=meanID1
