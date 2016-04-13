@@ -1,13 +1,13 @@
-Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.sim){
+Q_nearest_neighbors = function(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim){
   #INPUT  userID              : l'identifiant de l'utilisateur
   #       movieID             : ID du film dont on veut prédire la note  
-  #       Q                   : le nombre de voisins
+  #       Qmax                   : le nombre de voisins
   #       list.dejaVu         : la liste des films notés par utilisateur
   #       vect.Users          : l'ensemble des utilisateurs
   #       mat.sim             : la matrice de similarité
-  #OUTPUT neighbors           : les Q plus proches voisins pour le film movieID pour userID
+  #OUTPUT mat.neighbors       : les (au plus) Qmax plus proches voisins pour le film movieID pour userID et leur degré de similarité
   
-  # Plus spécifiquement, cette fonction retourne le vecteur de taille Q contenant les valeurs 
+  # Plus spécifiquement, cette fonction retourne le vecteur de taille Qmax contenant les valeurs 
   # de vect.Users (ie les identifiants des utilisateurs), à partir des calculs de proximité 
   # (au sens de la matrice de similarité), de userID pour le film movieID. 
   # Rq : un utilisateur peut se prétendre un plus proche voisin d'un utilisateur X pour le film Y
@@ -17,21 +17,23 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.
   userIND = which(vect.Users == userID)
   
   # Le vecteur contenant les plus proches voisins de userID au sens général
-  vect.similarity = vect.Users[order(mat.sim[userIND,], decreasing = TRUE)]
-  nb.Users = length(vect.similarity)
+  vect.Neighbors = order(mat.sim[userIND,], decreasing = TRUE)
+  vect.Similarity = mat.sim[userIND,vect.Neighbors]
+  nb.OtherUsers = length(vect.Similarity)
   
-  # Création du vecteur des plus proches voisins pour le film movieID
-  neighbors = matrix(NA, nrow = 1, ncol = Q)
-  userIND2 = 1
-  nb.Neighbors = 0
+  # Création de la matrice des plus proches voisins pour le film movieID (userID et coefficient de similarité)
+  mat.neighbors = matrix(NA, nrow = Qmax, ncol = 2)
+  userIND2 = 1 #indice dans vect.similarity
+  nb.Neighbors = 0 #indice dans mat.neighbors
   
-  while((nb.Neighbors < Q) & (userIND2 <= nb.Users)){
-    userID2 = vect.similarity[userIND2]
-    if(movieID %in% list.dejaVu[[userID2]]){ #TODO ind ou id
+  while((nb.Neighbors < Qmax) & (userIND2 <= nb.OtherUsers)){
+    if(movieID %in% list.dejaVu[[vect.Neighbors[userIND2]]]){
       nb.Neighbors = nb.Neighbors+1
-      neighbors[nb.Neighbors] = userID2
+      mat.neighbors[nb.Neighbors,1] = vect.Neighbors[userIND2]
+      mat.neighbors[nb.Neighbors,2] = vect.Similarity[userIND2]
     }
     userIND2 = userIND2+1
+    mat.neighbors
   }
-  return(neighbors)
+  return(mat.neighbors)
 }

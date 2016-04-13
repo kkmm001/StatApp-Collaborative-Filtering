@@ -16,34 +16,35 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
   vect.Users = sort(unique(train.Ratings$userID))
 
   ## TESTS
-  cat(sprintf("Début du test \n"))
-  nb.Tests = dim(test.Ratings)[1]
+  nb.Tests = 2000 #TODO dim(test.Ratings)[1]
   resultTest = test.Ratings
   
   cat(paste0(nb.Tests))
   
   ## PREDICTION
-  for(test in 1:5000){ #TODO for(test in 1:nb.Tests){
+  for(test in 1:nb.Tests){
     
     cat(paste0("|", test))
     
     userID = test.Ratings$userID[test]
     movieID = test.Ratings$movieID[test]
     
-    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)
-    vect.Ratings.byNN = matrix(NA, nrow = 1, ncol = Qmax)
+    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)[,1]
+    vect.Similarity.byNN = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)[,2]
+    vect.Ratings.byNN = as.vector(matrix(NA, nrow = 1, ncol = Qmax))
 
     estPresent = movieID %in% stat.Movies$movieID
     if(estPresent){
-      #nb.Ratings = stat.Movies$nb.Ratings[stat.Movies$movieID == movieID]
-    
+
       for(q in 1:Qmax){
-        vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
-        resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,qnn)
+        if(!is.na(qnn[q])){
+          vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
+        }
+          resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,qnn)
       }
     }
     else{
-        resultTest[test,] = NA
+        resultTest[test,3:3+Qmax] = NA
     }
     
   }

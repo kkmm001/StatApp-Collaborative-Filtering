@@ -16,41 +16,44 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-#source("./Util/open_files.R", encoding = 'UTF-8')
 repository = readline(prompt = "Choisissez un problème : ") #ml-100k
 
-# ====================== 3.GENERATION DES BASES D'APPRENTISSAGE ET DE TEST ==========================
+# ====================== 3.CHARGEMENT DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
-file_list.Datasets = paste0("./CrossValidation/", repository, "/list.Datasets.Rdata")
+nb.Tests = as.integer(readline(prompt = "Choisissez un nombre de sous-bases : "))
+
+file_list.Datasets = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/list.Datasets.Rdata")
 load(file = file_list.Datasets)
-nb.Tests = length(list.Datasets)
 
 # ============================== 4.CHOIX DE PARAMETRES =========================================
-library("hydroGOF")
 
-#source("./Util/error_function.R")
-#error_names = c("RMSE")
-#nb.Errors = length(error_names)
+library("zoo")
+library("hydroGOF")
 
 Qmax = 20
 
-similarity_names = c("pearson") #TODO A BOUCLER
+similarity_names = c("pearson", "RFP", "nrmse", "nmae") 
+list.nbMin.InCommon = c(0,4,10)
+method_names = c("mean", "weighted&b", "weighted-centered&b", "weighted&a", "weighted-centered&a", "weighted&ab", "weighted-centered&ab")
+
+# Calcul du nombre de prédicteurs
+# Noms des familles de modèles : similarité_nbMin.InCommon_predicteur
+
 nb.Similarity = length(similarity_names)
-
-list.nbMin.InCommon = c(0,2) #4,6,8)
 nb.nbMin.InCommon = length(list.nbMin.InCommon)
-
-method_names = c("mean") #, "pondered", "centred-pondered")
 nb.method = length(method_names)
 
 mat.names_predictors = expand.grid(similarity_names, list.nbMin.InCommon, method_names)
 colnames(mat.names_predictors) = c("similarity", "nbMin.InCommon", "predicteur")
+mat.names_predictors$model = paste0(mat.names_predictors$similarity, "_", mat.names_predictors$nbMin.InCommon, "_", 
+                                    mat.names_predictors$predicteur)
+
 nb.Predictors.byQ = nb.Similarity * nb.nbMin.InCommon * nb.method
 
 # ====================== 5.CHARGEMENT DES TABLEAUX DE PREDICTION ====================================
 
 source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
-source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R")
+source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R", encoding = 'UTF-8')
 source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
 
 #for(error in error_names){
@@ -61,35 +64,41 @@ result_error = as.data.frame(matrix(0, nrow=nb.Predictors.byQ, ncol = Qmax))
 
 # =================== 6.CALCUL DES TABLEAUX DE PREDICTION ================================
 
-#TODO a changer : 1:n et non 1:1
+#TODO a changer : 1:nb.Tests et non 1:1
 for(train in 1:1){ # pour chaque couple train/test de la validation croisée
   
+  cat(sprintf("\n Calcul pour la sous-base : %0.f / %0.f \n", train, nb.Tests))
+  
   # Chargement des listes déjà vus
-  file_list.dejaVu = paste0("./CrossValidation/", repository, "/train", train, "/list.dejaVu.Rdata")
+  file_list.dejaVu = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/list.dejaVu.Rdata")
   load(file = file_list.dejaVu)
   
   # Statistiques sur les utilisateurs
-  file_stat.Users = paste0("./CrossValidation/", repository, "/train", train, "/stat.Users.tsv")
+  file_stat.Users = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/stat.Users.tsv")
   stat.Users = read.table(file = file_stat.Users, header=T, sep='\t')
   
   # Statistiques sur les films
-  file_stat.Movies = paste0("./CrossValidation/", repository, "/train", train, "/stat.Movies.tsv")
+  file_stat.Movies = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/stat.Movies.tsv")
   stat.Movies = read.table(file = file_stat.Movies, header=T, sep='\t')
   
-  
   for(model in 1:nb.Predictors.byQ){
+    
+    cat(sprintf("\n Calcul pour le modèle : %s (%0.f / %0.f) \n",mat.names_predictors$model[model], model, nb.Predictors.byQ))
+    
     similarity = mat.names_predictors$similarity[model]
     nbMin.InCommon = mat.names_predictors$nbMin.InCommon[model]
     method_pred = mat.names_predictors$predicteur[model]
     
-    file_mat.sim = paste0("./CrossValidation/", repository, "/train", train, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv")
+    file_mat.sim = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv")
     mat.sim = as.matrix(read.table(file = file_mat.sim, header=T, sep='\t'))
       
     pred = knn_user_predictions(list.Datasets, train, Qmax, mat.sim, method_pred, list.dejaVu, stat.Users, stat.Movies)
+    
+    write.table(pred, paste0("./Results/", repository, "/results_predictions_train", train, "_", similarity, "_", nbMin.InCommon, "_", method_pred, ".tsv"), col.names=NA, sep="\t")
     
     for(q in 1:Qmax){
       result_error[model,q] = rmse(pred$rating, pred[,q+3])
     }
   }
-  write.table(result_error, paste0("./Results/", repository, "/results_knn_userPredictionTest_train", train, ".tsv"), col.names=NA, sep="\t")
+  write.table(result_error, paste0("./Results/", repository, "/results_knn_userPredictionTest_train", train, ".tsv"), col.names=NA, row.names = mat.names_predictors$model, sep="\t")
 }
