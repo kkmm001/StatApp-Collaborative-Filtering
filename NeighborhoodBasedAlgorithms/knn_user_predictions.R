@@ -16,7 +16,7 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
   vect.Users = sort(unique(train.Ratings$userID))
 
   ## TESTS
-  nb.Tests = 2000 #TODO dim(test.Ratings)[1]
+  nb.Tests = dim(test.Ratings)[1]
   resultTest = test.Ratings
   
   cat(paste0(nb.Tests))
@@ -29,20 +29,21 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
     userID = test.Ratings$userID[test]
     movieID = test.Ratings$movieID[test]
     
-    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)[,1]
-    vect.Similarity.byNN = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)[,2]
+    qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)
+    vect.Neighbors = qnn$neighbors
+    vect.Similarity.byNN = qnn$similarities
     vect.Ratings.byNN = as.vector(matrix(NA, nrow = 1, ncol = Qmax))
 
     estPresent = movieID %in% stat.Movies$movieID
     if(estPresent){
-
       for(q in 1:Qmax){
-        if(!is.na(qnn[q])){
-          vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == qnn[q]) & (train.Ratings$movieID == movieID)]
+        if(!is.na(vect.Neighbors[q])){
+          vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == vect.Neighbors[q]) & (train.Ratings$movieID == movieID)]
         }
-          resultTest[test,q+3] = knn_user_predicteur(q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,qnn)
+          resultTest[test,q+3] = knn_user_predicteur(vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,vect.Neighbors)
       }
-    }
+    } 
+    
     else{
         resultTest[test,3:3+Qmax] = NA
     }
