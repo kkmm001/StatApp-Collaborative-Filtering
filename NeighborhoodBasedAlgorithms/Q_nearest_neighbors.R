@@ -24,7 +24,8 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.
   nb.OtherUsers = length(vect.Similarity) #nombre maximal de plus proches voisins
   
   # Création de la matrice des plus proches voisins pour le film movieID (contient les identifiants et les coefficients de similarité)
-  mat.neighbors = matrix(NA, nrow = Q, ncol = 2)
+  mat.neighbors = as.data.frame(matrix(NA, nrow = Q, ncol = 2))
+  colnames(mat.neighbors) = c("neighbors", "similarities")
   
   userIND2 = 1 #indice dans vect.Neighbors
   nb.Neighbors = 0 #indice dans mat.neighbors
@@ -33,8 +34,8 @@ Q_nearest_neighbors = function(userID, movieID, Q, list.dejaVu, vect.Users, mat.
     userID2 = vect.Neighbors[userIND2]
     if(movieID %in% list.dejaVu[[userID2]]){
       nb.Neighbors = nb.Neighbors+1
-      mat.neighbors[nb.Neighbors,1] = userID2
-      mat.neighbors[nb.Neighbors,2] = vect.Similarity[userIND2]
+      mat.neighbors$neighbors[nb.Neighbors] = userID2
+      mat.neighbors$similarities[nb.Neighbors] = vect.Similarity[userIND2]
     }
     userIND2 = userIND2+1
   }
