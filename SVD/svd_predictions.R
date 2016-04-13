@@ -1,4 +1,4 @@
-svd_predictions=function(AvrRtg,list.Datasets,data.Movies,data.Users,X){
+svd_predictions=function(AvrRtg,list.Datasets,matUS,matSV,data.Movies,data.Users,X){
   # INPUT
   # OUTPUT  : prédit les notes pour les couples (train, test)
   
@@ -12,8 +12,8 @@ svd_predictions=function(AvrRtg,list.Datasets,data.Movies,data.Users,X){
   for(testID in 1:nb.Tests){
     train.Ratings=list.Datasets[testID]$train
     test.Ratings=list.Datasets[testID]$test
-    US=svd(AvrRtg,train.Ratings,X)$US
-    SV=svd(AvrRtg,train.Ratings,X)$SV
+    US=matUS[testID]
+    SV=matSV[testID]
     res[testID]=test.Ratings
     n=length(test.Ratings$rating)
     stat.Users = stat_Users(train.Ratings)
