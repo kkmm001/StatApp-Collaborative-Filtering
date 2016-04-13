@@ -91,17 +91,20 @@ if(method == "knn_user"){
   source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
   
-  vect.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur)
-}
+  mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur)
+  }
 
 # ============================== 4.AFFICHAGE DES RECOMMANDATIONS ==================================================================
 
 cat(sprintf("Les %.0f films recommandés pour vous : \n", nb.recommandations))
 for (recom in 1:nb.recommandations){
-  cat(sprintf("%.0f \t %-40s \t noté %.2f/5\n", 
+  movieID = mat.RecommendedMovies$movieID[recom]
+  cat(sprintf("%.0f \t %-40s \t noté %.2f/5 \t prédit à %.2f/5 \ noté %0.f fois\n", 
               recom, 
-              recap.Movies$title[recap.Movies$movieID == vect.RecommendedMovies[recom]], 
-              recap.Movies$mean[recap.Movies$movieID == vect.RecommendedMovies[recom]]
+              recap.Movies$title[recap.Movies$movieID == movieID], 
+              recap.Movies$mean[recap.Movies$movieID == movieID],
+              mat.RecommendedMovies$prating[recom],
+              recap.Movies$nb.Ratings[recap.Movies$movieID == movieID]
               )
   )
 }  
