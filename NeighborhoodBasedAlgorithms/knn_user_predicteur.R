@@ -1,5 +1,13 @@
-knn_user_predicteur = function(Q, vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur, qnn){
-  # ============#
+knn_user_predicteur = function(weight, ratings, stat.Users, userID, predicteur, Q_Neighbors){
+  # INPUT   weight                : vecteur contenant le degré de similarité par plus proches voisins
+  #         ratings               : vecteur contenant les notes des plus proches voisins
+  #         stat.Users            : statistiques des utilsateurs
+  #         userID                : identifiant de l'utilisateur
+  #         predicteur            : la fonction de prédiction
+  #         Q_Neighbors           : les identifiants et les similarités des plus proches voisins
+  # OUTPUT                        : la note prédite
+  
+  # Fonction pour obtenir la moyenne des notes d'un individu
   get_meanRatings = function(userID){
     if(is.na(userID)){
       return(NA)
@@ -10,8 +18,7 @@ knn_user_predicteur = function(Q, vect.Similarity.byNN, vect.Ratings.byNN, stat.
     }
   }
   
-  # ============#
-  
+  # Fonction pour limiter la valeur de la prédiction
   limited_value = function(value){
     if(is.na(value)){
       return(NA)
@@ -27,18 +34,21 @@ knn_user_predicteur = function(Q, vect.Similarity.byNN, vect.Ratings.byNN, stat.
     }
   }
   
-  # ============#
+  # Calcul des prédicteurs
+
+  if(predicteur != "mean"){
+    meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
+    meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings)
+  }
   
-  meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
-  meanOfNeighbors = sapply(qnn,get_meanRatings)
+  # Notation  : &b  : pour les prédicteurs pondérés, la valeur est majorée par 5 et minorée par 1 (b pour bounds)
+  #           : &ab : pour les prédicteurs pondérés, la valeur est majorée/minorée et le dénominateur est la somme des valeurs absolues (a pour absolute)
+    
   switch(predicteur, 
-         'mean' = mean(vect.Ratings.byNN[1:Q], na.rm = TRUE),
-         'weighted&b' = limited_value(sum(vect.Ratings.byNN[1:Q] * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(vect.Similarity.byNN[1:Q], na.rm = TRUE)),
-         'weighted-centered&b' = limited_value(meanOfUser + sum((vect.Ratings.byNN[1:Q]-meanOfNeighbors[1:Q]) * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(vect.Similarity.byNN[1:Q], na.rm = TRUE)),
-         'weighted&a' = sum(vect.Ratings.byNN[1:Q] * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(abs(vect.Similarity.byNN[1:Q]), na.rm = TRUE),
-         'weighted-centered&a' = meanOfUser + sum((vect.Ratings.byNN[1:Q]-meanOfNeighbors[1:Q]) * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(abs(vect.Similarity.byNN[1:Q]), na.rm = TRUE),
-         'weighted&ab' = limited_value(sum(vect.Ratings.byNN[1:Q] * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(abs(vect.Similarity.byNN[1:Q]), na.rm = TRUE)),
-         'weighted-centered&ab' = limited_value(meanOfUser + sum((vect.Ratings.byNN[1:Q]-meanOfNeighbors[1:Q]) * vect.Similarity.byNN[1:Q], na.rm = TRUE)/ sum(abs(vect.Similarity.byNN[1:Q]), na.rm = TRUE))
-         
+         'mean' = mean(ratings, na.rm = TRUE),
+         'weighted&b' = limited_value(sum(ratings * weight, na.rm = TRUE)/ sum(weight, na.rm = TRUE)),
+         'weighted-centered&b' = limited_value(meanOfUser + sum((ratings-meanOfNeighbors) * weight, na.rm = TRUE)/ sum(weight, na.rm = TRUE)),
+         'weighted&ab' = limited_value(sum(ratings * weight, na.rm = TRUE)/ sum(abs(weight), na.rm = TRUE)),
+         'weighted-centered&ab' = limited_value(meanOfUser + sum((ratings-meanOfNeighbors) * weight, na.rm = TRUE)/ sum(abs(weight), na.rm = TRUE))
          )
 }
