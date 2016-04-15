@@ -16,7 +16,7 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
   vect.Users = sort(unique(train.Ratings$userID))
 
   ## TESTS
-  nb.Tests = dim(test.Ratings)[1]
+  nb.Tests = 2000 #dim(test.Ratings)[1]
   resultTest = test.Ratings
   
   cat(paste0(nb.Tests))
@@ -30,6 +30,7 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
     movieID = test.Ratings$movieID[test]
     
     qnn = Q_nearest_neighbors(userID, movieID, Qmax, list.dejaVu, vect.Users, mat.sim)
+
     vect.Neighbors = qnn$neighbors
     vect.Similarity.byNN = qnn$similarities
     vect.Ratings.byNN = as.vector(matrix(NA, nrow = 1, ncol = Qmax))
@@ -40,7 +41,7 @@ knn_user_predictions = function(list.Datasets, train, Qmax, mat.sim, predicteur,
         if(!is.na(vect.Neighbors[q])){
           vect.Ratings.byNN[q] = train.Ratings$rating[(train.Ratings$userID == vect.Neighbors[q]) & (train.Ratings$movieID == movieID)]
         }
-          resultTest[test,q+3] = knn_user_predicteur(vect.Similarity.byNN, vect.Ratings.byNN, stat.Users, userID, predicteur,vect.Neighbors)
+          resultTest[test,q+3] = knn_user_predicteur(vect.Similarity.byNN[1:q], vect.Ratings.byNN[1:q], stat.Users, userID, predicteur,vect.Neighbors[1:q])
       }
     } 
     
