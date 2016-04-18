@@ -65,11 +65,11 @@ svd2=function(AvrRtg="Item",train.Ratings){
   # conversion of ratings to z-scores and 
   # subtraction of customer average from each rating.  => 
   # We found the latter approach to providebetter results.
-  meanByUser=as.numeric(c(stat.Users$mean[1:10]))
+  meanByUser=as.numeric(c(stat.Users$mean))
   matR=matR-meanByUser
   
   #factor Rnorm using SVD to obtain U, S and V.
-  SVD=svd(matR)
+  mat.SVD=svd(matR)  # ON UTILISE ICI DIRECTEMENT LA FONCTION SVD DE R STUDIO
   # matR3=SVD$u%*%diag(SVD$d)%*%t(SVD$v) verification : on retrouve bien matR
-  return(SVD)
+  return(mat.SVD)
 }
