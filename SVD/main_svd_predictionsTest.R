@@ -50,9 +50,9 @@ for(testID in 1:nb.Tests){
   dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != testID]
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
   test.Ratings=list.Datasets[[testID]]
-  SVD=svd2(AvrRtg,train.Ratings)
-  matUS[[testID]]=matUS_matSV(SVD,X)$US
-  matSV[[testID]]=matUS_matSV(SVD,X)$SV
+  mat.SVD=svd2(AvrRtg,train.Ratings)
+  matUS[[testID]]=matUS_matSV(mat.SVD,X)$US
+  matSV[[testID]]=matUS_matSV(mat.SVD,X)$SV
 }
 # ======================================== 4. PREDICTION =================================
 
