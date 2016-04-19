@@ -12,8 +12,8 @@ matUS_matSV=function(mat.SVD,X){
   
   # compute two resultant matrices: UkSk^(1/2) and Sk^(1/2)Vk
   sqr_Sk=sqrtm(Sk)
-  Uk=SVD$u[,1:k]
-  Vk=SVD$v[,1:k]
+  Uk=mat.SVD$u[,1:k]
+  Vk=mat.SVD$v[,1:k]
   res=list(US=Uk%*%sqr_Sk,SV=sqr_Sk%*%t(Vk))
   return(res)
 }
