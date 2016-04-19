@@ -62,7 +62,7 @@ for(testID in 1:nb.Tests){
 
 pred=list()
 for(testID in 1:nb.Tests){
-  Pred[[testID]]=svd_prediction(AvrRtg,list.Datasets,testID,matUS,matSV,data.Movies,data.Users,X)
+  Pred[[testID]]=svd_prediction(list.Datasets,testID,matUS,matSV,X)
 }
 
 
