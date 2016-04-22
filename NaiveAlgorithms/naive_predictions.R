@@ -3,7 +3,14 @@
 #       Description : Fonction de predictions naives sur les bases                                   #
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =#
 
-naive_predictions = function(train.Ratings, test.Ratings){
+naive_predictions = function(list.Datasets, train){
+  
+  ## BASES D'APPRENTISSAGE ET DE TEST
+  nb.Datasets = length(list.Datasets)
+  dataset_to_keep = (1:nb.Datasets)[(1:nb.Datasets) != train]
+  
+  train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
+  test.Ratings = list.Datasets[[train]]
   
   #generation des statistiques sur les donnees de l'apprentissage
   stat.Users = stat_Users(train.Ratings)
