@@ -74,8 +74,11 @@ if(method == "knn_user"){
   # Choix du nombre de plus proches voisins
   Q = as.integer(readline(prompt = "Choisissez le nombre de plus proches voisins : "))
   
+  # Choix du nombre minimal de visionnage
+  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
+  
   # Choix du prédicteur
-  cat(sprintf("Les prédicteurs proposés sont : mean, weighted&b, weighted-centered&b, weighted&ab, weighted-centered&ab \n"))
+  cat(sprintf("Les prédicteurs proposés sont : mean, weighted, weighted-centered, weighted&a, weighted-centered&a \n"))
   predicteur = readline(prompt = "Choisissez le prédicteur : ")
   
 # CHARGEMENT DES PARAMETRES CHOISIS PAR L'UTILISATEUR FINAL
@@ -91,12 +94,12 @@ if(method == "knn_user"){
   source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
   
-  mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur)
+  mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur, nbMin.Ratings)
   }
 
 # ============================== 4.AFFICHAGE DES RECOMMANDATIONS ==================================================================
 
-cat(sprintf("Les %.0f films recommandés pour vous : \n", nb.recommandations))
+cat(sprintf("\n Les %.0f films recommandés pour vous : \n", nb.recommandations))
 for (recom in 1:nb.recommandations){
   movieID = mat.RecommendedMovies$movieID[recom]
   cat(sprintf("%.0f \t %-40s \t noté %.2f/5 \t prédit à %.2f/5 \ noté %0.f fois\n", 
