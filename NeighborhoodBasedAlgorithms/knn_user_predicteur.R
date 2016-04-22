@@ -1,5 +1,5 @@
 # Fonction pour obtenir la moyenne des notes d'un individu
-get_meanRatings = function(userID){
+get_meanRatings = function(userID, stat.Users){
   if(is.na(userID)){
     return(NA)
   }
@@ -38,7 +38,7 @@ knn_user_predicteur = function(weights, ratings, stat.Users, userID, predicteur,
   
   #if(predicteur != "mean"){
     meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
-    meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings)
+    meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings, stat.Users)
   #}
   
   # Notation  : &a : pour les prédicteurs pondérés, la valeur est majorée/minorée et le dénominateur est la somme des valeurs absolues (a pour absolute)
