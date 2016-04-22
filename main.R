@@ -32,12 +32,12 @@ if(method == "naive"){
 
   # Choix de quelques paramètres pour l'utilisateur final
   nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
-  seuil = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
+  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
   userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
 
   # Recommandation
   source("./NaiveAlgorithms/recommandation_meanByMovie.R")
-  vect.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, threshold = seuil)
+  mat.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, nbMin.Ratings)
 }
 
 # ============================== 3.ALGORITHME DES PLUS PROCHES VOISINS AU SENS UTILISATEUR ============================
