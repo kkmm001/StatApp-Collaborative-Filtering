@@ -30,8 +30,13 @@ load(file = file_list.Datasets)
 
 source("./SVD/svd2.R")
 source("./SVD/svd_predictions.R")
+source("./SVD/matUS_matSV.R")
 source("./Util/stat_Movies.R")
 source("./Util/stat_Users.R")
+
+library("zoo")
+library("hydroGOF")
+library("expm")
 
 # ======================================== 3. PHASE DE PREPARATION =================================
 
@@ -40,30 +45,27 @@ source("./Util/stat_Users.R")
 
 ## Création des matrices servant de paramètres
 
-X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder : "))
+#X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder (entre 0 et 1) : "))
 cat(sprintf("Les façons de remplis sont Item ou User \n"))
 AvrRtg = readline(prompt = "Choisissez un mode de remplissage : ")
 
 matUS=list()
 matSV=list()
-for(testID in 1:nb.Tests){
+
+seq_X = seq(0.20, 0.40, by=0.02)
+result_RMSE = matrix(0, nrow = length(seq_X), ncol = nb.Tests)
+
+for(testID in 1:1){ #TODO for(testID in 1:nb.Tests){
   dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != testID]
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
   test.Ratings=list.Datasets[[testID]]
   mat.SVD=svd2(AvrRtg,train.Ratings)
-  matUS[[testID]]=matUS_matSV(mat.SVD,X)$US
-  matSV[[testID]]=matUS_matSV(mat.SVD,X)$SV
+  for(INDX in 1:length(seq_X)){
+    X=seq_X[INDX]
+    matUS[[testID]]=matUS_matSV(mat.SVD,X)$US
+    matSV[[testID]]=matUS_matSV(mat.SVD,X)$SV
+    pred=svd_predictions(list.Datasets,testID,matUS,matSV)
+    write.csv2(pred, paste0("svd_", AvrRtg, X, "_pred_train", testID, ".csv"), col.names = NA)
+    result_RMSE[INDX,testID] = rmse(pred$rating, pred$prating)
+  }
 }
-# ======================================== 4. PREDICTION =================================
-
-# A CHARGER LES DEUX listes de MATRICES load(matSV)
-
-# Prediction
-
-pred=list()
-for(testID in 1:nb.Tests){
-  Pred[[testID]]=svd_prediction(list.Datasets,testID,matUS,matSV,X)
-}
-
-
-# Cross Validation
