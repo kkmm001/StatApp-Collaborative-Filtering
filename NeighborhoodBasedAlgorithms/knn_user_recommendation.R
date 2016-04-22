@@ -1,4 +1,4 @@
-knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur){
+knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur, nbMin.Ratings){
   #INPUT  userID              : identifiant de l'utilisateur
   #       recap.Users         : base de données et des statistiques des utilisateurs
   #       recap.Movies        : base de données et des statistiques des films
@@ -8,6 +8,7 @@ knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratin
   #       Q                   : nombre de plus proches voisins
   #       nb.recommandations  : nombre de films recommandés
   #       predicteur          : la fonction de prédiction
+  #       nbMin.Ratings       : le nombre minimal de visionnage pour qu'un film soit recommandable
   #OUTPUT                     : retourne les recommandations pour l'utilisateur userID
   
   # Plus spécifiquement, cette fonction retourne le vecteur de taille nb.recommandations, contenant les identifiants des films recommandés
@@ -17,14 +18,14 @@ knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratin
   # Ensemble des utilisateurs (et donc des potentiels futurs voisins de userID)
   vect.Users = sort(unique(recap.Users$userID))
   
-  # Ensemble des films
-  vect.Movies = sort(unique(recap.Movies$movieID))
-  
   # Indice de userID dans les matrices 
   userIND = which(vect.Users == userID)
   
+  # Filtre des films ayant dépasssé un certain seuil
+  vect.Recommandable = sort(unique(recap.Movies$movieID[recap.Movies$nb.Ratings >= nbMin.Ratings]))
+  
   # Ensemble des films qui sont susceptibles d'être recommandés à userID
-  vect.Recommandable = vect.Movies[!(vect.Movies %in% list.dejaVu[[userID]])]
+  vect.Recommandable = vect.Recommandable[!(vect.Recommandable %in% list.dejaVu[[userID]])]
   
   # Génération du vecteur vect.Ratings.byNN : vecteur contenant les notes des Q plus proches voisins pour un film donné
   vect.Ratings.byNN = as.vector(matrix(NA, nrow = 1, ncol = Q))
