@@ -11,7 +11,6 @@ svd2=function(AvrRtg="Item",train.Ratings){
 # using the average ratings for a product. 
 # We found the product average produce a better result.  
   
-  
   # Dimension du problème
   vect.Users = sort(unique(train.Ratings$userID))
   nb.Users = length(vect.Users) # nombre d'individus différents dans la data frame train.Ratings
@@ -28,6 +27,7 @@ svd2=function(AvrRtg="Item",train.Ratings){
   
   if(AvrRtg=="User"){
     for (userInd1 in 1:nb.Users){
+      cat(paste("*", userInd1))
       userID1=vect.Users[userInd1]
       mat.MoviesOfuserID1 = train.Ratings[train.Ratings$userID == userID1, c("movieID", "rating")]
       meanID1=as.numeric(stat.Users$mean[stat.Users$userID==userID1])
@@ -44,6 +44,7 @@ svd2=function(AvrRtg="Item",train.Ratings){
     }
   }else{
     for (movieInd1 in 1:nb.Movies){
+      cat(paste("*", movieInd1))
       movieID1=vect.Movies[movieInd1]
       mat.UsersOfmovieID1 = train.Ratings[train.Ratings$movieID == movieID1, c("userID", "rating")]
       meanID1=as.numeric(stat.Movies$mean[stat.Movies$movieID==movieID1])
