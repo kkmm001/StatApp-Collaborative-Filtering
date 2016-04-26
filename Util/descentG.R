@@ -19,31 +19,34 @@
 
 source("./CrossValidation/main_split.R")
 source("./Util/transform_Ratings.R")
-
-
+library("Metrics")
 
 
 data.training = rbind(list.Datasets[[1]], list.Datasets[[2]], list.Datasets[[3]], list.Datasets[[4]])
 data.check = list.Datasets[[5]]
 
-X = transform.data.rating(data.training, data.Ratings)
+vector.userID = sort(as.numeric(unique(data.Ratings$userID)))
+vector.movieID = sort(as.numeric(unique(data.Ratings$movieID)))
 
+
+
+X = transform.data.rating(data.training, vector.userID, vector.movieID)
+Y = transform.data.rating(data.Ratings, vector.userID, vector.movieID)
 
 # M_t is a randomly sampled matrix restrained from 1 to 5.
-M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X))
+M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
 
 
-lambda=2
+lambda=20
 
 M_t = M
 
 track_F_M <- NULL
-track_gap <- NULL
 
 
-for(i in 1:10){
+for(i in 1:15){
   
-  mu = 1/sqrt(i)
+  mu = 2/sqrt(i)
   
   gradient_norm_M_X = 2*(M_t-X)
   
@@ -64,4 +67,21 @@ for(i in 1:10){
   M_t = M_t_1
 }
 
+
+# retablissement de la matrice
+
+matrix.prevision = restablish.data.rating.col(M_t_1, vector.userID, vector.movieID)
+colnames(matrix.prevision) = 1:max(vector.movieID)
+
+result <-NULL
+
+for(i in 1:nrow(data.check))
+{
+  userID = data.check$userID[i]
+  movieID = data.check$movieID[i]
+  result[i] = matrix.prevision[userID, movieID]
+}
+data.check = cbind(data.check, result)
+
+error = rmse(result, data.check$rating)
 
