@@ -1,6 +1,3 @@
-
-
-
 transform.data.rating = function(data.Training, vec.userID , vec.movieID){
   
   matrix.ratings = matrix(data=0, nrow = max(vec.userID), ncol=max(vec.movieID))

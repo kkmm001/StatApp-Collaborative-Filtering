@@ -20,10 +20,20 @@
 
 source("./CrossValidation/main_split.R")
 source("./Util/transform_Ratings.R")
+#install.packages("Metrics")
 library("Metrics")
 
+nb.subbase=4
 
-data.training = rbind(list.Datasets[[1]], list.Datasets[[2]], list.Datasets[[3]], list.Datasets[[4]])
+data.training = list.Datasets[[1]]
+for(i in 2:nb.subbase){
+  
+  data.training = rbind(list.Datasets[[i]])
+  
+}
+
+
+
 data.check = list.Datasets[[5]]
 
 vector.userID = sort(as.numeric(unique(data.Ratings$userID)))
@@ -37,56 +47,61 @@ X = transform.data.rating(data.training, vector.userID, vector.movieID)
 # M_t is a randomly sampled matrix restrained from 1 to 5.
 M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
 
+#lambda=15
 
-lambda=15
+iteration.times = 20
 
-iteration.times = 50
 
-M_t = M
+track_error <- NULL
+
 
 #track_F_M <- NULL
-
-for(i in 1:iteration.times){
-  
-  mu = 2/sqrt(i)
-  
-  gradient_norm_M_X = 2*(M_t-X)
-  
-  gradient_norm_M_X[X==0]=0
-  
-  svd_M_t = svd(M_t) 
-  
-  gradient_norm_M = svd_M_t$u%*%t(svd_M_t$v)
-  
-  gradient_F_M = gradient_norm_M_X+lambda*gradient_norm_M
-  
-  M_t_1 = M_t - mu*gradient_F_M
-  
-  #F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
-  
-  #track_F_M = c(track_F_M, F_M)
-  
-  M_t = M_t_1
-}
-
-
-# retablissement de la matrice
-
-matrix.prevision = restablish.data.rating.col(M_t_1, vector.userID, vector.movieID)
-colnames(matrix.prevision) = 1:max(vector.movieID)
-
-result <-NULL
-
-for(i in 1:nrow(data.check))
+for(lambda in 15)#c(5, 10,15, 20))
 {
-  userID = data.check$userID[i]
-  movieID = data.check$movieID[i]
-  result[i] = matrix.prevision[userID, movieID]
+  M_t = M
+  
+  for(i in 1:iteration.times){
+    
+    mu = 2/sqrt(i)
+    
+    gradient_norm_M_X = 2*(M_t-X)
+    
+    gradient_norm_M_X[X==0]=0
+    
+    svd_M_t = svd(M_t) 
+    
+    gradient_norm_M = svd_M_t$u%*%t(svd_M_t$v)
+    
+    gradient_F_M = gradient_norm_M_X+lambda*gradient_norm_M
+    
+    M_t_1 = M_t - mu*gradient_F_M
+    
+    #F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    
+    #track_F_M = c(track_F_M, F_M)
+    
+    M_t = M_t_1
+  }
+
+  # retablissement de la matrice
+  
+  matrix.prevision = restablish.data.rating.col(M_t_1, vector.userID, vector.movieID)
+  colnames(matrix.prevision) = 1:max(vector.movieID)
+  
+  result <-NULL
+  
+  for(i in 1:nrow(data.check))
+  {
+    userID = data.check$userID[i]
+    movieID = data.check$movieID[i]
+    result[i] = matrix.prevision[userID, movieID]
+  }
+  data.check = cbind(data.check, result)
+  
+  error = rmse(result, data.check$rating)
+  
+  track_error = cbind(track_error,c(lambda, error, iteration.times))
+  
 }
-data.check = cbind(data.check, result)
-
-error = rmse(result, data.check$rating)
-
-track_error = cbind(track_error,c(lambda, error, iteration.times))
 
 rownames(track_error)<-c("lambda","error", "times")
