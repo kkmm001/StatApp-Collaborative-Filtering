@@ -1,11 +1,11 @@
 
 
 
-transform.data.rating = function(data.Training, userID , movieID){
+transform.data.rating = function(data.Training, vec.userID , vec.movieID){
   
-  matrix.ratings = matrix(data=0, nrow = max(data.Ratings$userID), ncol=max(data.Ratings$movieID))
-  colnames(matrix.ratings)=1:max(data.Ratings$movieID)   #sort(unique(data.Training$movieID))
-  rownames(matrix.ratings)=1:max(data.Ratings$userID)   #sort(unique(data.Training$userID))
+  matrix.ratings = matrix(data=0, nrow = max(vec.userID), ncol=max(vec.movieID))
+  colnames(matrix.ratings)=1:max(vec.movieID)   #sort(unique(data.Training$movieID))
+  rownames(matrix.ratings)=1:max(vec.userID)   #sort(unique(data.Training$userID))
   
   
   for(i in 1:nrow(data.Training)){

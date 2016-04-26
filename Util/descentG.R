@@ -17,6 +17,7 @@
 #   http://math.stackexchange.com/questions/701062/derivative-of-nuclear-norm
 #   The above url explain how to compute nuclear norm gradient, seeming different from vincent's method #####
 
+
 source("./CrossValidation/main_split.R")
 source("./Util/transform_Ratings.R")
 library("Metrics")
@@ -31,20 +32,21 @@ vector.movieID = sort(as.numeric(unique(data.Ratings$movieID)))
 
 
 X = transform.data.rating(data.training, vector.userID, vector.movieID)
-Y = transform.data.rating(data.Ratings, vector.userID, vector.movieID)
+#Y = transform.data.rating(data.Ratings, vector.userID, vector.movieID)
 
 # M_t is a randomly sampled matrix restrained from 1 to 5.
 M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
 
 
-lambda=20
+lambda=15
+
+iteration.times = 50
 
 M_t = M
 
-track_F_M <- NULL
+#track_F_M <- NULL
 
-
-for(i in 1:15){
+for(i in 1:iteration.times){
   
   mu = 2/sqrt(i)
   
@@ -60,9 +62,9 @@ for(i in 1:15){
   
   M_t_1 = M_t - mu*gradient_F_M
   
-  F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+  #F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
   
-  track_F_M = c(track_F_M, F_M)
+  #track_F_M = c(track_F_M, F_M)
   
   M_t = M_t_1
 }
@@ -85,3 +87,6 @@ data.check = cbind(data.check, result)
 
 error = rmse(result, data.check$rating)
 
+track_error = cbind(track_error,c(lambda, error, iteration.times))
+
+rownames(track_error)<-c("lambda","error", "times")
