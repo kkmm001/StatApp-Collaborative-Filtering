@@ -1,6 +1,3 @@
-
-rm(list=ls())
-
 #########     Matrix Completion with Nuclear Norm Minimization    ##############################"
 #
 #       X is the original ratings matrix to approach
@@ -20,9 +17,17 @@ rm(list=ls())
 #   http://math.stackexchange.com/questions/701062/derivative-of-nuclear-norm
 #   The above url explain how to compute nuclear norm gradient, seeming different from vincent's method #####
 
+source("./CrossValidation/main_split.R")
+source("./Util/transform_Ratings.R")
 
 
-X = transform.data.rating(data.Ratings)
+
+
+data.training = rbind(list.Datasets[[1]], list.Datasets[[2]], list.Datasets[[3]], list.Datasets[[4]])
+data.check = list.Datasets[[5]]
+
+X = transform.data.rating(data.training, data.Ratings)
+
 
 # M_t is a randomly sampled matrix restrained from 1 to 5.
 M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X))
