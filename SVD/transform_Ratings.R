@@ -20,18 +20,18 @@ transform.data.rating = function(data.Training, vec.userID , vec.movieID){
 
 
 ######### restablish original dimension by adding zero vector in prevision base
-restablish.data.rating.col = function(prevision, vec.userID , vec.movieID){ #prevision n'inclut que les donnees training
+restablish.data.rating.col = function(matrix.prevision, vec.userID , vec.movieID){ #prevision n'inclut que les donnees training
 
   matrix.recovery <- matrix(NA, nrow = max(vec.userID), ncol = max(vec.movieID))
   
-  vec.col.prevision = as.numeric(colnames(prevision))
-  vec.row.prevision = as.numeric(rownames(prevision))
+  vec.col.prevision = as.numeric(colnames(matrix.prevision))
+  vec.row.prevision = as.numeric(rownames(matrix.prevision))
   
   vec.col.recovery = 1:max(vec.movieID)
   vec.row.recovery = 1:max(vec.userID)
   
   begin = sum(vec.col.recovery == vec.col.prevision)
-  matrix.recovery[,1:begin] = prevision[,1:begin]
+  matrix.recovery[,1:begin] = matrix.prevision[,1:begin]
   
   end = max(vec.movieID)
   j=begin + 1
@@ -40,7 +40,7 @@ restablish.data.rating.col = function(prevision, vec.userID , vec.movieID){ #pre
     
     if(j<=length(vec.col.prevision)){
       if(i==vec.col.prevision[j]){
-        matrix.recovery[,i] = prevision[,j]
+        matrix.recovery[,i] = matrix.prevision[,j]
         j = j+1
       }
     }
