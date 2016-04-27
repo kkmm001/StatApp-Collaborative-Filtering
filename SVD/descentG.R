@@ -18,9 +18,12 @@
 #   The above url explain how to compute nuclear norm gradient, seeming different from vincent's method #####
 
 
-descentG = function(training.reduced, iteration.times=10, lambda=15)
+descentG = function(matrix.training, iteration.times=10, lambda=15)
 {
-  X = training.reduced
+  X = matrix.training
+  
+  #row.null = which(apply(X, 1,sum) == 0)
+  #col.null = which(apply(X, 2,sum) == 0)
   
   # M is a randomly sampled matrix restrained from 1 to 5.
   M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
@@ -36,7 +39,14 @@ descentG = function(training.reduced, iteration.times=10, lambda=15)
     
     gradient_norm_M_X = 2*(M_t-X)
     
-    gradient_norm_M_X[X==0]=0
+    #if(length(row.null)!=0){
+    #  gradient_norm_M_X[row.null, ]=0
+    #}
+    #if(length(col.null)!=0){
+    #  gradient_norm_M_X[, col.null]=0  
+    #}
+    
+    gradient_norm_M_X[X==0]=0 
     
     svd_M_t = svd(M_t) 
     
@@ -53,8 +63,8 @@ descentG = function(training.reduced, iteration.times=10, lambda=15)
     M_t = M_t_1
   }
   
-  colnames(M_t)=colnames(training.reduced)
-  rownames(M_t)=rownames(training.reduced)
+  colnames(M_t)=colnames(matrix.training)
+  rownames(M_t)=rownames(matrix.training)
   
   return(M_t)
 } 

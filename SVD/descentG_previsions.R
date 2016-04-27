@@ -7,35 +7,38 @@ source("./SVD/DescentG.R")
 library("zoo")
 library("hydroGOF")
 
-###### divise and scatter data.ratings into 2 parts(training, test) 
-nb.subbase=4
-
-data.test = list.Datasets[[1]]
-
-data.training <- NULL
-
-for(i in 2:nb.subbase){
-  
-  data.training = rbind(list.Datasets[[i]])
-  
-}
 
 vector.userID = sort(as.numeric(unique(data.Ratings$userID)))
 vector.movieID = sort(as.numeric(unique(data.Ratings$movieID)))
 
-training.reduced = transform.data.rating(data.training, vector.userID, vector.movieID)
-
 track_error <- NULL
+###### divise and scatter data.ratings into 2 parts(training, test) 
+no.base.test=5
 
-lambda.set = c(20)
+data.test = list.Datasets[[no.base.test]]
+
+data.training <- NULL
+
+for(i in 1:5){
+  if(i!=no.base.test)
+  {
+    data.training = rbind(data.training, list.Datasets[[i]])
+  }
+  
+}
+
+matrix.training = transform.data.rating(data.training, vector.userID, vector.movieID)
+
+
+lambda.set = c(25)
 
 iteration.times=50
 
 for(lambda in lambda.set){
   
-  prevision.reduced = descentG(training.reduced, iteration.times, lambda)
+  matrix.prevision = descentG(matrix.training, iteration.times, lambda)
   
-  data.prevision = restablish.data.rating.col(prevision.reduced, vector.userID, vector.movieID)
+  data.prevision = restablish.data.rating.col(matrix.prevision, vector.userID, vector.movieID)
   
   error = svd.error.test(data.prevision, data.test)
   
