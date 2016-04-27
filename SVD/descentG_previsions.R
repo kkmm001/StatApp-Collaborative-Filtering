@@ -13,7 +13,7 @@ vector.movieID = sort(as.numeric(unique(data.Ratings$movieID)))
 
 track_error <- NULL
 ###### divise and scatter data.ratings into 2 parts(training, test) 
-no.base.test=5
+no.base.test=1
 
 data.test = list.Datasets[[no.base.test]]
 
@@ -32,11 +32,12 @@ matrix.training = transform.data.rating(data.training, vector.userID, vector.mov
 
 lambda.set = c(25)
 
-iteration.times=50
+iteration.times=10
 
 for(lambda in lambda.set){
   
-  matrix.prevision = descentG(matrix.training, iteration.times, lambda)
+  #matrix.prevision = descentG(matrix.training, iteration.times, lambda)
+  matrix.prevision = proximalG(matrix.training, iteration.times, lambda)
   
   data.prevision = restablish.data.rating.col(matrix.prevision, vector.userID, vector.movieID)
   
