@@ -30,14 +30,14 @@ for(i in 1:5){
 matrix.training = transform.data.rating(data.training, vector.userID, vector.movieID)
 
 
-lambda.set = c(25)
+lambda.set = c(5, 10, 15, 20)
 
-iteration.times=10
+iteration.times=5
 
 for(lambda in lambda.set){
   
-  #matrix.prevision = descentG(matrix.training, iteration.times, lambda)
-  matrix.prevision = proximalG(matrix.training, iteration.times, lambda)
+  matrix.prevision = descentG(matrix.training, iteration.times, lambda)
+  #matrix.prevision = proximalG(matrix.training, iteration.times, lambda)
   
   data.prevision = restablish.data.rating.col(matrix.prevision, vector.userID, vector.movieID)
   

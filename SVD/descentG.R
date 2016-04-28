@@ -27,11 +27,13 @@ descentG = function(matrix.training, iteration.times=10, lambda=15)
  
   M_t = M   #affecter M a M_t pour iterer
   
+  track_F_M <-NULL
+  
   for(i in 1:iteration.times){
     
     mu = 2/sqrt(i)    #longeur de pas
     
-    gradient_norm_M_X = 2*(M_t-X)
+    gradient_norm_M_X = (M_t-X)
     
     gradient_norm_M_X[X==0]=0 
     
@@ -43,9 +45,12 @@ descentG = function(matrix.training, iteration.times=10, lambda=15)
     
     M_t_1 = M_t - mu*gradient_F_M
     
-    #F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    variation.M = X-M_t_1
+    variation.M[X==0]=0 
     
-    #track_F_M = c(track_F_M, F_M)
+    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    
+    track_F_M = c(track_F_M, F_M)
     
     M_t = M_t_1
   }
@@ -90,6 +95,11 @@ proximalG = function(matrix.training, iteration.times=10, lambda=15)
       M_t_1 = svd_M_t$u[,1]%*%t(svd_M_t$v[,1])*sigma
     }
     
+    
+    
+    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    
+    track_F_M = c(track_F_M, F_M)
    
     
     M_t = M_t_1
