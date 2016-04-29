@@ -35,11 +35,8 @@ knn_user_predicteur = function(weights, ratings, stat.Users, userID, predicteur,
   # OUTPUT              : la note prédite
   
   # Calcul des prédicteurs
-  
-  #if(predicteur != "mean"){
-    meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
-    meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings, stat.Users)
-  #}
+  meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
+  meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings, stat.Users)
   
   # Notation  : &a : pour les prédicteurs pondérés, la valeur est majorée/minorée et le dénominateur est la somme des valeurs absolues (a pour absolute)
   
