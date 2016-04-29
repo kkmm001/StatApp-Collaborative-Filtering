@@ -17,7 +17,7 @@ cat("\014")
 # Choix du problème et de la méthode de recommandation
 cat(sprintf("Les problèmes proposés sont : ml-100k\n"))
 repository = readline(prompt = "Choisissez un problème : ")
-cat(sprintf("Les méthodes proposées sont : naive et knn_user\n"))
+cat(sprintf("Les méthodes proposées sont : naive, knn_user et svd\n"))
 method = readline(prompt = "Choisissez une méthode : ")
 
 # ============================== 2.ALGORITHME NAIF ==================================================================
@@ -62,7 +62,7 @@ if(method == "knn_user"){
   
   # choix de la métrique de similarité
   cat(sprintf("Les métriques proposées sont : pearson, nrmse, nmae et RFP (ratings-frequency pearson) \n"))
-  similarity = readline(prompt = "Choisissez une métrique pour la similarité : ") # "pearson", "nrmse" ou "nmae"
+  similarity = readline(prompt = "Choisissez une métrique pour la similarité : ") 
     
   # Choix du seuil de voisinage
   cat(sprintf("Les seuils de voisinage sont 0, 2, 4, 6, 8 et 10  \n"))
@@ -97,17 +97,14 @@ if(method == "knn_user"){
   mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur, nbMin.Ratings)
   }
 
-# ============================== 4.AFFICHAGE DES RECOMMANDATIONS ==================================================================
+# ============================== 4.ALGORITHME PAR REDUCTION SVD ======= ============================
 
-cat(sprintf("\n Les %.0f films recommandés pour vous : \n", nb.recommandations))
-for (recom in 1:nb.recommandations){
-  movieID = mat.RecommendedMovies$movieID[recom]
-  cat(sprintf("%.0f \t %-40s \t noté %.2f/5 \t prédit à %.2f/5 \ noté %0.f fois\n", 
-              recom, 
-              recap.Movies$title[recap.Movies$movieID == movieID], 
-              recap.Movies$mean[recap.Movies$movieID == movieID],
-              mat.RecommendedMovies$prating[recom],
-              recap.Movies$nb.Ratings[recap.Movies$movieID == movieID]
-              )
-  )
-}  
+if(method == "svd"){
+  print("Not available")
+}
+
+# ============================== 5.AFFICHAGE DES RECOMMANDATIONS ==================================================================
+
+source("./Util/display_recommendations.R", encoding = 'UTF8')
+
+display_recommendations(mat.RecommendedMovies, nb.recommandations, recap.Movies)
