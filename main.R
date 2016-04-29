@@ -106,5 +106,6 @@ if(method == "svd"){
 # ============================== 5.AFFICHAGE DES RECOMMANDATIONS ==================================================================
 
 source("./Util/display_recommendations.R", encoding = 'UTF8')
+source("./Util/genres_of_movie.R")
 
 display_recommendations(mat.RecommendedMovies, nb.recommandations, recap.Movies)
