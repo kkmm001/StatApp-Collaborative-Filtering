@@ -18,25 +18,24 @@
 #   The above url explain how to compute nuclear norm gradient, seeming different from vincent's method #####
 
 
-descentG = function(training.reduced, iteration.times=10, lambda=15)
+descentG = function(matrix.training, iteration.times=10, lambda=15)
 {
-  X = training.reduced
+  X = matrix.training
   
   # M is a randomly sampled matrix restrained from 1 to 5.
   M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
-  
-  #track_F_M <- NULL
-  #for(lambda in lambda_array)
-  #{
+ 
   M_t = M   #affecter M a M_t pour iterer
+  
+  track_F_M <-NULL
   
   for(i in 1:iteration.times){
     
     mu = 2/sqrt(i)    #longeur de pas
     
-    gradient_norm_M_X = 2*(M_t-X)
+    gradient_norm_M_X = (M_t-X)
     
-    gradient_norm_M_X[X==0]=0
+    gradient_norm_M_X[X==0]=0 
     
     svd_M_t = svd(M_t) 
     
@@ -46,19 +45,76 @@ descentG = function(training.reduced, iteration.times=10, lambda=15)
     
     M_t_1 = M_t - mu*gradient_F_M
     
-    #F_M = norm(X-M_t_1, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    variation.M = X-M_t_1
+    variation.M[X==0]=0 
     
-    #track_F_M = c(track_F_M, F_M)
+    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    
+    track_F_M = c(track_F_M, F_M)
     
     M_t = M_t_1
   }
   
-  colnames(M_t)=colnames(training.reduced)
-  rownames(M_t)=rownames(training.reduced)
+  colnames(M_t)=colnames(matrix.training)
+  rownames(M_t)=rownames(matrix.training)
   
   return(M_t)
 } 
 
+
+proximalG = function(matrix.training, iteration.times=10, lambda=15)
+{
+  X = matrix.training
+  
+  # M is a randomly sampled matrix restrained from 1 to 5.
+  M_t = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
+  
+  for(i in 1:iteration.times){
+    
+    mu = 3/sqrt(i)    #longeur de pas
+    
+    gradient_norm_M_X = (M_t-X)
+    
+    gradient_norm_M_X[X==0]=0 
+    
+    M_t.modified = M_t - mu*gradient_norm_M_X
+    
+    
+    svd_M_t = svd(M_t.modified) 
+    
+    
+    sigma.vec = pmax(svd_M_t$d-lambda, 0)
+    
+    index = match(0, sigma.vec)-1
+    
+    if(index>=2){
+      sigma = diag(sigma.vec[1:index])
+      M_t_1 = svd_M_t$u[,1:index]%*%sigma%*%t(svd_M_t$v[,1:index])
+    }else if(index == 1){
+      sigma = sigma.vec[1]
+      M_t_1 = svd_M_t$u[,1]%*%t(svd_M_t$v[,1])*sigma
+    }
+    
+    
+    
+    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    
+    track_F_M = c(track_F_M, F_M)
+   
+    
+    M_t = M_t_1
+  }
+  
+  colnames(M_t)=colnames(matrix.training)
+  rownames(M_t)=rownames(matrix.training)
+  
+  return(M_t)
+  
+}  
+  
+  
+  
+  
   
 svd.error.test = function(prevision, data.test)  {
 
