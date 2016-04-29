@@ -19,7 +19,7 @@ display_recommendations = function(mat.RecommendedMovies, nb.recommandations, re
     #détermination des genres du film
     genresOfMovies = genres_of_movie(movieID, recap.Movies, vect.MovieGenres)
     
-    cat(sprintf("%.0f \t %-40s \t noté %.2f/5 \t prédit à %.2f/5 \ vu %0.f fois \t genre(s) : %s \n", 
+    cat(sprintf("%.0f \t %-40s \t noté %.2f/5 \t prédit à %.2f/5 \ vu %.0f fois \t genre(s) : %s \n", 
                 recom,                                                    #numéro de la recommandation
                 recap.Movies$title[recap.Movies$movieID == movieID],      #titre du film
                 recap.Movies$mean[recap.Movies$movieID == movieID],       #note moyenne du film
