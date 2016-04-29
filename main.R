@@ -20,15 +20,23 @@ repository = readline(prompt = "Choisissez un problème : ")
 cat(sprintf("Les méthodes proposées sont : naive, knn_user et svd\n"))
 method = readline(prompt = "Choisissez une méthode : ")
 
-# ============================== 2.ALGORITHME NAIF ==================================================================
+# ============================== 2.CHARGEMENT DES DONNEES BASIQUES ==================================================================
+
+# Chargement de la base des notes
+data.Ratings = read.table(file = paste0("Data/", repository, "/data.Ratings.tsv"), header=T, sep='\t')
+
+# Chargement de la base et des statistiques des films
+recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
+
+# Chargement de la base et des statistiques des utilisateurs
+recap.Users = read.table(file = paste0("./Results/", repository, "/recap.Users.tsv"), header=T, sep='\t')
+
+# Chargement de la liste des films déjà notés
+load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
+
+# ============================== 3.ALGORITHME NAIF ==================================================================
 
 if(method == "naive"){
-
-  # Chargement de la base et des statistiques des films
-  recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv") , header=T, sep='\t')
-  
-  # Chargement de la liste des films déjà notés par individu
-  load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
 
   # Choix de quelques paramètres pour l'utilisateur final
   nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
@@ -40,23 +48,9 @@ if(method == "naive"){
   mat.RecommendedMovies = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, nbMin.Ratings)
 }
 
-# ============================== 3.ALGORITHME DES PLUS PROCHES VOISINS AU SENS UTILISATEUR ============================
+# ============================== 4.ALGORITHME DES PLUS PROCHES VOISINS AU SENS UTILISATEUR ============================
 
 if(method == "knn_user"){
-  
-# CHARGEMENT DES DONNEES BASIQUES
-  
-  # Chargement de la base des notes
-  data.Ratings = read.table(file = paste0("Data/", repository, "/data.Ratings.tsv"), header=T, sep='\t')
-  
-  # Chargement de la base et des statistiques des films
-  recap.Movies = read.table(file = paste0("./Results/", repository, "/recap.Movies.tsv"), header=T, sep='\t')
-  
-  # Chargement de la base et des statistiques des utilisateurs
-  recap.Users = read.table(file = paste0("./Results/", repository, "/recap.Users.tsv"), header=T, sep='\t')
-  
-  # Chargement de la liste des films déjà notés
-  load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
   
 # CHARGEMENT DES PARAMETRES CHOISIS PAR L'OPERATEUR
   
@@ -97,15 +91,19 @@ if(method == "knn_user"){
   mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur, nbMin.Ratings)
   }
 
-# ============================== 4.ALGORITHME PAR REDUCTION SVD ======= ============================
+# ============================== 5.ALGORITHME PAR REDUCTION SVD ======= ============================
 
 if(method == "svd"){
   print("Not available")
 }
 
-# ============================== 5.AFFICHAGE DES RECOMMANDATIONS ==================================================================
+# ============================== 6.AFFICHAGE DES RECOMMANDATIONS ==================================================================
+
+source("./Util/genres_of_movie.R")
+
+source("./Util/display_user_characteristics.R", encoding = 'UTF8')
+display_user_characteristics(userID, recap.Users, data.Ratings, recap.Movies)
 
 source("./Util/display_recommendations.R", encoding = 'UTF8')
-source("./Util/genres_of_movie.R")
 
 display_recommendations(mat.RecommendedMovies, nb.recommandations, recap.Movies)
