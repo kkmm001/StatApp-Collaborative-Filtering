@@ -1,0 +1,17 @@
+carac_User = function(userID, recap.Users, nb.FavoriteMovies, data.Ratings, recap.Movies){
+#INPUT      userID            : l'identifiant de l'utilisateur [PHASE 1]
+#           recap.Users       : pour avoir ses statistiques globales [PHASE 1]
+#           nb.FavoriteMovies : le nombre de ses films préférés qu'on affiche [PHASE 2]
+#           data.Ratings      : pour connaître les identifiants de ces nb.FavoriteMovies films préférés [PHASE 2]
+#           recap.Movies      : pour connaître ses genres de films préférés [PHASE 3]
+#OUTPUT                       : une liste contenant ses statistiques globales, ses films préférés, ses genres cinématographiques préférés
+
+nb.Movies= length (data.Ratings$userID == userID)
+list.movies=data.frame(data.Ratings$movieID[data.Ratings$userID == userID],data.Ratings$ratings[data.Ratings$userID == userID] )
+
+#ordonné les ratings et prendre les k meilleurs identifiants associés nommé ce vecteur vect.prefMovies
+
+# produit matricielle netre vect.pref et les genres donne vect.PrefGenreMovies
+res=list(recap.Users(recap.Users$userID == userID),vect.prefMovies,vect.PrefGenreMovies)
+return (res)
+}
