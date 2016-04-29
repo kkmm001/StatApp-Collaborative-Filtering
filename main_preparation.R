@@ -22,7 +22,7 @@ source("./Util/deja_Vu.R")
 source("./NeighborhoodBasedAlgorithms/nb_MoviesInCommon.R")
 source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
 source("./NeighborhoodBasedAlgorithms/proxi_Users_AllvsAll.R")
-source("./NeighborhoodBasedAlgorithms/filtrer_Similarite.R")
+source("./NeighborhoodBasedAlgorithms/filtrer_similarite.R")
 
 # ================================== 2.CHOIX DES PARAMETRES ===========================================================
 
@@ -67,7 +67,7 @@ for(similarity in list.Similarities){
   write.table(mat.sim0, paste0("./Results/", repository, "/mat.sim_", similarity, "_0.tsv"), row.names = FALSE, sep="\t")
   for(nbMin.InCommon in list.nbMin.InCommon){
     cat(sprintf("\n \t \t Création de la matrice %s avec un seuil à %0.f \n", similarity, nbMin.InCommon))
-    mat.sim_filtre = filtrer_Similarite(mat.sim0, mat.InCommon, nbMin.InCommon)
+    mat.sim_filtre = filtrer_similarite(mat.sim0, mat.InCommon, nbMin.InCommon)
     write.table(mat.sim_filtre, paste0("./Results/", repository, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), row.names = FALSE, sep="\t")
   } 
 }
@@ -110,7 +110,7 @@ for(train in 1:1){ #TODO for(train in 1:nb.Tests){
     
     for(nbMin.InCommon in list.nbMin.InCommon){
       cat(sprintf("\n \t \t Création de la matrice %s avec un seuil à %0.f \n", similarity, nbMin.InCommon))
-      mat.sim_filtre = filtrer_Similarite(mat.sim0, mat.InCommon, nbMin.InCommon)
+      mat.sim_filtre = filtrer_similarite(mat.sim0, mat.InCommon, nbMin.InCommon)
       write.table(mat.sim_filtre, paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), row.names = FALSE, sep="\t")
     } 
   }
