@@ -14,13 +14,14 @@ stat_users_by_genre = function(data.Ratings, vect.MovieGenres){
     cat(sprintf("%.0f|", userIND))
     userID = vect.Users[userIND]
     meanRatings = mean(data.Ratings$rating[data.Ratings$userID == userID])
+    nb.Ratings = length(data.Ratings$rating[data.Ratings$userID == userID])
     
     # Matrice contenant les couples (movieID/rating) de ses films
     mat.RatedMovies = data.Ratings[data.Ratings$userID == userID, c("movieID", "rating")]     
   
     # Caractéristiques sur ses genres préférés
     mat.StatByGenresbyUser = as.data.frame(matrix(0, nrow = nb.Genres, ncol = 3)) 
-    colnames(mat.StatByGenresbyUser) = c("nb.Ratings", "sum", "mean")
+    colnames(mat.StatByGenresbyUser) = c("nb.Ratings", "sum", "score")
     rownames(mat.StatByGenresbyUser) = vect.MovieGenres 
     
     for(movieID in mat.RatedMovies[,"movieID"]){ #boucle sur tous les films notés par userID
@@ -33,10 +34,10 @@ stat_users_by_genre = function(data.Ratings, vect.MovieGenres){
       }
     }
     
-    mat.StatByGenresbyUser$mean = mat.StatByGenresbyUser$sum / mat.StatByGenresbyUser$nb.Ratings - meanRatings #obtention de la moyenne par division de la somme par le nombre nb.Ratings
+    mat.StatByGenresbyUser$score = (mat.StatByGenresbyUser$sum / mat.StatByGenresbyUser$nb.Ratings - meanRatings) * mat.StatByGenresbyUser$nb.Ratings/nb.Ratings
     
     mat.stat.byGenre[userIND,1] = userID
-    mat.stat.byGenre[userIND,2:(nb.Genres+1)] = mat.StatByGenresbyUser$mean
+    mat.stat.byGenre[userIND,2:(nb.Genres+1)] = mat.StatByGenresbyUser$score
   }
   
   return(mat.stat.byGenre)
