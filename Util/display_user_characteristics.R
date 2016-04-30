@@ -53,21 +53,22 @@ display_user_characteristics = function(userID, recap.Users, data.Ratings, recap
   cat(sprintf("\nVous êtes %s de %.0f ans et vous avez noté %.0f films avec une moyenne à %.2f \n", sex, age, nb.Ratings, meanRatings))
   
   #Affichage des caractéristiques sur ses films préférés (son top 10% des meilleurs films)
-  nb.FavoriteMovies = min(round(10/100 * nb.Ratings,1),20) #nombre de films considérés, majoré par 20
+  nb.FavoriteMovies = max(min(round(10/100 * nb.Ratings,1),20),5) #nombre de films considérés, majoré par 20 et minoré à 5
   cat(sprintf("\nVos %.0f films préférés sont : \n", nb.FavoriteMovies))
   for(movieID in mat.RatedMovies$movieID[1:nb.FavoriteMovies]){
     title = recap.Movies$title[recap.Movies$movieID == movieID]
+    mean = recap.Movies$mean[recap.Movies$movieID == movieID]
     rating = data.Ratings$rating[data.Ratings$userID == userID & data.Ratings$movieID == movieID]
     genresOfMovies = genres_of_movie(movieID, recap.Movies, vect.MovieGenres)
-    cat(sprintf("%s avec une note à %.0f, de genre(s) %s\n", title, rating, paste(genresOfMovies, collapse=" ")))
+    cat(sprintf("%s avec une note à %.0f (moyenne à %.2f), de genre(s) %s\n", title, rating, mean, paste(genresOfMovies, collapse=" ")))
   }
   
   #Affichage des caractéristiques sur ses genres préférés
   cat(sprintf("\nVos 5 genres préférés sont : \n"))
   for(genre in mat.StatByGenres$genre[1:5]){
     nb.Ratings = mat.StatByGenres$nb.Ratings[mat.StatByGenres$genre == genre]
-    mean = mat.StatByGenres$mean[mat.StatByGenres$genre == genre]
-    cat(sprintf("%s dont vous avez vu %.0f film(s) avec une note moyenne à %.2f \n", genre, nb.Ratings, mean))
+    meanGenre = mat.StatByGenres$mean[mat.StatByGenres$genre == genre]
+    cat(sprintf("%s dont vous avez vu %.0f film(s) avec une note moyenne à %.2f \n", genre, nb.Ratings, meanGenre))
   }
   
 }
