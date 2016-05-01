@@ -46,8 +46,8 @@ library("expm")
 ## Création des matrices servant de paramètres
 
 #X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder (entre 0 et 1) : "))
-cat(sprintf("Les façons de remplis sont Item ou User \n"))
-AvrRtg = readline(prompt = "Choisissez un mode de remplissage : ")
+cat(sprintf("Les méthodes proposées pour remplir la matrice des notes sont : Item ou User \n"))
+AvrRtg = readline(prompt = "Choisissez une méthode de remplissage de la matrice : ") 
 
 matUS=list()
 matSV=list()
