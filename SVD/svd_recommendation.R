@@ -1,0 +1,77 @@
+svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD.Item,mat.SVD.User,X,  nb.recommandations, nbMin.Ratings, AvrRtg){
+  # INPUT
+  #       userID              : identifiant de l'utilisateur
+  #     	recap.Users         : base de données et des statistiques des utilisateurs
+  #       recap.Movies        : base de données et des statistiques des films
+  #     	data.Ratings        : base des notes
+  #     	mat.SVD.User        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
+  #     	mat.SVD.Item        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
+  #     	X                   : nombre de plus proches voisins
+  #       nb.recommandations  : nombre de films recommandés
+  #       nbMin.Ratings       : le nombre minimal de visionnage pour qu'un film soit recommandable
+  #       AvrRtg              : « Item » ou « User »
+  # OUTPUT 
+  #       retourne les recommandations pour l'utilisateur userID 
+  #       Plus spécifiquement, cette fonction retourne le vecteur de taille nb.recommandations, contenant les identifiants des films recommandés à partir de l'algorithme SVD pour l'individu userID
+  
+  
+  #
+  if(AvrRtg=="Item"){
+    mat.SVD=mat.SVD.Item
+  }else{
+    mat.SVD=mat.SVD.User
+  }
+  
+  # Indice de userID dans la dataframe data.Ratings 
+  userIND = which(data.Ratings$userID == userID)      
+  
+  # Liste des films qu’userID a déjà vu :
+  list.dejaVu= sort(data.Ratings$movieID[data.Ratings$userID ==userID])
+  
+  # Ensemble des films qui sont susceptibles d'être recommandés à userID
+  ###### Filtre des films ayant dépassés un certain seuil
+  vect.Recommandable = sort(recap.Movies$movieID[recap.Movies$nb.Ratings >= nbMin.Ratings])
+  ###### Les films qu’userID n’a pas encore vu
+  vect.Recommandable = vect.Recommandable[!(vect.Recommandable %in% list.dejaVu)]
+  
+  # Génération de la matrice Prediction : matrice contenant les prédictions pour tous les films susceptibles d'être recommandés et leur identifiants
+  nb.RecommandableMovies= length(vect.Recommandable)
+  Prediction = matrix(NA, nrow =nb.RecommandableMovies,ncol = 2)
+  
+  # Transformation d ela matrice PRediction en data frame
+  Prediction=as.data.frame(Prediction)
+  colnames(Prediction) = c("movieID", "prating")
+  
+  cat(nb.RecommandableMovies)
+  
+  # Creation des matrice US et SV se basant sur la méthode SVD neceaaire à la prediction
+  US=matUS_matSV(mat.SVD,X)$US
+  SV=matUS_matSV(mat.SVD,X)$SV
+  
+  # Création le de la moyenne de l'utilisateur userID
+  mean.userID=mean(data.Ratings$rating[data.Ratings$userID==userID])
+  
+
+  # Complétion de la data frame Prediction
+  for(movieIND in 1:nb.RecommandableMovies){
+    cat(sprintf("|%0.f",movieIND))
+    movieID = vect.Recommandable[movieIND]
+    Prediction$prating[movieIND]=as.numeric(mean.userID+US[userIND,]%*%SV[,movieIND])
+    Prediction$movieID[movieIND]= movieID
+  }
+
+
+# Création de la data frame de Recommendation 
+  Recommendation = matrix(NA, nrow =nb.recommandations,ncol = 2)
+  Recommendation=as.data.frame(Recommendation)
+  colnames(Recommendation) = c("movieID", "prating")
+
+  q=quantile(Prediction$prating,1-nb.recommandations/50)
+
+  Recommendation$movieID=Prediction$movieID[Prediction$movieID>=q][1:nb.recommandations]
+  Recommendation$prating=Prediction$prating[Prediction$movieID>=q][1:nb.recommandations]
+
+  
+  Return(Recommendation)
+}
+
