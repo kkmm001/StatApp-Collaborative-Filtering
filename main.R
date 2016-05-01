@@ -94,7 +94,48 @@ if(method == "knn_user"){
 # ============================== 5.ALGORITHME PAR REDUCTION SVD ======= ============================
 
 if(method == "svd"){
-  print("Not available")
+ 
+  # CHARGEMENT DES PARAMETRES CHOISIS PAR L'OPERATEUR
+  
+  # choix de la méthode de remplissage de la matrice des notes
+  cat(sprintf("Les méthodes proposées pour remplir la matrice des notes sont : Item ou User \n"))
+  AvrRtg = readline(prompt = "Choisissez une méthode de remplissage de la matrice : ")
+  
+  #  Choix de la proportion d'inertie à garder
+  X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder (entre 0 et 1) : "))
+  
+  # Choix du nombre minimal de visionnage
+  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
+  
+ 
+  # CHARGEMENT DES PARAMETRES CHOISIS PAR L'UTILISATEUR FINAL
+  
+  # Choix du nombre de recommandations
+  nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
+  
+  # Choix de l'identifiant de l'utilisateur
+  userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+  
+  # RECOMMANDATION
+  
+  source("./SVD/svd2.R")
+  source("./SVD/svd_predictions.R")
+  source("./SVD/matUS_matSV.R")
+  source("./SVD/svd_recommendation.R")
+  
+  library("expm")
+  
+  
+  # Chargement des des matrices SVD (indépendant de AvrRtg)
+  # Ici il faut garder les matrices en dures et metttre le bon répertoire
+  mat.SVD.Item = as.matrix(read.table(file = paste0("./Results/matrice.SVD.User.tsv"), header=T, sep='\t'))
+  mat.SVD.User =as.matrix(read.table(file = paste0("./Results/matrice.SVD.Item.tsv"), header=T, sep='\t'))
+   
+  # ou bien faire tourner ces deux commandes :
+  #  mat.SVD.Item=svd2(Item,data.Ratings)
+  #  mat.SVD.User=svd2(User,data.Ratings)
+  
+  mat.RecommendedMovies = svd_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD.Item,mat.SVD.User,X,nb.recommandations, nbMin.Ratings, AvrRtg)
 }
 
 # ============================== 6.AFFICHAGE DES RECOMMANDATIONS ==================================================================
