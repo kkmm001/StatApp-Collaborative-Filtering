@@ -1,10 +1,11 @@
-svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD,X,  nb.recommandations, nbMin.Ratings, AvrRtg){
+svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD.Item,mat.SVD.User,X,  nb.recommandations, nbMin.Ratings, AvrRtg){
   # INPUT
   #       userID              : identifiant de l'utilisateur
   #     	recap.Users         : base de données et des statistiques des utilisateurs
   #       recap.Movies        : base de données et des statistiques des films
   #     	data.Ratings        : base des notes
-  #     	mat.SVD             : matrice U,S et V
+  #     	mat.SVD.User        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
+  #     	mat.SVD.Item        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
   #     	X                   : nombre de plus proches voisins
   #       nb.recommandations  : nombre de films recommandés
   #       nbMin.Ratings       : le nombre minimal de visionnage pour qu'un film soit recommandable
@@ -12,6 +13,14 @@ svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, m
   # OUTPUT 
   #       retourne les recommandations pour l'utilisateur userID 
   #       Plus spécifiquement, cette fonction retourne le vecteur de taille nb.recommandations, contenant les identifiants des films recommandés à partir de l'algorithme SVD pour l'individu userID
+  
+  
+  #
+  if(AvrRtg=="Item"){
+    mat.SVD=mat.SVD.Item
+  }else{
+    mat.SVD=mat.SVD.User
+  }
   
   # Indice de userID dans la dataframe data.Ratings 
   userIND = which(data.Ratings$userID == userID)      
