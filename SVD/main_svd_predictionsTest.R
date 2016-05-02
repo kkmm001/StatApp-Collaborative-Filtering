@@ -80,4 +80,4 @@ for(testID in 1:nb.Tests){
 
 result=as.data.frame(result_RMSE)
 rownames(result)=seq_X
-write.table(result_RMSE,"./Results/Results.RMSE.SVDNaif.X1.tsv",col.names = NA,sep="\t")
+write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif",AvrRtg,".X1.csv"),col.names = NA,sep="\t")
