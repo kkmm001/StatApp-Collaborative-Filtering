@@ -24,5 +24,20 @@ source("./Util/split_data.R")
 
 nb.Tests = as.integer(readline(prompt = "Choisissez le nombre de sous-bases : "))
 
-list.Datasets = split_data(data.Ratings, nb.Tests)
-#save(list.Datasets, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/list.Datasets.Rdata"))
+
+
+set.seed(42)
+
+# Génération d'un vecteur aléatoire
+alea = runif(nrow(data.Ratings))
+
+# Création de la base Vierge
+data.Ratings.Vierge = subset(data.Ratings, (alea<quantile(alea,0.05)))
+
+#Création de list.dataset servant à la cross validation
+
+data.Ratings.Autre=subset(data.Ratings, (alea>=quantile(alea,0.05)))
+
+list.Datasets = split_data(data.Ratings.Autre, nb.Tests)
+save(list.Datasets, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/list.Datasets.Rdata"))
+save(data.Ratings.Vierge, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/data.Ratings.Vierge.Rdata"))
