@@ -7,11 +7,11 @@ matUS_matSV=function(mat.SVD,X){
     k=k+1
     m=sum(mat.SVD$d[1:k])
   }
-  Sk=diag(mat.SVD$d[1:k])
+  #Sk=diag(mat.SVD$d[1:k],k)
   
   
   # compute two resultant matrices: UkSk^(1/2) and Sk^(1/2)Vk
-  sqr_Sk=sqrtm(Sk)
+  sqr_Sk= diag(mat.SVD$d[1:k]^0.5,k)
   Uk=mat.SVD$u[,1:k]
   Vk=mat.SVD$v[,1:k]
   res=list(US=Uk%*%sqr_Sk,SV=sqr_Sk%*%t(Vk))
