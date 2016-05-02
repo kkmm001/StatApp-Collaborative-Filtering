@@ -1,11 +1,11 @@
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-# ENSAE - 2AD - Groupe de statistique appliquée
+# ENSAE - 2AD - Groupe de statistique appliquÃ©e
 #    Sujet : Filtrage collaboratif
 #       Encadrants : Vincent Cottet et Mehdi Sebbar
 #       Etudiants : Biwei Cui, Claudia Delgado, Mehdi Miah et Ulrich Mpeli Mpeli
 #
 #       Fichier : main_svd_predictionsTest.R
-#       Description : résultats des tests par validation croisée
+#       Description : rÃ©sultats des tests par validation croisÃ©e
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
 # ===================================== 1.PREAMBULE ===============================================
@@ -17,7 +17,7 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-repository = readline(prompt = "Choisissez un problème : ") #ml-100k
+repository = readline(prompt = "Choisissez un problÃ¨me : ") #ml-100k
 
 # ====================== 3.CHARGEMENT DES BASES D'APPRENTISSAGE ET DE TEST ==========================
 
@@ -34,8 +34,11 @@ source("./SVD/matUS_matSV.R")
 source("./Util/stat_Movies.R")
 source("./Util/stat_Users.R")
 
-library("zoo")
+#install.packages("zoo")
+#install.packages("hydroGOF")
+#install.packages("expm")
 library("hydroGOF")
+library("zoo")
 library("expm")
 
 # ======================================== 3. PHASE DE PREPARATION =================================
@@ -43,29 +46,38 @@ library("expm")
 ## BASES D'APPRENTISSAGE ET DE TEST
 # list.Datasets est une list de 5 data.frame
 
-## Création des matrices servant de paramètres
+## CrÃ©ation des matrices servant de paramÃ¨tres
 
-#X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder (entre 0 et 1) : "))
-cat(sprintf("Les méthodes proposées pour remplir la matrice des notes sont : Item ou User \n"))
-AvrRtg = readline(prompt = "Choisissez une méthode de remplissage de la matrice : ") 
+#X = as.numeric(readline(prompt = "Choisissez une proportion d'inertie Ã  garder (entre 0 et 1) : "))
+cat(sprintf("Les mÃ©thodes proposÃ©es pour remplir la matrice des notes sont : Item ou User \n"))
+AvrRtg = readline(prompt = "Choisissez une mÃ©thode de remplissage de la matrice : ") 
 
 matUS=list()
 matSV=list()
 
-seq_X = seq(0.20, 0.40, by=0.02)
+seq_X = seq(0.05, 0.95, by=0.10)
 result_RMSE = matrix(0, nrow = length(seq_X), ncol = nb.Tests)
 
-for(testID in 1:1){ #TODO for(testID in 1:nb.Tests){
+for(testID in 1:nb.Tests){
+  cat(paste("BASE TEST N°: ", testID,"\n" ))
   dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != testID]
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
   test.Ratings=list.Datasets[[testID]]
   mat.SVD=svd2(AvrRtg,train.Ratings)
   for(INDX in 1:length(seq_X)){
     X=seq_X[INDX]
+    cat(paste("\n","\n"))
+    cat(paste("X :=", X,"\n"))
+    cat(paste("Creation de matUS \n"))
     matUS[[testID]]=matUS_matSV(mat.SVD,X)$US
+    cat(paste("Creation de matSV \n"))
     matSV[[testID]]=matUS_matSV(mat.SVD,X)$SV
     pred=svd_predictions(list.Datasets,testID,matUS,matSV)
     write.csv2(pred, paste0("svd_", AvrRtg, X, "_pred_train", testID, ".csv"), col.names = NA)
     result_RMSE[INDX,testID] = rmse(pred$rating, pred$prating)
   }
 }
+
+result=as.data.frame(result_RMSE)
+rownames(result)=seq_X
+write.table(result_RMSE,"./Results/Results.RMSE.SVDNaif.X1.tsv",col.names = NA,sep="\t")
