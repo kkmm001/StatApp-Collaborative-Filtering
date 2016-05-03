@@ -84,22 +84,28 @@ write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif.",AvrRtg,".X3.csv"),col
 
 
 
-X_opt=0.245
-
+seq_X = seq(0.23, 0.26, by=0.005)
+result_RMSE = matrix(0, nrow = length(seq_X), ncol = 1)
 train.Ratings = do.call("rbind", list.Datasets)
 test.Ratings=data.Ratings.Vierge
+matUS=list()
+matSV=list()
 list.Datasets.Test=list(test.Ratings,train.Ratings)
 mat.SVD=svd2(AvrRtg,train.Ratings)
-cat(paste("Creation de matUS \n"))
-Q=matUS_matSV(mat.SVD,X_opt)
-matUS=Q$US
-cat(paste("Creation de matSV \n"))
-matSV=Q$SV
-pred=svd_predictions(list.Datasets.Test,1,matUS,matSV)
-write.csv2(pred, paste0("svd_", AvrRtg, X_opt, "_pred_sur_base_vierge.csv"), col.names = NA)
-result_RMSE= rmse(pred$rating, pred$prating)
+for(INDX in 1:length(seq_X)){
+    X_opt=seq_X[INDX]
+    cat(paste("\n","\n"))
+    cat(paste("X :=", X_opt,"\n"))
+    cat(paste("Creation de matUS \n"))
+    Q=matUS_matSV(mat.SVD,X_opt)
+    matUS[[1]]=Q$US
+    cat(paste("Creation de matSV \n"))
+    matSV[[1]]=Q$SV
+    pred=svd_predictions(list.Datasets.Test,1,matUS,matSV)
+    write.csv2(pred, paste0("svd_pred_sur_base_vierge", AvrRtg, X_opt,".csv"), col.names = NA)
+    result_RMSE[INDX,1] = rmse(pred$rating, pred$prating)
+  }
 result=as.data.frame(result_RMSE)
-rownames(result)=X_opt
+rownames(result)=seq_X
 write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif.pred_sur_base_vierge.",AvrRtg,".",X_opt,".csv"),col.names = NA,sep="\t")
-
 
