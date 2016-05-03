@@ -55,7 +55,7 @@ AvrRtg = readline(prompt = "Choisissez une mÃ©thode de remplissage de la matri
 matUS=list()
 matSV=list()
 
-seq_X = seq(0.05, 0.95, by=0.10)
+seq_X = seq(0.23, 0.29, by=0.005)
 result_RMSE = matrix(0, nrow = length(seq_X), ncol = nb.Tests)
 
 for(testID in 1:nb.Tests){
@@ -80,4 +80,26 @@ for(testID in 1:nb.Tests){
 
 result=as.data.frame(result_RMSE)
 rownames(result)=seq_X
-write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif",AvrRtg,".X1.csv"),col.names = NA,sep="\t")
+write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif.",AvrRtg,".X3.csv"),col.names = NA,sep="\t")
+
+
+
+X_opt=0.245
+
+train.Ratings = do.call("rbind", list.Datasets)
+test.Ratings=data.Ratings.Vierge
+list.Datasets.Test=list(test.Ratings,train.Ratings)
+mat.SVD=svd2(AvrRtg,train.Ratings)
+cat(paste("Creation de matUS \n"))
+Q=matUS_matSV(mat.SVD,X_opt)
+matUS=Q$US
+cat(paste("Creation de matSV \n"))
+matSV=Q$SV
+pred=svd_predictions(list.Datasets.Test,1,matUS,matSV)
+write.csv2(pred, paste0("svd_", AvrRtg, X_opt, "_pred_sur_base_vierge.csv"), col.names = NA)
+result_RMSE= rmse(pred$rating, pred$prating)
+result=as.data.frame(result_RMSE)
+rownames(result)=X_opt
+write.csv2(result,paste0("./Results/Results.RMSE.SVDNaif.pred_sur_base_vierge.",AvrRtg,".",X_opt,".csv"),col.names = NA,sep="\t")
+
+
