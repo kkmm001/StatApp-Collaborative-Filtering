@@ -10,7 +10,7 @@
 
 # ===================================== 1.PREAMBULE ===============================================
 
-## Clean up
+# Clean up
 rm(list=ls()) 
 cat("\014") 
 
@@ -32,11 +32,15 @@ load(file = file_list.Datasets)
 library("zoo")
 library("hydroGOF")
 
-Qmax = 20
+Kmin = 25
+Kmax = 50
+Kpas = 1
+seq_K = seq(Kmin, Kmax, by = Kpas)
+nb.K = length(seq_K)
 
 similarity_names = c("RFP") 
 list.nbMin.InCommon = c(0)
-method_names = c("weighted-centered&a", "mean")
+method_names = c("weighted-centered&a")
 
 # Calcul du nombre de prédicteurs
 # Noms des familles de modèles : similarité_nbMin.InCommon_predicteur
@@ -50,20 +54,22 @@ colnames(mat.models) = c("similarity", "nbMin.InCommon", "predicteur")
 mat.models$name = paste0(mat.models$similarity, "_", mat.models$nbMin.InCommon, "_", 
                                     mat.models$predicteur)
 
-nb.Models.byQ = nb.similarities * nb.nbMin.InCommon * nb.predicteurs
+nb.Models.byK = nb.similarities * nb.nbMin.InCommon * nb.predicteurs
 
 # ====================== 5.CHARGEMENT DES TABLEAUX DE PREDICTION ====================================
 
-source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
+source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
 source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R", encoding = 'UTF-8')
 source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
 
-result_error = as.data.frame(matrix(0, nrow=nb.Models.byQ, ncol = Qmax))
+result_error = as.data.frame(matrix(0, nrow=nb.Models.byK, ncol = nb.K))
+rownames(result_error) = mat.models$name
+colnames(result_error) = seq_K
 
 # =================== 6.CALCUL DES TABLEAUX DE PREDICTION ================================
 
 #TODO a changer : 1:nb.Datasets et non 1:1
-for(train in 1:1){ # pour chaque couple train/test de la validation croisée
+for(train in 1:nb.Datasets){ # pour chaque couple train/test de la validation croisée
   
   cat(sprintf("\n Calcul pour la sous-base : %0.f / %0.f \n", train, nb.Datasets))
   
@@ -79,9 +85,9 @@ for(train in 1:1){ # pour chaque couple train/test de la validation croisée
   file_stat.Movies = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/train", train, "/stat.Movies.tsv")
   stat.Movies = read.table(file = file_stat.Movies, header=T, sep='\t')
   
-  for(modelIND in 1:nb.Models.byQ){
+  for(modelIND in 1:nb.Models.byK){
     
-    cat(sprintf("\n Calcul pour le modèle : %s (%0.f / %0.f) \n",mat.models$name[modelIND], modelIND, nb.Models.byQ))
+    cat(sprintf("\n Calcul pour le modèle : %s (%0.f / %0.f) \n",mat.models$name[modelIND], modelIND, nb.Models.byK))
     
     similarity = mat.models$similarity[modelIND]
     nbMin.InCommon = mat.models$nbMin.InCommon[modelIND]
@@ -90,13 +96,61 @@ for(train in 1:1){ # pour chaque couple train/test de la validation croisée
     file_mat.sim = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/train", train, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv")
     mat.sim = as.matrix(read.table(file = file_mat.sim, header=T, sep='\t'))
       
-    pred = knn_user_predictions(list.Datasets, train, Qmax, mat.sim, predicteur, list.dejaVu, stat.Users, stat.Movies)
+    pred = knn_user_predictions(list.Datasets, train, seq_K, mat.sim, predicteur, list.dejaVu, stat.Users, stat.Movies)
+    colnames(pred) = c("userID", "movieID", "rating", seq_K)
+    write.table(pred, paste0("./Results/", repository, "/results_predictions_train", train, "_", similarity, nbMin.InCommon, "_", predicteur, ".tsv"), col.names=NA, sep="\t")
     
-    write.table(pred, paste0("./Results/", repository, "/results_predictions_train", train, "_", similarity, "_", nbMin.InCommon, "_", predicteur, ".tsv"), col.names=NA, sep="\t")
-    
-    for(q in 1:Qmax){
-      result_error[modelIND,q] = rmse(pred$rating, pred[,q+3])
+    for(kIND in 1:nb.K){
+      k = seq_K[kIND]
+      result_error[modelIND,kIND] = rmse(pred$rating, pred[,kIND+3])
     }
   }
   write.table(result_error, paste0("./Results/", repository, "/results_knn_userPredictionTest_train", train, ".tsv"), col.names=NA, row.names = mat.models$name, sep="\t")
 }
+
+
+# =================== 7.CALCUL DES TABLEAUX DE PREDICTION POUR LA BASE VIERGE ================================
+
+cat(sprintf("\n Calcul pour la base vierge"))
+  
+#Adaptation du code pour prendre en compte la base vierge
+file_data.Vierge = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/data.Ratings.Vierge.Rdata")
+load(file = file_data.Vierge)
+train.Ratings = do.call("rbind", list.Datasets)
+test.Ratings=data.Ratings.Vierge
+list.Datasets=list(test.Ratings,train.Ratings)
+
+# Chargement des listes déjà vus
+file_list.dejaVu = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/vierge/list.dejaVu.Rdata")
+load(file = file_list.dejaVu)
+
+# Statistiques sur les utilisateurs
+file_stat.Users = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/vierge/stat.Users.tsv")
+stat.Users = read.table(file = file_stat.Users, header=T, sep='\t')
+
+# Statistiques sur les films
+file_stat.Movies = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/vierge/stat.Movies.tsv")
+stat.Movies = read.table(file = file_stat.Movies, header=T, sep='\t')
+
+for(modelIND in 1:nb.Models.byK){
+    
+  cat(sprintf("\n Calcul pour le modèle : %s (%0.f / %0.f) \n",mat.models$name[modelIND], modelIND, nb.Models.byK))
+  
+  similarity = mat.models$similarity[modelIND]
+  nbMin.InCommon = mat.models$nbMin.InCommon[modelIND]
+  predicteur = mat.models$predicteur[modelIND]
+  
+  file_mat.sim = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/vierge/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv")
+  mat.sim = as.matrix(read.table(file = file_mat.sim, header=T, sep='\t'))
+  
+  pred = knn_user_predictions(list.Datasets, 1, seq_K, mat.sim, predicteur, list.dejaVu, stat.Users, stat.Movies) #1 désigne la base vierge
+  colnames(pred) = c("userID", "movieID", "rating", seq_K)
+  write.table(pred, paste0("./Results/", repository, "/results_predictions_vierge_", similarity, nbMin.InCommon, "_", predicteur, ".tsv"), col.names=NA, sep="\t")
+  
+  for(kIND in 1:nb.K){
+    k = seq_K[kIND]
+    result_error[modelIND,kIND] = rmse(pred$rating, pred[,kIND+3])
+  }
+}
+
+write.table(result_error, paste0("./Results/", repository, "/results_knn_userPredictionTest_vierge.tsv"), col.names=NA, row.names = mat.models$name, sep="\t")
