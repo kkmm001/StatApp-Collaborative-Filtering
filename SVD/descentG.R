@@ -23,11 +23,11 @@ descentG = function(matrix.training, iteration.times=10, lambda=15)
   X = matrix.training
   
   # M is a randomly sampled matrix restrained from 1 to 5.
-  M = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
+  M_t = matrix(sample(1:5,nrow(X)*ncol(X),TRUE),nrow = nrow(X), ncol = ncol(X)) #matrice initiale
  
-  M_t = M   #affecter M a M_t pour iterer
+  #M_t = M   #affecter M a M_t pour iterer
   
-  track_F_M <-NULL
+  #track_F_M <-NULL
   
   for(i in 1:iteration.times){
     
@@ -43,16 +43,16 @@ descentG = function(matrix.training, iteration.times=10, lambda=15)
     
     gradient_F_M = gradient_norm_M_X+lambda*gradient_norm_M
     
-    M_t_1 = M_t - mu*gradient_F_M
+    M_t = M_t - mu*gradient_F_M
     
-    variation.M = X-M_t_1
-    variation.M[X==0]=0 
+    #variation.M = X-M_t_1
+    #variation.M[X==0]=0 
     
-    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
+    #F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
     
-    track_F_M = c(track_F_M, F_M)
+    #track_F_M = c(track_F_M, F_M)
     
-    M_t = M_t_1
+    #M_t = M_t_1
   }
   
   colnames(M_t)=colnames(matrix.training)
@@ -87,22 +87,25 @@ proximalG = function(matrix.training, iteration.times=10, lambda=15)
     
     index = match(0, sigma.vec)-1
     
-    if(index>=2){
+    if(is.na(index)){
+      sigma = diag(sigma.vec)
+      M_t = svd_M_t$u%*%sigma%*%t(svd_M_t$v)
+    }
+    else if(index>=2){
       sigma = diag(sigma.vec[1:index])
-      M_t_1 = svd_M_t$u[,1:index]%*%sigma%*%t(svd_M_t$v[,1:index])
+      M_t = svd_M_t$u[,1:index]%*%sigma%*%t(svd_M_t$v[,1:index])
     }else if(index == 1){
       sigma = sigma.vec[1]
-      M_t_1 = svd_M_t$u[,1]%*%t(svd_M_t$v[,1])*sigma
+      M_t = svd_M_t$u[,1]%*%t(svd_M_t$v[,1])*sigma
     }
     
     
+    #F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
     
-    F_M = 0.5*norm(variation.M, "f")**2+lambda*sum(svd_M_t$d[1:min(dim(M_t))])
-    
-    track_F_M = c(track_F_M, F_M)
+    #track_F_M = c(track_F_M, F_M)
    
     
-    M_t = M_t_1
+    #M_t = M_t_1
   }
   
   colnames(M_t)=colnames(matrix.training)
@@ -111,9 +114,7 @@ proximalG = function(matrix.training, iteration.times=10, lambda=15)
   return(M_t)
   
 }  
-  
-  
-  
+ 
   
   
 svd.error.test = function(prevision, data.test)  {
