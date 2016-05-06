@@ -66,7 +66,7 @@ if(method == "knn_user"){
   mat.sim = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), header=T, sep='\t'))
   
   # Choix du nombre de plus proches voisins
-  Q = as.integer(readline(prompt = "Choisissez le nombre de plus proches voisins : "))
+  K = as.integer(readline(prompt = "Choisissez le nombre de plus proches voisins : "))
   
   # Choix du nombre minimal de visionnage
   nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
@@ -84,11 +84,11 @@ if(method == "knn_user"){
   userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
   
 # RECOMMANDATION
-  source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
+  source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
   
-  mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, Q, nb.recommandations, predicteur, nbMin.Ratings)
+  mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, K, nb.recommandations, predicteur, nbMin.Ratings)
   }
 
 # ============================== 5.ALGORITHME PAR REDUCTION SVD ======= ============================
