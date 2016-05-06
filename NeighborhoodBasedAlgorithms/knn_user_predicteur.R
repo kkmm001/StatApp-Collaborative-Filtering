@@ -25,18 +25,18 @@ limited_value = function(value){
   }
 }
 
-knn_user_predicteur = function(weights, ratings, stat.Users, userID, predicteur, Q_Neighbors){
+knn_user_predicteur = function(weights, ratings, stat.Users, userID, predicteur, K_Neighbors){
   # INPUT   weights     : vecteur contenant le degré de similarité par plus proches voisins
   #         ratings     : vecteur contenant les notes des plus proches voisins
   #         stat.Users  : statistiques des utilsateurs
   #         userID      : identifiant de l'utilisateur
   #         predicteur  : la fonction de prédiction
-  #         Q_Neighbors : les identifiants des plus proches voisins
+  #         K_Neighbors : les identifiants des plus proches voisins
   # OUTPUT              : la note prédite
   
   # Calcul des prédicteurs
   meanOfUser = as.numeric(stat.Users$mean[stat.Users$userID == userID])
-  meanOfNeighbors = sapply(Q_Neighbors,get_meanRatings, stat.Users)
+  meanOfNeighbors = sapply(K_Neighbors,get_meanRatings, stat.Users)
   
   # Notation  : &a : pour les prédicteurs pondérés, la valeur est majorée/minorée et le dénominateur est la somme des valeurs absolues (a pour absolute)
   
