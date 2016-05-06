@@ -31,12 +31,12 @@ if(method == "naive"){
   # Chargement de la liste des films déjà notés par individu
   load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
   
-  # Nombre de films recommandables
-  nb.recommandations = dim(recap.Movies)[1]- length(list.dejaVu[[userID]])
-  
   # Choix de quelques paramètres pour l'utilisateur final
   nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
   userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+  
+  # Nombre de films recommandables
+  nb.recommandations = dim(recap.Movies)[1]- length(list.dejaVu[[userID]])
   
   # Recommandation
   source("./NaiveAlgorithms/recommandation_meanByMovie.R")
@@ -100,7 +100,7 @@ if(method == "knn_user"){
   nb.recommandations = sum(!(recap.Movies$movieID %in% list.dejaVu[[userID]]) & recap.Movies$nb.Ratings >= nbMin.Ratings)
   
   # RECOMMANDATION
-  source("./NeighborhoodBasedAlgorithms/Q_nearest_neighbors.R")
+  source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
   source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
   
@@ -138,6 +138,7 @@ rankOfMovies1 = rank(mat.RecommendedMovies1[order(mat.RecommendedMovies1$movieID
 rankOfMovies2 = rank(mat.RecommendedMovies2[order(mat.RecommendedMovies2$movieID),"prating"])
 correlation = cor(rankOfMovies1, rankOfMovies2, method = "pearson")
 
+source("./Util/genres_of_movie.R")
 source("./Util/display_recommendations.R", encoding = 'UTF8')
 
 display_recommendations(mat.RecommendedMovies1[1:10,], 10, recap.Movies)
