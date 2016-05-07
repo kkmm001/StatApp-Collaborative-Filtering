@@ -44,7 +44,9 @@ knn_user_recommendation = function(userID, recap.Users, recap.Movies, data.Ratin
     
     #vecteur contenant les notes des K plus proches voisins pour un film donné
     for(k in 1:K){
-      vect.Ratings.byNN[k] = data.Ratings$rating[(data.Ratings$userID == knn[k,1]) & (data.Ratings$movieID == movieID)]
+      if(!is.na(knn[k,1])){
+        vect.Ratings.byNN[k] = data.Ratings$rating[(data.Ratings$userID == knn[k,1]) & (data.Ratings$movieID == movieID)]
+      }
     }
  
     vect.Prediction[movieIND] =  knn_user_predicteur(knn$similarities, vect.Ratings.byNN, recap.Users, userID, predicteur, knn$neighbors)
