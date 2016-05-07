@@ -53,6 +53,12 @@ nb.Movies = length(unique(data.Ratings$movieID))
 cat(sprintf("La base de données contient exactement %.0f films uniques. \n", nb.Movies))
 ```
 
+```{r,echo = FALSE}
+## Taux de complétion de la matrice Y
+taux_completion = nb.Ratings/(nb.Users * nb.Movies)
+cat(sprintf("Le taux de complétion de la matrice des notes Y est de %.2f %%", taux_completion))
+```
+
 ## Vérification avec les autres bases : data.Movies et data.Users
 
 ```{r,echo = FALSE}

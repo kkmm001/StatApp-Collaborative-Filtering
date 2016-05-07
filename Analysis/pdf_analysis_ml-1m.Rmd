@@ -21,7 +21,7 @@ cat("\014")
 
 ```{r,echo = FALSE}
 data.Ratings = read.table(file = "../Data/ml-1m/data.Ratings.tsv", header=T, sep='\t')
-data.Movies = read.table(file = "../Data/ml-1m/data.Movies.tsv", quote="", header=T, sep='\t')
+data.Movies = read.table(file = "../Data/ml-1m/data.Movies.tsv", header=T, sep='\t')
 data.Users = read.table(file = "../Data/ml-1m/data.Users.tsv", colClasses = c("integer", "factor", "integer", "factor", "factor"), header=T, sep='\t')
 
 vect.MovieGenres = c("unknown", "Action", "Adventure", "Animation", "Children's", "Comedy", 
@@ -53,12 +53,13 @@ nb.Movies = length(unique(data.Ratings$movieID))
 cat(sprintf("La base de données contient exactement %.0f films uniques. \n", nb.Movies))
 ```
 
-## Nettoyage de la base data.Movies (à mettre dans clean)
-```{r}
-vect.Movies_Ratings = sort(unique(data.Ratings$movieID))
-vect.Movies_Movies = sort(unique(data.Movies$movieID))
-vect.MoviesToDelete = vect.Movies_Movies[!(vect.Movies_Movies %in% vect.Movies_Ratings)]
-data.Movies = data.Movies[!(data.Movies$movieID %in% vect.MoviesToDelete),]
+%## Nettoyage de la base data.Movies (à mettre dans clean)
+```{r, echo = FALSE}
+#vect.Movies_Ratings = sort(unique(data.Ratings$movieID))
+#vect.Movies_Movies = sort(unique(data.Movies$movieID))
+#vect.MoviesToDelete = vect.Movies_Movies[!(vect.Movies_Movies %in% vect.Movies_Ratings)]
+#data.Movies = data.Movies[!(data.Movies$movieID %in% vect.MoviesToDelete),]
+#write.table(data.Movies, "../Data/ml-1m/Data.Movies2.tsv", row.names = FALSE, sep='\t')
 ```
 
 ```{r,echo = FALSE}
