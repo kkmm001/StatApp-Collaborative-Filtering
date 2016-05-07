@@ -12,7 +12,7 @@ cat(sprintf("Les problèmes proposés sont : ml-100k et ml-1m\n"))
 repository <- readline(prompt= "Choisissez un problème : ")
 
 data.Ratings = read.table(file = paste0("Data/", repository, "/data.Ratings.tsv"), header=T, sep='\t')
-data.Movies = read.table(file = paste0("Data/", repository, "/data.Movies.tsv"), header=T, quote="", sep='\t')
+data.Movies = read.table(file = paste0("Data/", repository, "/data.Movies.tsv"), header=T, sep='\t')
 data.Users = read.table(file = paste0("Data/", repository, "/data.Users.tsv"), header=T, sep='\t')
 
 vect.MovieGenres = c("unknown", "Action", "Adventure", "Animation", "Children.s", "Comedy", 
