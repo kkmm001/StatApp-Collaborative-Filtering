@@ -1,77 +1,60 @@
-svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD.Item,mat.SVD.User,X,  nb.recommandations, nbMin.Ratings, AvrRtg){
-  # INPUT
-  #       userID              : identifiant de l'utilisateur
-  #     	recap.Users         : base de données et des statistiques des utilisateurs
-  #       recap.Movies        : base de données et des statistiques des films
-  #     	data.Ratings        : base des notes
-  #     	mat.SVD.User        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
-  #     	mat.SVD.Item        : matrice U,S et V obtenues avec la fonction svd2 qd AvrRtg= User
-  #     	X                   : nombre de plus proches voisins
-  #       nb.recommandations  : nombre de films recommandés
-  #       nbMin.Ratings       : le nombre minimal de visionnage pour qu'un film soit recommandable
-  #       AvrRtg              : « Item » ou « User »
-  # OUTPUT 
-  #       retourne les recommandations pour l'utilisateur userID 
-  #       Plus spécifiquement, cette fonction retourne le vecteur de taille nb.recommandations, contenant les identifiants des films recommandés à partir de l'algorithme SVD pour l'individu userID
+svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, list.SVD.Item, list.SVD.User, tau,  nb.recommandations, nbMin.Ratings, howToFill, list.dejaVu){
+  # INPUT   userID              : identifiant de l'utilisateur
+  #     	  recap.Users         : base de données et des statistiques des utilisateurs
+  #         recap.Movies        : base de données et des statistiques des films
+  #     	  data.Ratings        : base des notes
+  #     	  list.SVD.User       : liste des matrices lors de la décomposition de la matrice des notes remplie par la méthode howToFill = User
+  #     	  list.SVD.Item       : liste des matrices lors de la décomposition de la matrice des notes remplie par la méthode howToFill = Item
+  #     	  tau                 : taux d'inertie conservé lors de la réduction de matrice
+  #         nb.recommandations  : nombre de films recommandés
+  #         nbMin.Ratings       : le nombre minimal de visionnage pour qu'un film soit recommandable
+  #         howToFill           : méthode naïve de complétion de matrice (vaut "Item" ou "User")
+  #         list.dejaVu         : la liste des films notés par utilisateur
+  # OUTPUT                      : retourne les recommandations pour l'utilisateur userID 
   
+  # Plus spécifiquement, cette fonction retourne le vecteur de taille nb.recommandations, contenant les identifiants  et les notes 
+  # des films recommandés à partir de l'algorithme SVD pour l'individu userID
   
-  #
-  if(AvrRtg=="Item"){
-    mat.SVD=mat.SVD.Item
+  # Décompostion SVD en fonction de la valeur de howToFill
+  if(howToFill=="Item"){
+    list.SVD=list.SVD.Item
   }else{
-    mat.SVD=mat.SVD.User
+    list.SVD=list.SVD.User
   }
   
-  # Indice de userID dans la dataframe data.Ratings 
-  userIND = which(data.Ratings$userID == userID)      
+  # Dimension du problème
+  vect.Users = sort(unique(data.Ratings$userID))
+  userIND = which(vect.Users == userID)      
   
-  # Liste des films qu’userID a déjà vu :
-  list.dejaVu= sort(data.Ratings$movieID[data.Ratings$userID ==userID])
-  
+  # Filtre des films ayant dépassés un certain seuil
+  vect.RecommandableMovies = sort(unique(recap.Movies$movieID[recap.Movies$nb.Ratings >= nbMin.Ratings]))
+        
   # Ensemble des films qui sont susceptibles d'être recommandés à userID
-  ###### Filtre des films ayant dépassés un certain seuil
-  vect.Recommandable = sort(recap.Movies$movieID[recap.Movies$nb.Ratings >= nbMin.Ratings])
-  ###### Les films qu’userID n’a pas encore vu
-  vect.Recommandable = vect.Recommandable[!(vect.Recommandable %in% list.dejaVu)]
+  vect.RecommandableMovies = vect.RecommandableMovies[!(vect.RecommandableMovies %in% list.dejaVu[[userID]])]
+  nb.RecommandableMovies = length(vect.RecommandableMovies)
   
-  # Génération de la matrice Prediction : matrice contenant les prédictions pour tous les films susceptibles d'être recommandés et leur identifiants
-  nb.RecommandableMovies= length(vect.Recommandable)
-  Prediction = matrix(NA, nrow =nb.RecommandableMovies,ncol = 2)
+  # Génération de la data frame mat.RecommendedMovies : matrice contenant les prédictions pour tous les films susceptibles 
+  # d'être recommandés et leur identifiants
+  mat.RecommendedMovies = as.data.frame(matrix(NA, nrow = nb.RecommandableMovies, ncol = 2))
+  colnames(mat.RecommendedMovies) = c("movieID", "prating")
   
-  # Transformation d ela matrice PRediction en data frame
-  Prediction=as.data.frame(Prediction)
-  colnames(Prediction) = c("movieID", "prating")
-  
-  cat(nb.RecommandableMovies)
-  
-  # Creation des matrice US et SV se basant sur la méthode SVD neceaaire à la prediction
-  US=matUS_matSV(mat.SVD,X)$US
-  SV=matUS_matSV(mat.SVD,X)$SV
+  # Creation des matrice US et SV se basant sur la méthode SVD necessaire à la prediction
+  mat.US = matUS_matSV(list.SVD,tau)$US
+  mat.SV = matUS_matSV(list.SVD,tau)$SV
   
   # Création le de la moyenne de l'utilisateur userID
-  mean.userID=mean(data.Ratings$rating[data.Ratings$userID==userID])
+  meanOfUser = recap.Users$mean[recap.Users$userID == userID]
   
-
-  # Complétion de la data frame Prediction
+  # Complétion de la data frame mat.RecommendedMovies
   for(movieIND in 1:nb.RecommandableMovies){
-    cat(sprintf("|%0.f",movieIND))
-    movieID = vect.Recommandable[movieIND]
-    Prediction$prating[movieIND]=as.numeric(mean.userID+US[userIND,]%*%SV[,movieIND])
-    Prediction$movieID[movieIND]= movieID
+    movieID = vect.RecommandableMovies[movieIND]
+    mat.RecommendedMovies$prating[movieIND] = meanOfUser + mat.US[userIND,] %*% mat.SV[,movieIND]
+    mat.RecommendedMovies$movieID[movieIND] = movieID
   }
 
-
-# Création de la data frame de Recommendation 
-  Recommendation = matrix(NA, nrow =nb.recommandations,ncol = 2)
-  Recommendation=as.data.frame(Recommendation)
-  colnames(Recommendation) = c("movieID", "prating")
-
-  q=quantile(Prediction$prating,1-nb.recommandations/50)
-
-  Recommendation$movieID=Prediction$movieID[Prediction$movieID>=q][1:nb.recommandations]
-  Recommendation$prating=Prediction$prating[Prediction$movieID>=q][1:nb.recommandations]
-
+  # Tri de mat.RecommendedMovies
+  mat.RecommendedMovies = mat.RecommendedMovies[order(mat.RecommendedMovies$prating, decreasing = TRUE),]
   
-  Return(Recommendation)
+  return(mat.RecommendedMovies[1:nb.recommandations,])
 }
 

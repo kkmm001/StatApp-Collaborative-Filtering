@@ -1,42 +1,49 @@
-svd_predictions=function(list.Datasets,train,matUS,matSV){
-  # INPUT
-  # OUTPUT  : prédit les notes pour les couples (train, test)
+svd_predictions = function(list.Datasets, test, tau, list.SVD, stat.Users){
+  # INPUT   list.Datasets : la liste des datasets pour la partie validation-croisée
+  #         test         : le numéro du test
+  #         tau           : le taux d'inertie conservé
+  # OUTPUT                : prédit les notes pour les couples (train, test)
   
-  ## BASES D'APPRENTISSAGE ET DE TEST
+  ## Bases d'apprentissage et de test
   nb.Tests = length(list.Datasets)
-  # liss.Datasets est une list de 5 éléments ou chaque élement
-  # est une liste comoposée d'un train.Ratings et d 'un test.Rating
-  
-  ## PREDICTION
-  dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != train]
+
+  dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != test]
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])
-  test.Ratings=list.Datasets[[train]]
+  test.Ratings=list.Datasets[[test]]
   
+  # Eléments présents dans la base d'apprentissage
   vect.MoviesInTrain = sort(unique(train.Ratings$movieID))
   vect.UsersInTrain = sort(unique(train.Ratings$userID))
   
-  US=matUS[[train]]
-  SV=matSV[[train]]
-  res=test.Ratings
-  n=length(test.Ratings$rating)
-  stat.Users = stat_Users(train.Ratings)
+  # Matrices US et SV créés pour un taux d'inertie tau
+  matUS_matSV = matUS_matSV(list.SVD, tau) 
+  mat.US = matUS_matSV$US
+  mat.SV = matUS_matSV$SV
+  
+  # Dimension de la matrice US (rang du problème)
+  k = dim(mat.SV)[1]
+  
+  # Prédictions
+  nb.Ratings = length(test.Ratings$rating)
 
-  for(i in 1:n){
-    cat(paste0("|", i))
-    userID=res$userID[i]
-    movieID=res$movieID[i]
+  for(i in 1:nb.Ratings){
+
+    userID = test.Ratings$userID[i]
+    movieID = test.Ratings$movieID[i]
+    
     movieIND = which(vect.MoviesInTrain == movieID)    
     userIND = which(vect.UsersInTrain == userID)
 
     if(movieID %in% vect.MoviesInTrain & userID %in% vect.UsersInTrain){
-      res$prating[i]=as.numeric(stat.Users$mean[stat.Users$userID==userID]+US[userIND,]%*%SV[,movieIND])
-    }
-    else{
-      res$prating[i] = NA
+      if(k!=1){
+        test.Ratings$prating[i]=get_limited_value(as.numeric(stat.Users$mean[stat.Users$userID==userID]+mat.US[userIND,]%*%mat.SV[,movieIND]))
+      }else{
+        test.Ratings$prating[i] = get_limited_value(stat.Users$mean[stat.Users$userID==userID] + mat.US[userIND] * mat.SV[movieIND])
+      }
+    }else{
+      test.Ratings$prating[i] = NA
     }
   }
 
-
-  return(res)
+  return(test.Ratings)
 }
-  
