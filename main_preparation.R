@@ -24,11 +24,13 @@ source("./NeighborhoodBasedAlgorithms/proxi_Users.R")
 source("./NeighborhoodBasedAlgorithms/proxi_Users_AllvsAll.R")
 source("./NeighborhoodBasedAlgorithms/filtrer_similarite.R")
 
+source("./SVD/svd_filledMatrix.R")
+
 # ================================== 2.CHOIX DES PARAMETRES ===========================================================
 
 # Pour la partie recommandation et validation-croisée
 list.Similarities = c("pearson", "RFP")
-#list.nbMin.InCommon = c(2,4,6,8,10)
+list.nbMin.InCommon = c()
 
 # Pour la partie validation-croisée (il faut que la base de validation-croisée soit créée)
 nb.Tests = 5
@@ -71,6 +73,14 @@ save(list.dejaVu, file = paste0("Results/", repository, "/list.dejaVu.Rdata"))
 #    write.table(mat.sim_filtre, paste0("./Results/", repository, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), row.names = FALSE, sep="\t")
 #  } 
 #}
+
+# Décomposition de la matrice des notes remplie de façon naïve
+cat("\t Décomposition de la matrice des notes remplies en fonction de la moyenne des utilisateurs ou des films \n")
+list.SVD_Item = svd_filledMatrix("Item",data.Ratings, recap.Users, recap.Movies)
+list.SVD_User = svd_filledMatrix("User",data.Ratings, recap.Users, recap.Movies)
+
+save(list.SVD_User, file = paste0("./Results/", repository, "/list.SVD_User.Rdata"))
+save(list.SVD_Item, file = paste0("./Results/", repository, "/list.SVD_Item.Rdata"))
 
 # =============================== 3.PREPARATION DES FICHIERS POUR LA VALIDATION CROISEE ===========================
 
@@ -115,8 +125,14 @@ for(train in 1:nb.Tests){
 #    } 
 #  }
   
+  cat(" \n \t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
+  list.SVD_Item = svd_filledMatrix("Item",train.Ratings, stat.Users, stat.Movies)
+  list.SVD_User = svd_filledMatrix("User",train.Ratings, stat.Users, stat.Movies)
+  
+  save(list.SVD_User, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/list.SVD_User.Rdata"))
+  save(list.SVD_Item, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/train", train, "/list.SVD_Item.Rdata"))
+  
 }
-
 
 # =============================== 4.PREPARATION DES FICHIERS POUR LE BASE VIERGE ===========================
 
@@ -156,14 +172,10 @@ save(list.dejaVu, file = paste0("CrossValidation/", repository, "/CV", nb.Tests,
 #  } 
 #}
 
-# FICHIER UTILISES DANS SVD NAIVE
-source("./SVD/svd2.R") 
-source("./SVD/svd_predictions.R") 
-source("./SVD/matUS_matSV.R") 
-source("./Util/stat_Movies.R") 
-source("./Util/stat_Users.R") 
+cat(" \n \t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
+list.SVD_Item = svd_filledMatrix("Item",train.Ratings, stat.Users, stat.Movies)
+list.SVD_User = svd_filledMatrix("User",train.Ratings, stat.Users, stat.Movies)
 
-library("hydroGOF") 
-library("zoo") 
-library("expm") 
+save(list.SVD_User, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/vierge/list.SVD_User.Rdata"))
+save(list.SVD_Item, file = paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/vierge/list.SVD_Item.Rdata"))
 
