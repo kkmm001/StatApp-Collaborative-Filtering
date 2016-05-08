@@ -16,7 +16,7 @@ cat("\014")
 
 # ======================================== 2.OUVERTURE DES FICHIERS =================================
 
-cat(sprintf("Les problèmes proposés sont : ml-100k\n"))
+cat(sprintf("Les problèmes proposés sont : ml-100k \n"))
 repository = readline(prompt = "Choisissez un problème : ")
 
 # ====================== 3.CHARGEMENT DES BASES D'APPRENTISSAGE ET DE TEST ==========================
@@ -61,6 +61,7 @@ nb.Models.byK = nb.similarities * nb.nbMin.InCommon * nb.predicteurs
 source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
 source("./NeighborhoodBasedAlgorithms/knn_user_predictions.R", encoding = 'UTF-8')
 source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
+source("./Util/get_limited_value.R")
 
 result_error = as.data.frame(matrix(0, nrow=nb.Models.byK, ncol = nb.K))
 rownames(result_error) = mat.models$name
@@ -68,7 +69,6 @@ colnames(result_error) = seq_K
 
 # =================== 6.CALCUL DES TABLEAUX DE PREDICTION ================================
 
-#TODO a changer : 1:nb.Datasets et non 1:1
 for(train in 1:nb.Datasets){ # pour chaque couple train/test de la validation croisée
   
   cat(sprintf("\n Calcul pour la sous-base : %0.f / %0.f \n", train, nb.Datasets))
@@ -117,8 +117,8 @@ cat(sprintf("\n Calcul pour la base vierge"))
 file_data.Vierge = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/data.Ratings.Vierge.Rdata")
 load(file = file_data.Vierge)
 train.Ratings = do.call("rbind", list.Datasets)
-test.Ratings=data.Ratings.Vierge
-list.Datasets=list(test.Ratings,train.Ratings)
+test.Ratings = data.Ratings.Vierge
+list.Datasets = list(test.Ratings,train.Ratings)
 
 # Chargement des listes déjà vus
 file_list.dejaVu = paste0("./CrossValidation/", repository, "/CV", nb.Datasets, "/vierge/list.dejaVu.Rdata")
