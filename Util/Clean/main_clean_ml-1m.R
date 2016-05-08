@@ -79,9 +79,9 @@ unique.movies = unique(data.Ratings$movieID)
 data.Movies = data.Movies[is.element(data.Movies$movieID, unique.movies),]
 data.Users = data.Users[is.element(data.Users$userID, unique.users),]
 
-write.table(data.Movies, file='Data/ml-1m/data.Movies1.tsv', quote=FALSE, sep='\t', col.names = list.col.names, row.names=FALSE)
-write.table(data.Users, file='Data/ml-1m/data.Users1.tsv', quote=FALSE, sep='\t', col.names = col.names.user, row.names=FALSE)
-write.table(data.Ratings, file='Data/ml-1m/data.Ratings1.tsv', quote=FALSE, sep='\t', col.names = col.names.ratings, row.names=FALSE)
+write.table(data.Movies, file='Data/ml-1m/data.Movies.tsv', quote=FALSE, sep='\t', col.names = list.col.names, row.names=FALSE)
+write.table(data.Users, file='Data/ml-1m/data.Users.tsv', quote=FALSE, sep='\t', col.names = col.names.user, row.names=FALSE)
+write.table(data.Ratings, file='Data/ml-1m/data.Ratings.tsv', quote=FALSE, sep='\t', col.names = col.names.ratings, row.names=FALSE)
 
 rm(list=ls()) 
 
