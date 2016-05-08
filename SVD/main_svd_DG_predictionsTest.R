@@ -44,12 +44,12 @@ library("hydroGOF")
 
 iteration.times = as.integer(readline(prompt = "Choisissez un nombre d’iterations: "))
 
-seq_lambda = seq(5,40, by=5)
+seq_lambda = seq(5,20, by=5)
 result_RMSE = matrix(0, nrow = length(seq_lambda), ncol = nb.Tests)
 vector.userID = sort(as.numeric(unique(data.Ratings$userID)))
 vector.movieID = sort(as.numeric(unique(data.Ratings$movieID)))
 
-for(testID in 2:5){
+for(testID in 1){
   cat(paste("BASE TEST N°: ", testID,"\n" ))
   dataset_to_keep = (1:nb.Tests)[(1:nb.Tests) != testID]
   train.Ratings = do.call("rbind", list.Datasets[dataset_to_keep])

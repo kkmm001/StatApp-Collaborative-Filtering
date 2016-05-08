@@ -138,7 +138,31 @@ if(method == "svd"){
   mat.RecommendedMovies = svd_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.SVD.Item,mat.SVD.User,X,nb.recommandations, nbMin.Ratings, AvrRtg)
 }
 
-# ============================== 6.AFFICHAGE DES RECOMMANDATIONS ==================================================================
+# ============================== 6.ALGORITHME PAR DG-SVD ======= ============================
+
+
+if(method == "svd_dg"){
+  
+  # Choix du nombre minimal de visionnage
+  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de notes pour film accepté : "))
+  
+  
+  # CHARGEMENT DES PARAMETRES CHOISIS PAR L'UTILISATEUR FINAL
+  
+  # Choix du nombre de recommandations
+  nb.recommandations = as.integer(readline(prompt = "Choisissez un nombre de recommandations : "))
+  
+  # Choix de l'identifiant de l'utilisateur
+  userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+  
+  source("./SVD/transform_Ratings.R")
+  source("./SVD/DescentG.R")
+  source("./SVD/svd_DG_recommendation.R")
+  recommandation = svd_DG_recommendation(userID, recap.Users, recap.Movies, data.Ratings, nb.recommandations, nbMin.Ratings)
+}
+
+
+# ============================== 7.AFFICHAGE DES RECOMMANDATIONS ==================================================================
 
 source("./Util/genres_of_movie.R")
 

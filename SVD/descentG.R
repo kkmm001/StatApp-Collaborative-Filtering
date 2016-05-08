@@ -58,6 +58,9 @@ descentG = function(matrix.training, iteration.times=10, lambda=15)
   colnames(M_t)=colnames(matrix.training)
   rownames(M_t)=rownames(matrix.training)
   
+  M_t[M_t>5]=5
+  M_t[M_t<0]=0
+  
   return(M_t)
 } 
 
@@ -110,6 +113,9 @@ proximalG = function(matrix.training, iteration.times=10, lambda=15)
   
   colnames(M_t)=colnames(matrix.training)
   rownames(M_t)=rownames(matrix.training)
+  
+  M_t[M_t>5]=5
+  M_t[M_t<0]=0
   
   return(M_t)
   
