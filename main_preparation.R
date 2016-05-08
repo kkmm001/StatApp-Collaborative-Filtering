@@ -155,3 +155,15 @@ save(list.dejaVu, file = paste0("CrossValidation/", repository, "/CV", nb.Tests,
 #    write.table(mat.sim_filtre, paste0("./CrossValidation/", repository, "/CV", nb.Tests, "/vierge/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), row.names = FALSE, sep="\t")
 #  } 
 #}
+
+# FICHIER UTILISES DANS SVD NAIVE
+source("./SVD/svd2.R") 
+source("./SVD/svd_predictions.R") 
+source("./SVD/matUS_matSV.R") 
+source("./Util/stat_Movies.R") 
+source("./Util/stat_Users.R") 
+
+library("hydroGOF") 
+library("zoo") 
+library("expm") 
+
