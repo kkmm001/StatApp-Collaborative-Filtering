@@ -124,7 +124,7 @@ if(method == "svd_naif"){
   
   source("./SVD/matUS_matSV.R")
   source("./SVD/svd_recommendation.R")
-  
+  source("./Util/get_limited_value.R")
   library("expm")
   
   mat.RecommendedMovies = svd_recommendation(userID, recap.Users, recap.Movies, data.Ratings, list.SVD_Item, list.SVD_User, tau,  nb.recommandations, nbMin.Ratings, howToFill, list.dejaVu)

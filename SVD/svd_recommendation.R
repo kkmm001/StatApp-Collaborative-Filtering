@@ -38,7 +38,7 @@ svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, l
   
   # Génération de la data frame mat.RecommendedMovies : matrice contenant les prédictions pour tous les films susceptibles 
   # d'être recommandés et leur identifiants
-  mat.RecommendedMovies = as.data.frame(matrix(NA, nrow = length(vect.Recommandable), ncol = 2))
+  mat.RecommendedMovies = as.data.frame(matrix(NA, nrow = length(vect.RecommandableMovies), ncol = 2))
   colnames(mat.RecommendedMovies) = c("movieID", "prating")
   
   # Creation des matrice US et SV se basant sur la méthode SVD necessaire à la prediction
@@ -49,7 +49,7 @@ svd_recommendation = function(userID, recap.Users, recap.Movies, data.Ratings, l
   meanOfUser = recap.Users$mean[recap.Users$userID == userID]
   
   # Complétion de la data frame mat.RecommendedMovies
-  for(movieREC in 1:length(vect.Recommandable)){ # INDICE du film dans vect.Recommandable
+  for(movieREC in 1:length(vect.RecommandableMovies)){ # INDICE du film dans vect.RecommandableMovies
     movieID = vect.RecommandableMovies[movieREC] #ID du film
     movieIND = which(vect.Movies == movieID)      #INDICE du film dans la matrice
     mat.RecommendedMovies$prating[movieREC] = get_limited_value(meanOfUser + mat.US[userIND,] %*% mat.SV[,movieIND]) #TODO IN ou IND

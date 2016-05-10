@@ -125,7 +125,7 @@ for(train in 1:nb.Tests){
 #    } 
 #  }
   
-  cat(" \n \t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
+  cat(" \t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
   list.SVD_Item = svd_filledMatrix("Item",train.Ratings, stat.Users, stat.Movies)
   list.SVD_User = svd_filledMatrix("User",train.Ratings, stat.Users, stat.Movies)
   
@@ -172,7 +172,7 @@ save(list.dejaVu, file = paste0("CrossValidation/", repository, "/CV", nb.Tests,
 #  } 
 #}
 
-cat(" \n \t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
+cat("\t Décomposition de la matrice des notes remplie en fonction de la moyenne des utilisateurs ou des films \n")
 list.SVD_Item = svd_filledMatrix("Item",train.Ratings, stat.Users, stat.Movies)
 list.SVD_User = svd_filledMatrix("User",train.Ratings, stat.Users, stat.Movies)
 
