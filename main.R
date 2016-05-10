@@ -17,7 +17,7 @@ cat("\014")
 # Choix du problème et de la méthode de recommandation
 cat(sprintf("Les problèmes proposés sont : ml-100k et ml-1m \n"))
 repository = readline(prompt = "Choisissez un problème : ")
-cat(sprintf("Les méthodes proposées sont : naive, knn_user et svd\n"))
+cat(sprintf("Les méthodes proposées sont : naive, knn_user, svd_naif et svd_dg\n"))
 method = readline(prompt = "Choisissez une méthode : ")
 
 # ============================== 2.CHARGEMENT DES DONNEES BASIQUES ==================================================================
@@ -92,9 +92,9 @@ if(method == "knn_user"){
   mat.RecommendedMovies = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, K, nb.recommandations, predicteur, nbMin.Ratings)
   }
 
-# ============================== 5.ALGORITHME PAR ===================================
+# ============================== 5.ALGORITHME PAR DECOMPOSITION EN FAIBLE RANG - NAIF ===================================
 
-if(method == "svd"){
+if(method == "svd_naif"){
  
   # CHARGEMENT DES PARAMETRES CHOISIS PAR L'OPERATEUR
   
@@ -136,8 +136,7 @@ if(method == "svd"){
 if(method == "svd_dg"){
   
   # Choix du nombre minimal de visionnage
-  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de notes pour film accepté : "))
-  
+  nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
   
   # CHARGEMENT DES PARAMETRES CHOISIS PAR L'UTILISATEUR FINAL
   
@@ -150,9 +149,8 @@ if(method == "svd_dg"){
   source("./SVD/transform_Ratings.R")
   source("./SVD/DescentG.R")
   source("./SVD/svd_DG_recommendation.R")
-  recommandation = svd_DG_recommendation(userID, recap.Users, recap.Movies, data.Ratings, nb.recommandations, nbMin.Ratings)
+  mat.RecommendedMovies = svd_DG_recommendation(userID, recap.Users, recap.Movies, data.Ratings, nb.recommandations, nbMin.Ratings)
 }
-
 
 # ============================== 7.AFFICHAGE DES RECOMMANDATIONS ==================================================================
 
