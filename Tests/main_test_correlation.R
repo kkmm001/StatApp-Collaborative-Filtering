@@ -18,10 +18,31 @@ cat("\014")
 source("./Util/open_files.R", encoding = 'UTF-8')
 
 # Choix de l'utilisateur
-userID = as.integer(readline(prompt = "Choisissez un utilisateur : "))
+seq_userID = seq(1, 943, by=15)
 
 # Choix de quelques paramètres pour l'utilisateur final
-nbMin.Ratings = as.integer(readline(prompt = "Choisissez un seuil de visionnage : "))
+nbMin.Ratings = 25
+
+# choix de la métrique de similarité
+similarity = "RFP"
+
+# Choix du seuil de voisinage
+nbMin.InCommon = 0
+
+# Chargement de la matrice de similarité (dépend de la métrique et du seuil)
+mat.sim = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), header=T, sep='\t'))
+
+# Choix du nombre de plus proches voisins
+K = 36
+
+# Choix du prédicteur
+predicteur = "weighted-centered&a"
+
+# choix de la méthode de remplissage de la matrice des notes
+howToFill = "Item"
+
+#  Choix de la proportion d'inertie à garder
+tau = 24.5
 
 # ============================== 2.CHARGEMENT DES DONNEES BASIQUES ==================================================================
 
@@ -34,89 +55,116 @@ recap.Users = read.table(file = paste0("./Results/", repository, "/recap.Users.t
 # Chargement de la liste des films déjà notés par individu
 load(file = paste0("./Results/", repository, "/list.dejaVu.Rdata"))
 
-# Nombre de films recommandables
-nb.recommandations = dim(recap.Movies)[1]- length(list.dejaVu[[userID]]) #tous les films
+# ============================== 3.MATRICE DES CORRELATIONS ==================================================================
 
-# ============================== 2.ALGORITHME NAIF ==================================================================
+mat.Correlations = as.data.frame(matrix(NA, nrow = length(seq_userID), ncol = 7))
+rownames(mat.Correlations) = seq_userID
+colnames(mat.Correlations) = c("userID", "corr_naif_knn", "corr_naif_svdN", "corr_naif_svdDG", 
+                               "corr_knn_svdN", "corr_knn_svdDG", "corr_svdN_svdDG")
 
-cat(sprintf("Algorithme naïf \n"))
-source("./NaiveAlgorithms/recommandation_meanByMovie.R")
-mat.RecommendedMovies_naif = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, nbMin.Ratings)
-
-# ============================== 3.ALGORITHME DES PLUS PROCHES VOISINS AU SENS UTILISATEUR ============================
-
-cat(sprintf("Algorithme des plus proches voisins \n"))
-
-# choix de la métrique de similarité
-cat(sprintf("Les métriques proposées sont : pearson, nrmse, nmae et RFP (ratings-frequency pearson) \n"))
-similarity = readline(prompt = "Choisissez une métrique pour la similarité : ") # "pearson", "nrmse" ou "nmae"
+for(user in 1:length(seq_userID)){
+  userID = seq_userID[user]
+  # Filtre des films ayant dépasssé un certain seuil
+  vect.Recommandable = sort(unique(recap.Movies$movieID[recap.Movies$nb.Ratings >= nbMin.Ratings]))
   
-# Choix du seuil de voisinage
-cat(sprintf("Les seuils de voisinage sont 0, 2, 4, 6, 8 et 10  \n"))
-nbMin.InCommon = readline(prompt = "Choisissez un seuil de voisinage : ")
+  # Ensemble des films qui sont susceptibles d'être recommandés à userID
+  vect.Recommandable = vect.Recommandable[!(vect.Recommandable %in% list.dejaVu[[userID]])]
   
-# Chargement de la matrice de similarité (dépend de la métrique et du seuil)
-mat.sim = as.matrix(read.table(file = paste0("./Results/", repository, "/mat.sim_", similarity, "_", nbMin.InCommon, ".tsv"), header=T, sep='\t'))
+  # Nombre de films recommandables
+  nb.recommandations = length(vect.Recommandable) #tous les films
   
-# Choix du nombre de plus proches voisins
-K = as.integer(readline(prompt = "Choisissez le nombre de plus proches voisins : "))
+  # ALGORITHME NAIF
   
-# Choix du prédicteur
-cat(sprintf("Les prédicteurs proposés sont : mean, weighted, weighted-centered, weighted&a, weighted-centered&a \n"))
-predicteur = readline(prompt = "Choisissez le prédicteur : ")
+  cat(sprintf("\nAlgorithme naïf"))
+  source("./NaiveAlgorithms/recommandation_meanByMovie.R")
+  mat.RecommendedMovies_naif = recommandation_meanByMovie(recap.Movies, list.dejaVu, userID, nb.recommandations, nbMin.Ratings)
   
-source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
-source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
-source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
-source("./Util/get_limited_value.R")
+  # ALGORITHME DES PLUS PROCHES VOISINS AU SENS UTILISATEUR 
   
-mat.RecommendedMovies_knn = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, K, nb.recommandations, predicteur, nbMin.Ratings)
+  cat(sprintf("\nAlgorithme des plus proches voisins \n"))
+    
+  source("./NeighborhoodBasedAlgorithms/K_nearest_neighbors.R")
+  source("./NeighborhoodBasedAlgorithms/knn_user_predicteur.R")
+  source("./NeighborhoodBasedAlgorithms/knn_user_recommendation.R")
+  source("./Util/get_limited_value.R")
+    
+  mat.RecommendedMovies_knn = knn_user_recommendation(userID, recap.Users, recap.Movies, data.Ratings, mat.sim, list.dejaVu, K, nb.recommandations, predicteur, nbMin.Ratings)
+  
+  # ALGORITHME PAR DECOMPOSITION EN FAIBLE RANG - NAIF 
+  
+  cat(sprintf("\nAlgorithme par décomposition en faible rang - naif"))
+  
+  # Chargement de la décomposition de la matrice des notes après remplissage
+  load(paste0("./Results/", repository, "/list.SVD_User.Rdata"))
+  load(paste0("./Results/", repository, "/list.SVD_Item.Rdata"))
+  
+  source("./SVD/matUS_matSV.R")
+  source("./SVD/svd_recommendation.R")
+  source("./Util/get_limited_value.R")
+  
+  library("expm")
+  
+  mat.RecommendedMovies_svdN = svd_recommendation(userID, recap.Users, recap.Movies, data.Ratings, list.SVD_Item, list.SVD_User, tau,  nb.recommandations, nbMin.Ratings, howToFill, list.dejaVu)
+  
+  # ALGORITHME DECOMPOSITION EN FAIBLE RANG - DESCENTE DE GRADIENT 
+  
+  cat(sprintf("\nAlgorithme par décomposition en faible rang - descente de gradient\n"))
+   
+  source("./SVD/transform_Ratings.R")
+  source("./SVD/DescentG.R")
+  source("./SVD/svd_DG_recommendation.R")
+  mat.RecommendedMovies_svdDG = svd_DG_recommendation(userID, recap.Users, recap.Movies, data.Ratings, nb.recommandations, nbMin.Ratings)
+  
+  # AFFICHAGE DES RECOMMANDATIONS 
+  
+  # rankOfMovies contient le rang de chaque film recommandés  
+  rankOfMovies_naif = rank(mat.RecommendedMovies_naif[order(mat.RecommendedMovies_naif$movieID),"prating"])
+  rankOfMovies_knn  = rank(mat.RecommendedMovies_knn[order(mat.RecommendedMovies_knn$movieID),"prating"])
+  rankOfMovies_svdN  = rank(mat.RecommendedMovies_svdN[order(mat.RecommendedMovies_svdN$movieID),"prating"])
+  rankOfMovies_svdDG  = rank(mat.RecommendedMovies_svdDG[order(mat.RecommendedMovies_svdDG$movieID),"prating"])
+  
+  #taux de corrélation entre les deux recommandations (corrélation de pearson entre les rangs)
+  correlation_naif_knn = cor(rankOfMovies_naif, rankOfMovies_knn, method = "pearson")
+  correlation_naif_svdN = cor(rankOfMovies_naif, rankOfMovies_svdN, method = "pearson")
+  correlation_naif_svdDG = cor(rankOfMovies_naif, rankOfMovies_svdDG, method = "pearson")
+  correlation_knn_svdN  = cor(rankOfMovies_knn, rankOfMovies_svdN, method = "pearson")
+  correlation_knn_svdDG  = cor(rankOfMovies_knn, rankOfMovies_svdDG, method = "pearson")
+  correlation_svdN_svdDG  = cor(rankOfMovies_svdN, rankOfMovies_svdDG, method = "pearson")
+  
+  source("./Util/genres_of_movie.R")
+  #source("./Util/display_recommendations.R", encoding = 'UTF8')
+  
+  #cat(sprintf("Recommandation par la méthode naïve\n"))
+  #display_recommendations(mat.RecommendedMovies_naif[1:10,], 10, recap.Movies)
+  
+  #cat(sprintf("Recommandation par la méthode des plus proches voisins\n"))
+  #display_recommendations(mat.RecommendedMovies_knn[1:10,], 10, recap.Movies)
+  
+  #cat(sprintf("Recommandation par la décomposition en faible rang - naif\n"))
+  #display_recommendations(mat.RecommendedMovies_svdN[1:10,], 10, recap.Movies)
+  
+  #cat(sprintf("Recommandation par la décomposition en faible rang - descente de gradient\n"))
+  #display_recommendations(mat.RecommendedMovies_svdDG[1:10,], 10, recap.Movies)
+  
+  cat(sprintf("\n Taux de corrélation entre les méthodes pour l'utilisateur %.0f \n", userID))
+  
+  cat(sprintf("Le taux de corrélation entre naif et knn est de %.2f\n", correlation_naif_knn))
+  cat(sprintf("Le taux de corrélation entre naif et svdN est de %.2f\n", correlation_naif_svdN))
+  cat(sprintf("Le taux de corrélation entre naif et svdDG est de %.2f\n", correlation_naif_svdDG))
+  cat(sprintf("Le taux de corrélation entre knn et svdN est de %.2f\n", correlation_knn_svdN))
+  cat(sprintf("Le taux de corrélation entre knn et svdDG est de %.2f\n", correlation_knn_svdDG))
+  cat(sprintf("Le taux de corrélation entre svdN et svdDG est de %.2f\n", correlation_svdN_svdDG))
 
-# ============================== 3.ALGORITHME PAR DECOMPOSITION EN FAIBLE RANG ============================
+  # Remplissage de la matrice de corrélation
+  
+  mat.Correlations$userID[user] = userID
+  mat.Correlations$corr_naif_knn[user] = correlation_naif_knn
+  mat.Correlations$corr_naif_svdN[user] = correlation_naif_svdN
+  mat.Correlations$corr_naif_svdDG[user] = correlation_naif_svdDG
+  mat.Correlations$corr_knn_svdN[user] = correlation_knn_svdN
+  mat.Correlations$corr_knn_svdDG[user] = correlation_knn_svdDG
+  mat.Correlations$corr_svdN_svdDG[user] = correlation_svdN_svdDG
+    
+}
 
-# choix de la méthode de remplissage de la matrice des notes
-cat(sprintf("\n Les méthodes proposées pour remplir la matrice des notes sont : Item ou User \n"))
-howToFill = readline(prompt = "Choisissez une méthode de remplissage de la matrice : ")
-
-# Chargement de la décomposition de la matrice des notes après remplissage
-load(paste0("./Results/", repository, "/list.SVD_User.Rdata"))
-load(paste0("./Results/", repository, "/list.SVD_Item.Rdata"))
-
-#  Choix de la proportion d'inertie à garder
-tau = as.numeric(readline(prompt = "Choisissez une proportion d'inertie à garder (entre 0 et 100) : "))
-
-source("./SVD/matUS_matSV.R")
-source("./SVD/svd_recommendation.R")
-
-library("expm")
-
-mat.RecommendedMovies_svd = svd_recommendation(userID, recap.Users, recap.Movies, data.Ratings, list.SVD_Item, list.SVD_User, tau,  nb.recommandations, nbMin.Ratings, howToFill, list.dejaVu)
-
-# ============================== 4.AFFICHAGE DES RECOMMANDATIONS ==================================================================
-
-#taux de corrélation entre les deux recommandations (corrélation de pearson entre les rangs)
-rankOfMovies_naif = rank(mat.RecommendedMovies_naif[order(mat.RecommendedMovies_naif$movieID),"prating"])
-rankOfMovies_knn  = rank(mat.RecommendedMovies_knn[order(mat.RecommendedMovies_knn$movieID),"prating"])
-rankOfMovies_svd  = rank(mat.RecommendedMovies_svd[order(mat.RecommendedMovies_svd$movieID),"prating"])
-
-correlation_naif_knn = cor(rankOfMovies_naif, rankOfMovies_knn, method = "pearson")
-correlation_naif_svd = cor(rankOfMovies_naif, rankOfMovies_svd, method = "pearson")
-correlation_knn_svd  = cor(rankOfMovies_knn, rankOfMovies_svd, method = "pearson")
-
-source("./Util/genres_of_movie.R")
-source("./Util/display_recommendations.R", encoding = 'UTF8')
-
-cat(sprintf("Recommandation par la méthode naïve\n"))
-display_recommendations(mat.RecommendedMovies_naif[1:10,], 10, recap.Movies)
-
-cat(sprintf("Recommandation par la méthode des plus proches voisins\n"))
-display_recommendations(mat.RecommendedMovies_knn[1:10,], 10, recap.Movies)
-
-cat(sprintf("Recommandation par la décomposition en faible rang\n"))
-display_recommendations(mat.RecommendedMovies_svd[1:10,], 10, recap.Movies)
-
-cat(sprintf("\n Taux de corrélation entre les méthodes\n"))
-
-cat(sprintf("Le taux de corrélation entre naif et knn est de %.2f\n", correlation_naif_knn))
-cat(sprintf("Le taux de corrélation entre naif et svd est de %.2f\n", correlation_naif_svd))
-cat(sprintf("Le taux de corrélation entre knn et svd est de %.2f\n", correlation_knn_svd))
+write.table(mat.Correlations, "./Tests/mat.correlation.tsv", col.names = NA, sep='\t')
